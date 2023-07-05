@@ -526,6 +526,7 @@ def init_args():
     parser.add_argument('--p4dbg', help='Debugging', required=False, default=False, action='store_const', const=True)
     parser.add_argument('--p4opt', help='Debug option passed to P4-to-JSON compiler', required=False, default=[], action='append')
     parser.add_argument('--p4incdir', help='Include directory to P4-to-JSON compiler', required=False, default=[], action='append')
+    parser.add_argument('--merge' , help="merge additional file into compilation", required=False,action='append')
 
     args = vars(parser.parse_args())
 
@@ -563,13 +564,13 @@ def main():
         showWarnings()
     except T4P4SHandledException:
         sys.exit(1)
-    except:
-        cuco = compiler_common.current_compilation
-        if cuco:
-            stagetxt = f"{cuco['stage']['name']}: " if 'stage' in cuco else ""
-            print(f"{stagetxt}Error during the compilation of {cuco['from']} to {cuco['to']}")
-        print_with_backtrace(sys.exc_info(), cuco['from'] if cuco else "(no compiler_common file)", args['p4dbg'])
-        sys.exit(1)
+    #except:
+    #    cuco = compiler_common.current_compilation
+    #    if cuco:
+    #        stagetxt = f"{cuco['stage']['name']}: " if 'stage' in cuco else ""
+    #        print(f"{stagetxt}Error during the compilation of {cuco['from']} to {cuco['to']}")
+    #    print_with_backtrace(sys.exc_info(), cuco['from'] if cuco else "(no compiler_common file)", args['p4dbg'])
+    #    sys.exit(1)
 
     global errors
     if len(errors) > 0:
