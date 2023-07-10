@@ -30,9 +30,7 @@ struct metadata {
 }
 
 struct headers {
-    @name(".ethernet") 
     ethernet_t ethernet;
-    @name(".ipv4") 
     ipv4_t     ipv4;
 }
 

@@ -1,0 +1,5 @@
+accepted: 
+    0001 ethernet.etherType/16=0800
+    0002 ethernet.etherType/16≠0800
+    0003 ethernet.etherType/16=0806
+

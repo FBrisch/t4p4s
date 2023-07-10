@@ -18,6 +18,7 @@ class ParserCombiner:
         self.stateDict1 = {}
         self.stateDict2 = {}
         self.headerNameTranslationDictionary = {}
+        self.addedNodes = []
         for header in header1:
             self.headerDict1[header.name] = header
         for header in header2:
@@ -42,10 +43,12 @@ class ParserCombiner:
 
         for state in self.parser1.states:
             if state.name in ["accept","reject"]:
-                stateToInsert = deep_copy_with_details(state)
-                self.resultingStates[state.name]= deep_copy_with_details(stateToInsert)
+                stateToInsert = deep_copy(state)
+                self.resultingStates[state.name]= deep_copy(stateToInsert)
+                self.resultingStates[state.name].Node_ID = stateToInsert.Node_ID
+                self.addedNodes.append(stateToInsert)
         
-        #self.mergeMetadata()
+        self.mergeMetadata()
 
         
 
@@ -54,6 +57,7 @@ class ParserCombiner:
             print(f"could not combine states {state1.name} and {state2.name} due to extracted header width not matching({self.sumExtractedHeaderLength(state1)},{self.sumExtractedHeaderLength(state2)})")
             exit(1)
         if self.getExtractedHeader(state1) is not None:
+            self.addedNodes.append(self.getExtractedHeader(state1))
             self.resultingHeaders.append(self.getExtractedHeader(state1))
 
         mergedSelect,resultingSelectStatement = self.mergeSelects(state1.selectExpression,state2.selectExpression)
@@ -83,10 +87,12 @@ class ParserCombiner:
         #else:
         #    for case in resultingSelectStatement.selectCases:
         #        print(case < 3)
-        resultingState = deep_copy_with_details(state1)
+        resultingState = deep_copy(state1)
         resultingState.selectExpression = resultingSelectStatement
         self.resultingStates[resultingState.name]= deep_copy_with_details(resultingState)
-                
+        self.resultingStates[resultingState.name].Node_ID = resultingState.Node_ID
+        self.addedNodes.append(self.resultingStates[resultingState.name])
+        self.resultingStates[resultingState.name].is_skipped = False
         #hier koennen wir header name redirection machen, zumindest das dictionary muss hier gebaut werden
         
 
@@ -94,7 +100,7 @@ class ParserCombiner:
     def mergeSelects(self,selectStatement1,selectStatement2):
 
         selectDict = {}
-        resultingSelectStatement = deep_copy_with_details(selectStatement1)
+        resultingSelectStatement = deep_copy(selectStatement1)
         #check if selects have same offset 
         if (selectStatement2.node_type != "PathExpression" and selectStatement1.node_type != "PathExpression"):
             if not selectStatement1.select.components[0].fld_ref.offset == selectStatement2.select.components[0].fld_ref.offset:
@@ -138,7 +144,7 @@ class ParserCombiner:
             return selectDict,resultingSelectStatement
         else:
 
-            resultingSelectStatement.selectCases = deep_copy_with_details(selectStatement1.selectCases)
+            resultingSelectStatement.selectCases = deep_copy(selectStatement1.selectCases)
             resultingSelectStatement.selectCases.set_vec([]) 
             for key,value in selectDict.items():
                 if key == -1:
@@ -166,8 +172,11 @@ class ParserCombiner:
             currentState = self.stateDict2[statename]
         else:
             currentState = self.stateDict2[statename]
+        self.addedNodes.append(self.getExtractedHeader(currentState))
         self.resultingHeaders.append(self.getExtractedHeader(currentState))
-        self.resultingStates[statename] = deep_copy_with_details(currentState)
+        self.resultingStates[statename] = deep_copy(currentState)
+        self.resultingStates[statename].Node_ID = currentState.Node_ID
+        self.addedNodes.append(self.resultingStates[statename])
         if currentState.selectExpression.node_type == "PathExpression":
             self.addDistinctTree(currentState.selectExpression.path.name,treeIsInTree2)
         else:
@@ -216,6 +225,7 @@ class ParserCombiner:
 
         for field in metadata2.fields:
             if field.name not in metadatapresent:
-                resultingMetadata.vec.append(deep_deep_copy_with_detailscopy(field))
+                resultingMetadata.vec.append(deep_copy(field))
                 metadatapresent.append(field.name)
+        self.addedNodes.append(resultingMetadata)
         self.resultingHeaders.append(resultingMetadata)
