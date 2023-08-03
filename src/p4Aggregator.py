@@ -12,7 +12,7 @@ class P4Aggregator:
         self.resultingProgram = deep_copy(p4program1)
     
     def run(self):
-        printHLIR(self.p4program1)
+        #printHLIR(self.p4program1)
         parser1 = self.p4program1.parsers[0]
         parser2 = self.p4program2.parsers[0]
         headers1 = self.p4program1.headers

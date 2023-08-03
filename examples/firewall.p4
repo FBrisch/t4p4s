@@ -1,6 +1,6 @@
 /* -*- P4_16 -*- */
 
-#include "common-boilerplate-pre.p4"
+#include "include/v1-boilerplate-pre.p4"
 
 const bit<16> TYPE_IPV4  = 0x0800;
 const bit<16> TYPE_ARP   = 0x0806;
@@ -30,7 +30,11 @@ struct headers {
 }
 
 PARSER {
-    state start {
+    state start{
+        transition parse_ethernet;
+    }
+    
+    state parse_ethernet {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
           TYPE_ARP: parse_arp;
@@ -239,4 +243,4 @@ CTL_EMIT {
     }
 }
 
-#include "common-boilerplate-post.p4"
+#include "include/v1-boilerplate-post.p4"

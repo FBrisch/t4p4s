@@ -113,14 +113,14 @@ def printHLIR(hlir):
                     #normal call/assignment
                         
             if state.selectExpression.node_type == "PathExpression":
-                print(f'        transition {state.selectExpression.path.name}')
+                print(f'        transition {state.selectExpression.path.name};')
             else:
                 print(f'        transition select({parserHeaderName}.{state.selectExpression.select.components[0].fld_ref.name}.{state.selectExpression.select.components[0].fld_ref.name}){"{"}')
                 for case in state.selectExpression.selectCases:
                     if(case.keyset.node_type == 'DefaultExpression'):
-                        print(f'          default:')
+                        print(f'          default:{case.state.path.name};')
                     else:
-                        print(f'          {case.keyset.value}:{case.state.path.name}')
+                        print(f'          {case.keyset.value}:{case.state.path.name};')
                 if state.selectExpression.select.components[0].fld_ref.name == 'accept':
                     print(f'        transition accept;')
             print(f'    }}')

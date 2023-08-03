@@ -11,3 +11,4 @@ examples/local
 src/utils/codegen.py
 .idea/
 srcgen/
+cache/
