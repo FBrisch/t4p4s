@@ -17,7 +17,7 @@ import gzip
 import pickle
 
 import compiler_common
-from p4Merger import P4Merger
+from p4Aggregator import P4Aggregator
 
 
 # TODO also reload if (the relevant part of) the HLIR generator code has changed
@@ -304,7 +304,7 @@ def load_from_p4(compiler_args, cache_dir_name):
             check_file_extension(filename2)
             hlir2 = load_hlir(filename2, cache_dir_name, args['recompile'])
         
-            merger = P4Merger(hlir,hlir2)
+            merger = P4Aggregator(hlir,hlir2)
             merger.run()
             hlir = merger.getResult()
 

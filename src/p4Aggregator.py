@@ -2,15 +2,17 @@ from hlir16.hlir_attrs import attrs_hdr_metadata_insts, attrs_top_level
 from hlir16.hlirx_regroup import attrs_regroup_path_expressions, attrs_regroup_structs, regroup_attrs
 from hlir16.p4node import P4Node, deep_copy
 from parserCombiner import ParserCombiner
+from rewrite_p4 import printHLIR
 
 
-class P4Merger:
+class P4Aggregator:
     def __init__(self,p4program1,p4program2):
         self.p4program1 = p4program1
         self.p4program2 = p4program2
         self.resultingProgram = deep_copy(p4program1)
     
     def run(self):
+        printHLIR(self.p4program1)
         parser1 = self.p4program1.parsers[0]
         parser2 = self.p4program2.parsers[0]
         headers1 = self.p4program1.headers
@@ -27,6 +29,8 @@ class P4Merger:
             header.is_skipped = False
             header.is_local = False
         self.mergeHeaderInstances(combiner.resultingHeaders)
+
+        printHLIR(self.resultingProgram)
         #self.resultingProgram.header_instances.vec = combiner.resultingHeaders
         
         #self.resultingProgram.groups.pathexprs.append(self.p4program2.groups.pathexprs)

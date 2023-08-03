@@ -6,7 +6,7 @@
 from hlir16.p4node import P4Node
 import hlir16.hlir
 from hlir16.hlir_attrs import set_additional_attrs
-from p4Merger import P4Merger
+from p4Aggregator import P4Merger
 from parserCombiner import ParserCombiner
 import sys
 import pprint
