@@ -22,8 +22,8 @@ extern ctrl_plane_backend bg;
 extern void do_assignment(header_instance_e dst_hdr, header_instance_e src_hdr, SHORT_STDPARAMS);
 
 #if T4P4S_MULTI_IDX == 0
-    // action name: ._drop; ._drop
-    void action_code__drop(action__drop_params_t parameters, SHORT_STDPARAMS) {
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop(action_drop_params_t parameters, SHORT_STDPARAMS) {
         control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
 SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
 ;
@@ -31,8 +31,8 @@ SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
 #endif // T4P4S_MULTI_IDX == 0
 
 #if T4P4S_MULTI_IDX == 1
-    // action name: ._drop; ._drop
-    void action_code__drop_1(action__drop_1_params_t parameters, SHORT_STDPARAMS) {
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_1(action_drop_1_params_t parameters, SHORT_STDPARAMS) {
         control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
 SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
 ;
@@ -40,42 +40,409 @@ SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
 #endif // T4P4S_MULTI_IDX == 1
 
 #if T4P4S_MULTI_IDX == 0
-    // action name: .set_nhop; .set_nhop
-    void action_code_set_nhop(action_set_nhop_params_t parameters, SHORT_STDPARAMS) {
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_2(action_drop_2_params_t parameters, SHORT_STDPARAMS) {
         control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
-uint32_t value32b_0001;
-memcpy(&value32b_0001, &(parameters.nhgroup_1), 4);
-if (likely(is_header_valid(HDR(all_metadatas), pd))) {
-    set_fld(pd, FLD(all_metadatas,_routing_metadata_nhgroup0), value32b_0001);
-    } else {
-    debug("   " T4LIT(!!,warning) " Ignoring assignment to field in invalid header: " T4LIT(%s,warning) "." T4LIT(%s,field) "\n", hdr_infos[HDR(all_metadatas)].name, field_names[FLD(all_metadatas,_routing_metadata_nhgroup0)]);
-}
-
- if (unlikely(!is_header_valid(HDR(ipv4), pd))) {
-     debug("   " T4LIT(!!,warning) " Access to field in invalid header " T4LIT(%s,warning) "." T4LIT(ttl,field) ", returning \"unspecified\" value " T4LIT(0xd3 /* pseudorandom 8 bit value */) "\n", hdr_infos[HDR(ipv4)].name);
- }
- if (unlikely(!is_header_valid(HDR(ipv4), pd))) {
-     debug("   " T4LIT(!!,warning) " Access to field in invalid header " T4LIT(%s,warning) "." T4LIT(ttl,field) ", returning \"unspecified\" value " T4LIT(0xd3 /* pseudorandom 8 bit value */) "\n", hdr_infos[HDR(ipv4)].name);
- }
- uint8_t bitmask_8b_0003 = 0xff;
- uint8_t casting_0005 = (uint8_t)((((uint8_t)GET32_def(src_pkt(pd), FLD(ipv4,ttl), 0xd3 /* pseudorandom 8 bit value */)) + 0xff /* probably -1 */));
- uint8_t masking_0004 = (uint8_t)(casting_0005);
-uint8_t value8b_0002 = (bitmask_8b_0003 & masking_0004);
-if (likely(is_header_valid(HDR(ipv4), pd))) {
-    set_fld(pd, FLD(ipv4,ttl), value8b_0002);
-    } else {
-    debug("   " T4LIT(!!,warning) " Ignoring assignment to field in invalid header: " T4LIT(%s,warning) "." T4LIT(%s,field) "\n", hdr_infos[HDR(ipv4)].name, field_names[FLD(ipv4,ttl)]);
-}
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
     }
 #endif // T4P4S_MULTI_IDX == 0
 
 #if T4P4S_MULTI_IDX == 1
-    // action name: .forward; .forward
-    void action_code_forward(action_forward_params_t parameters, SHORT_STDPARAMS) {
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_3(action_drop_3_params_t parameters, SHORT_STDPARAMS) {
         control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
-set_fld_buf(pd, FLD(ethernet,dstAddr), parameters.dmac_val);
-set_fld(pd, FLD(all_metadatas,egress_port), parameters.port);
-set_fld_buf(pd, FLD(ethernet,srcAddr), parameters.smac_val);
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_4(action_drop_4_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_5(action_drop_5_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_6(action_drop_6_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_7(action_drop_7_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_8(action_drop_8_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: ingress.drop; ingress.drop
+    void action_code_drop_9(action_drop_9_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act)
+    void action_code_act(action_act_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp = true;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_0)
+    void action_code_act_0(action_act_0_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp = false;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall212)
+    void action_code_firewall212(action_firewall212_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_0 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_1)
+    void action_code_act_1(action_act_1_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_1 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_2)
+    void action_code_act_2(action_act_2_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_1 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall212_0)
+    void action_code_firewall212_0(action_firewall212_0_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_0 = local_vars->tmp_1;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall212_1)
+    void action_code_firewall212_1(action_firewall212_1_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_2 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_3)
+    void action_code_act_3(action_act_3_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_3 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_4)
+    void action_code_act_4(action_act_4_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_3 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall212_2)
+    void action_code_firewall212_2(action_firewall212_2_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_2 = local_vars->tmp_3;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall213)
+    void action_code_firewall213(action_firewall213_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+
+ uint8_t const8__01 = 1;
+ uint8_t const8__01_3 = 1;
+uint8_t assignment_0002 = (uint8_t)((const8__01_3)); // dbg False False True Constant->PathExpression
+memcpy(&(local_vars->dropped_0), &assignment_0002 /* dbg False False True Constant->PathExpression */, 1);
+dbg_bytes(&(local_vars->dropped_0), 1, "    : Set " T4LIT(dropped_0,field) "/" T4LIT(1B) " = " T4LIT(1) " = ");
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_5)
+    void action_code_act_5(action_act_5_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_4 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_6)
+    void action_code_act_6(action_act_6_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_4 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall215)
+    void action_code_firewall215(action_firewall215_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_5 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_7)
+    void action_code_act_7(action_act_7_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_6 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_8)
+    void action_code_act_8(action_act_8_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_6 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall215_0)
+    void action_code_firewall215_0(action_firewall215_0_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_5 = local_vars->tmp_6;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall215_1)
+    void action_code_firewall215_1(action_firewall215_1_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_7 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_9)
+    void action_code_act_9(action_act_9_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_8 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_10)
+    void action_code_act_10(action_act_10_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_8 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall215_2)
+    void action_code_firewall215_2(action_firewall215_2_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_7 = local_vars->tmp_8;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall216)
+    void action_code_firewall216(action_firewall216_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+
+ uint8_t const8__01_4 = 1;
+ uint8_t const8__01_6 = 1;
+uint8_t assignment_0005 = (uint8_t)((const8__01_6)); // dbg False False True Constant->PathExpression
+memcpy(&(local_vars->dropped_0), &assignment_0005 /* dbg False False True Constant->PathExpression */, 1);
+dbg_bytes(&(local_vars->dropped_0), 1, "    : Set " T4LIT(dropped_0,field) "/" T4LIT(1B) " = " T4LIT(1) " = ");
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_11)
+    void action_code_act_11(action_act_11_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_9 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_12)
+    void action_code_act_12(action_act_12_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_9 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall218)
+    void action_code_firewall218(action_firewall218_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_10 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_13)
+    void action_code_act_13(action_act_13_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_11 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_14)
+    void action_code_act_14(action_act_14_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_11 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall218_0)
+    void action_code_firewall218_0(action_firewall218_0_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_10 = local_vars->tmp_11;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall219)
+    void action_code_firewall219(action_firewall219_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+
+ uint8_t const8__01_7 = 1;
+ uint8_t const8__01_9 = 1;
+uint8_t assignment_0008 = (uint8_t)((const8__01_9)); // dbg False False True Constant->PathExpression
+memcpy(&(local_vars->dropped_0), &assignment_0008 /* dbg False False True Constant->PathExpression */, 1);
+dbg_bytes(&(local_vars->dropped_0), 1, "    : Set " T4LIT(dropped_0,field) "/" T4LIT(1B) " = " T4LIT(1) " = ");
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_15)
+    void action_code_act_15(action_act_15_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_12 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_16)
+    void action_code_act_16(action_act_16_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_12 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (act_17)
+    void action_code_act_17(action_act_17_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_14 = true;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (act_18)
+    void action_code_act_18(action_act_18_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_14 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall222)
+    void action_code_firewall222(action_firewall222_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_13 = local_vars->tmp_14;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall222_0)
+    void action_code_firewall222_0(action_firewall222_0_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+local_vars->tmp_13 = false;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall223)
+    void action_code_firewall223(action_firewall223_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+
+ uint8_t const8__01_10 = 1;
+ uint8_t const8__01_12 = 1;
+uint8_t assignment_0011 = (uint8_t)((const8__01_12)); // dbg False False True Constant->PathExpression
+memcpy(&(local_vars->dropped_0), &assignment_0011 /* dbg False False True Constant->PathExpression */, 1);
+dbg_bytes(&(local_vars->dropped_0), 1, "    : Set " T4LIT(dropped_0,field) "/" T4LIT(1B) " = " T4LIT(1) " = ");
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: (firewall229)
+    void action_code_firewall229(action_firewall229_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+
+ check_hdr_valid(pd, FLD(all_metadatas,egress_port), "0x14f /* pseudorandom 9 bit value */");
+ check_hdr_valid(pd, FLD(all_metadatas,egress_port), "0x14f /* pseudorandom 9 bit value */");
+ uint16_t bitmask_9b_0013 = 0x1ff;
+ uint16_t casting_0015 = (uint16_t)((((uint16_t)GET32_def(src_pkt(pd), FLD(all_metadatas,egress_port), 0x14f /* pseudorandom 9 bit value */)) + 1));
+ uint16_t masking_0014 = (uint16_t)(casting_0015);
+set_fld(pd, FLD(all_metadatas,egress_port), (((bitmask_9b_0013 & masking_0014)) & (1)));
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: (firewall210)
+    void action_code_firewall210(action_firewall210_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+
+ uint8_t const8__00 = 0;
+ uint8_t const8__00_18 = 0;
+uint8_t assignment_0017 = (uint8_t)((const8__00_18)); // dbg False False True Constant->PathExpression
+memcpy(&(local_vars->dropped_0), &assignment_0017 /* dbg False False True Constant->PathExpression */, 1);
+dbg_bytes(&(local_vars->dropped_0), 1, "    : Set " T4LIT(dropped_0,field) "/" T4LIT(1B) " = " T4LIT(0) " = ");
     }
 #endif // T4P4S_MULTI_IDX == 1
 

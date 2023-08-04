@@ -30,6 +30,14 @@ class P4Aggregator:
             header.is_local = False
         self.mergeHeaderInstances(combiner.resultingHeaders)
 
+
+        for control1 in self.p4program1.controls:
+            for control2 in self.p4program2.controls:
+                if control1.name == control2.name:
+                    resultingControl = self.mergeControl(control1,control2)
+        
+            
+
         printHLIR(self.resultingProgram)
         #self.resultingProgram.header_instances.vec = combiner.resultingHeaders
         
@@ -68,4 +76,6 @@ class P4Aggregator:
                     found = True
         self.resultingProgram.header_instances.vec = newInstances
 
+    def mergeControl():
+        print('mergingControl')
         

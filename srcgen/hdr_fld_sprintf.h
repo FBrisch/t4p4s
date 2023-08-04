@@ -8,8 +8,11 @@
 const char* sprintf_hdr(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr);
 
 const char* sprintf_hdr_ethernet(char* out, packet_descriptor_t* pd);
-const char* sprintf_hdr_ipv4(char* out, packet_descriptor_t* pd);
 const char* sprintf_hdr_arp(char* out, packet_descriptor_t* pd);
+const char* sprintf_hdr_ipv4(char* out, packet_descriptor_t* pd);
+const char* sprintf_hdr_icmp(char* out, packet_descriptor_t* pd);
+const char* sprintf_hdr_tcp(char* out, packet_descriptor_t* pd);
+const char* sprintf_hdr_udp(char* out, packet_descriptor_t* pd);
 
 int get_fld_vw_size(field_instance_e fld, packet_descriptor_t* pd);
 

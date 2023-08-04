@@ -10,9 +10,30 @@ void update_hdr_ethernet(STDPARAMS) {
     }
 }
 
+void update_hdr_arp(STDPARAMS) {
+    if (pd->fields.FLD_ATTR(arp,htype) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(arp,htype), src_32(pd->fields.FLD(arp,htype)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(arp,ptype) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(arp,ptype), src_32(pd->fields.FLD(arp,ptype)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(arp,hlen) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(arp,hlen), src_32(pd->fields.FLD(arp,hlen)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(arp,plen) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(arp,plen), src_32(pd->fields.FLD(arp,plen)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(arp,oper) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(arp,oper), src_32(pd->fields.FLD(arp,oper)), ENDIAN_NET);
+    }
+}
+
 void update_hdr_ipv4(STDPARAMS) {
-    if (pd->fields.FLD_ATTR(ipv4,versionIhl) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(ipv4,versionIhl), src_32(pd->fields.FLD(ipv4,versionIhl)), ENDIAN_NET);
+    if (pd->fields.FLD_ATTR(ipv4,version) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(ipv4,version), src_32(pd->fields.FLD(ipv4,version)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(ipv4,ihl) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(ipv4,ihl), src_32(pd->fields.FLD(ipv4,ihl)), ENDIAN_NET);
     }
     if (pd->fields.FLD_ATTR(ipv4,diffserv) == MODIFIED) {
         MODIFY(dst_pkt(pd), FLD(ipv4,diffserv), src_32(pd->fields.FLD(ipv4,diffserv)), ENDIAN_NET);
@@ -22,6 +43,9 @@ void update_hdr_ipv4(STDPARAMS) {
     }
     if (pd->fields.FLD_ATTR(ipv4,identification) == MODIFIED) {
         MODIFY(dst_pkt(pd), FLD(ipv4,identification), src_32(pd->fields.FLD(ipv4,identification)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(ipv4,flags) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(ipv4,flags), src_32(pd->fields.FLD(ipv4,flags)), ENDIAN_NET);
     }
     if (pd->fields.FLD_ATTR(ipv4,fragOffset) == MODIFIED) {
         MODIFY(dst_pkt(pd), FLD(ipv4,fragOffset), src_32(pd->fields.FLD(ipv4,fragOffset)), ENDIAN_NET);
@@ -43,33 +67,99 @@ void update_hdr_ipv4(STDPARAMS) {
     }
 }
 
-void update_hdr_arp(STDPARAMS) {
-    if (pd->fields.FLD_ATTR(arp,hardware_type) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(arp,hardware_type), src_32(pd->fields.FLD(arp,hardware_type)), ENDIAN_NET);
+void update_hdr_icmp(STDPARAMS) {
+    if (pd->fields.FLD_ATTR(icmp,type) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(icmp,type), src_32(pd->fields.FLD(icmp,type)), ENDIAN_NET);
     }
-    if (pd->fields.FLD_ATTR(arp,protocol_type) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(arp,protocol_type), src_32(pd->fields.FLD(arp,protocol_type)), ENDIAN_NET);
+    if (pd->fields.FLD_ATTR(icmp,code) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(icmp,code), src_32(pd->fields.FLD(icmp,code)), ENDIAN_NET);
     }
-    if (pd->fields.FLD_ATTR(arp,HLEN) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(arp,HLEN), src_32(pd->fields.FLD(arp,HLEN)), ENDIAN_NET);
+    if (pd->fields.FLD_ATTR(icmp,checksum) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(icmp,checksum), src_32(pd->fields.FLD(icmp,checksum)), ENDIAN_NET);
     }
-    if (pd->fields.FLD_ATTR(arp,PLEN) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(arp,PLEN), src_32(pd->fields.FLD(arp,PLEN)), ENDIAN_NET);
+    if (pd->fields.FLD_ATTR(icmp,identifier) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(icmp,identifier), src_32(pd->fields.FLD(icmp,identifier)), ENDIAN_NET);
     }
-    if (pd->fields.FLD_ATTR(arp,OPER) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(arp,OPER), src_32(pd->fields.FLD(arp,OPER)), ENDIAN_NET);
+    if (pd->fields.FLD_ATTR(icmp,sequence_number) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(icmp,sequence_number), src_32(pd->fields.FLD(icmp,sequence_number)), ENDIAN_NET);
     }
-    if (pd->fields.FLD_ATTR(arp,sender_ip) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(arp,sender_ip), src_32(pd->fields.FLD(arp,sender_ip)), ENDIAN_NET);
+}
+
+void update_hdr_tcp(STDPARAMS) {
+    if (pd->fields.FLD_ATTR(tcp,_srcPort0) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_srcPort0), src_32(pd->fields.FLD(tcp,_srcPort0)), ENDIAN_NET);
     }
-    if (pd->fields.FLD_ATTR(arp,target_ip) == MODIFIED) {
-        MODIFY(dst_pkt(pd), FLD(arp,target_ip), src_32(pd->fields.FLD(arp,target_ip)), ENDIAN_NET);
+    if (pd->fields.FLD_ATTR(tcp,_dstPort1) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_dstPort1), src_32(pd->fields.FLD(tcp,_dstPort1)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_seqNo2) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_seqNo2), src_32(pd->fields.FLD(tcp,_seqNo2)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_ackNo3) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_ackNo3), src_32(pd->fields.FLD(tcp,_ackNo3)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_dataOffset4) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_dataOffset4), src_32(pd->fields.FLD(tcp,_dataOffset4)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_res5) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_res5), src_32(pd->fields.FLD(tcp,_res5)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_cwr6) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_cwr6), src_32(pd->fields.FLD(tcp,_flags_cwr6)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_ece7) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_ece7), src_32(pd->fields.FLD(tcp,_flags_ece7)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_urg8) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_urg8), src_32(pd->fields.FLD(tcp,_flags_urg8)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_ack9) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_ack9), src_32(pd->fields.FLD(tcp,_flags_ack9)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_psh10) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_psh10), src_32(pd->fields.FLD(tcp,_flags_psh10)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_rst11) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_rst11), src_32(pd->fields.FLD(tcp,_flags_rst11)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_syn12) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_syn12), src_32(pd->fields.FLD(tcp,_flags_syn12)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_flags_fin13) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_flags_fin13), src_32(pd->fields.FLD(tcp,_flags_fin13)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_window14) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_window14), src_32(pd->fields.FLD(tcp,_window14)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_checksum15) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_checksum15), src_32(pd->fields.FLD(tcp,_checksum15)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(tcp,_urgentPtr16) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(tcp,_urgentPtr16), src_32(pd->fields.FLD(tcp,_urgentPtr16)), ENDIAN_NET);
+    }
+}
+
+void update_hdr_udp(STDPARAMS) {
+    if (pd->fields.FLD_ATTR(udp,srcPort) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(udp,srcPort), src_32(pd->fields.FLD(udp,srcPort)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(udp,dstPort) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(udp,dstPort), src_32(pd->fields.FLD(udp,dstPort)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(udp,plength) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(udp,plength), src_32(pd->fields.FLD(udp,plength)), ENDIAN_NET);
+    }
+    if (pd->fields.FLD_ATTR(udp,checksum) == MODIFIED) {
+        MODIFY(dst_pkt(pd), FLD(udp,checksum), src_32(pd->fields.FLD(udp,checksum)), ENDIAN_NET);
     }
 }
 
 void update_packet(STDPARAMS) {
     update_hdr_ethernet(STDPARAMS_IN);
-    update_hdr_ipv4(STDPARAMS_IN);
     update_hdr_arp(STDPARAMS_IN);
+    update_hdr_ipv4(STDPARAMS_IN);
+    update_hdr_icmp(STDPARAMS_IN);
+    update_hdr_tcp(STDPARAMS_IN);
+    update_hdr_udp(STDPARAMS_IN);
 }
 

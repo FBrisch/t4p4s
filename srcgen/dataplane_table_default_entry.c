@@ -4,11 +4,195 @@
 #include "gen_include.h"
 #include "dataplane_impl.h"
 
-ENTRY(ipv4_lpm_0)* ipv4_lpm_0_get_default_entry(STDPARAMS) {
-    return (ENTRY(ipv4_lpm_0)*)tables[TABLE_ipv4_lpm_0][0].default_val;
+ENTRY(eth_dstMac_filter_0)* eth_dstMac_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(eth_dstMac_filter_0)*)tables[TABLE_eth_dstMac_filter_0][0].default_val;
 }
 
-ENTRY(nexthops_0)* nexthops_0_get_default_entry(STDPARAMS) {
-    return (ENTRY(nexthops_0)*)tables[TABLE_nexthops_0][0].default_val;
+ENTRY(eth_srcMac_filter_0)* eth_srcMac_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(eth_srcMac_filter_0)*)tables[TABLE_eth_srcMac_filter_0][0].default_val;
+}
+
+ENTRY(eth_proto_filter_0)* eth_proto_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(eth_proto_filter_0)*)tables[TABLE_eth_proto_filter_0][0].default_val;
+}
+
+ENTRY(ip_proto_filter_0)* ip_proto_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(ip_proto_filter_0)*)tables[TABLE_ip_proto_filter_0][0].default_val;
+}
+
+ENTRY(ip_dstIP_filter_0)* ip_dstIP_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(ip_dstIP_filter_0)*)tables[TABLE_ip_dstIP_filter_0][0].default_val;
+}
+
+ENTRY(ip_srcIP_filter_0)* ip_srcIP_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(ip_srcIP_filter_0)*)tables[TABLE_ip_srcIP_filter_0][0].default_val;
+}
+
+ENTRY(tcp_srcPort_filter_0)* tcp_srcPort_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(tcp_srcPort_filter_0)*)tables[TABLE_tcp_srcPort_filter_0][0].default_val;
+}
+
+ENTRY(tcp_dstPort_filter_0)* tcp_dstPort_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(tcp_dstPort_filter_0)*)tables[TABLE_tcp_dstPort_filter_0][0].default_val;
+}
+
+ENTRY(udp_srcPort_filter_0)* udp_srcPort_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(udp_srcPort_filter_0)*)tables[TABLE_udp_srcPort_filter_0][0].default_val;
+}
+
+ENTRY(udp_dstPort_filter_0)* udp_dstPort_filter_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(udp_dstPort_filter_0)*)tables[TABLE_udp_dstPort_filter_0][0].default_val;
+}
+
+ENTRY(tbl_firewall210)* tbl_firewall210_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall210)*)tables[TABLE_tbl_firewall210][0].default_val;
+}
+
+ENTRY(tbl_act)* tbl_act_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act)*)tables[TABLE_tbl_act][0].default_val;
+}
+
+ENTRY(tbl_act_0)* tbl_act_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_0)*)tables[TABLE_tbl_act_0][0].default_val;
+}
+
+ENTRY(tbl_firewall212)* tbl_firewall212_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall212)*)tables[TABLE_tbl_firewall212][0].default_val;
+}
+
+ENTRY(tbl_act_1)* tbl_act_1_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_1)*)tables[TABLE_tbl_act_1][0].default_val;
+}
+
+ENTRY(tbl_act_2)* tbl_act_2_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_2)*)tables[TABLE_tbl_act_2][0].default_val;
+}
+
+ENTRY(tbl_firewall212_0)* tbl_firewall212_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall212_0)*)tables[TABLE_tbl_firewall212_0][0].default_val;
+}
+
+ENTRY(tbl_firewall212_1)* tbl_firewall212_1_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall212_1)*)tables[TABLE_tbl_firewall212_1][0].default_val;
+}
+
+ENTRY(tbl_act_3)* tbl_act_3_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_3)*)tables[TABLE_tbl_act_3][0].default_val;
+}
+
+ENTRY(tbl_act_4)* tbl_act_4_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_4)*)tables[TABLE_tbl_act_4][0].default_val;
+}
+
+ENTRY(tbl_firewall212_2)* tbl_firewall212_2_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall212_2)*)tables[TABLE_tbl_firewall212_2][0].default_val;
+}
+
+ENTRY(tbl_firewall213)* tbl_firewall213_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall213)*)tables[TABLE_tbl_firewall213][0].default_val;
+}
+
+ENTRY(tbl_act_5)* tbl_act_5_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_5)*)tables[TABLE_tbl_act_5][0].default_val;
+}
+
+ENTRY(tbl_act_6)* tbl_act_6_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_6)*)tables[TABLE_tbl_act_6][0].default_val;
+}
+
+ENTRY(tbl_firewall215)* tbl_firewall215_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall215)*)tables[TABLE_tbl_firewall215][0].default_val;
+}
+
+ENTRY(tbl_act_7)* tbl_act_7_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_7)*)tables[TABLE_tbl_act_7][0].default_val;
+}
+
+ENTRY(tbl_act_8)* tbl_act_8_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_8)*)tables[TABLE_tbl_act_8][0].default_val;
+}
+
+ENTRY(tbl_firewall215_0)* tbl_firewall215_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall215_0)*)tables[TABLE_tbl_firewall215_0][0].default_val;
+}
+
+ENTRY(tbl_firewall215_1)* tbl_firewall215_1_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall215_1)*)tables[TABLE_tbl_firewall215_1][0].default_val;
+}
+
+ENTRY(tbl_act_9)* tbl_act_9_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_9)*)tables[TABLE_tbl_act_9][0].default_val;
+}
+
+ENTRY(tbl_act_10)* tbl_act_10_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_10)*)tables[TABLE_tbl_act_10][0].default_val;
+}
+
+ENTRY(tbl_firewall215_2)* tbl_firewall215_2_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall215_2)*)tables[TABLE_tbl_firewall215_2][0].default_val;
+}
+
+ENTRY(tbl_firewall216)* tbl_firewall216_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall216)*)tables[TABLE_tbl_firewall216][0].default_val;
+}
+
+ENTRY(tbl_act_11)* tbl_act_11_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_11)*)tables[TABLE_tbl_act_11][0].default_val;
+}
+
+ENTRY(tbl_act_12)* tbl_act_12_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_12)*)tables[TABLE_tbl_act_12][0].default_val;
+}
+
+ENTRY(tbl_firewall218)* tbl_firewall218_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall218)*)tables[TABLE_tbl_firewall218][0].default_val;
+}
+
+ENTRY(tbl_act_13)* tbl_act_13_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_13)*)tables[TABLE_tbl_act_13][0].default_val;
+}
+
+ENTRY(tbl_act_14)* tbl_act_14_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_14)*)tables[TABLE_tbl_act_14][0].default_val;
+}
+
+ENTRY(tbl_firewall218_0)* tbl_firewall218_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall218_0)*)tables[TABLE_tbl_firewall218_0][0].default_val;
+}
+
+ENTRY(tbl_firewall219)* tbl_firewall219_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall219)*)tables[TABLE_tbl_firewall219][0].default_val;
+}
+
+ENTRY(tbl_act_15)* tbl_act_15_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_15)*)tables[TABLE_tbl_act_15][0].default_val;
+}
+
+ENTRY(tbl_act_16)* tbl_act_16_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_16)*)tables[TABLE_tbl_act_16][0].default_val;
+}
+
+ENTRY(tbl_act_17)* tbl_act_17_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_17)*)tables[TABLE_tbl_act_17][0].default_val;
+}
+
+ENTRY(tbl_act_18)* tbl_act_18_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_act_18)*)tables[TABLE_tbl_act_18][0].default_val;
+}
+
+ENTRY(tbl_firewall222)* tbl_firewall222_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall222)*)tables[TABLE_tbl_firewall222][0].default_val;
+}
+
+ENTRY(tbl_firewall222_0)* tbl_firewall222_0_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall222_0)*)tables[TABLE_tbl_firewall222_0][0].default_val;
+}
+
+ENTRY(tbl_firewall223)* tbl_firewall223_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall223)*)tables[TABLE_tbl_firewall223][0].default_val;
+}
+
+ENTRY(tbl_firewall229)* tbl_firewall229_get_default_entry(STDPARAMS) {
+    return (ENTRY(tbl_firewall229)*)tables[TABLE_tbl_firewall229][0].default_val;
 }
 

@@ -1,5 +1,9 @@
 accepted: 
-    ethernet.etherType/16=0800
-    ethernet.etherType/16≠0800
-    ethernet.etherType/16=0806
+    ethernet.etherType/16=0806 arp.oper/16=1
+    ethernet.etherType/16=0806 arp.oper/16≠1
+    ethernet.etherType/16=0800 ipv4.protocol/8=1
+    ethernet.etherType/16=0800 ipv4.protocol/8=6
+    ethernet.etherType/16=0800 ipv4.protocol/8=11
+    ethernet.etherType/16=0800 ipv4.protocol/8≠1 ipv4.protocol/8≠6 ipv4.protocol/8≠11
+    ethernet.etherType/16≠0806 ethernet.etherType/16≠0800
 

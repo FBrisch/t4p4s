@@ -6,82 +6,242 @@
 #ifdef T4P4S_DEBUG
     
     void show_params_by_action_id(char* out, int table_id, int action_id, const void* entry) {
-        if (table_id == TABLE_ipv4_lpm_0) {
-            if (action_id == action_set_nhop) {
-                ipv4_lpm_0_show_params_set_nhop(out, (action_set_nhop_params_t*)entry);
-                return;
-            }
-            if (action_id == action__drop) {
-                ipv4_lpm_0_show_params__drop(out, (action__drop_params_t*)entry);
+        if (table_id == TABLE_eth_dstMac_filter_0) {
+            if (action_id == action_drop) {
+                eth_dstMac_filter_0_show_params_drop(out, (action_drop_params_t*)entry);
                 return;
             }
             if (action_id == action_NoAction_1) {
-                ipv4_lpm_0_show_params_NoAction_1(out, (action_NoAction_1_params_t*)entry);
+                eth_dstMac_filter_0_show_params_NoAction_1(out, (action_NoAction_1_params_t*)entry);
                 return;
             }
         }
-        if (table_id == TABLE_nexthops_0) {
-            if (action_id == action_forward) {
-                nexthops_0_show_params_forward(out, (action_forward_params_t*)entry);
-                return;
-            }
-            if (action_id == action__drop_1) {
-                nexthops_0_show_params__drop_1(out, (action__drop_1_params_t*)entry);
+        if (table_id == TABLE_eth_srcMac_filter_0) {
+            if (action_id == action_drop_1) {
+                eth_srcMac_filter_0_show_params_drop_1(out, (action_drop_1_params_t*)entry);
                 return;
             }
             if (action_id == action_NoAction_2) {
-                nexthops_0_show_params_NoAction_2(out, (action_NoAction_2_params_t*)entry);
+                eth_srcMac_filter_0_show_params_NoAction_2(out, (action_NoAction_2_params_t*)entry);
                 return;
             }
         }
+        if (table_id == TABLE_eth_proto_filter_0) {
+            if (action_id == action_drop_2) {
+                eth_proto_filter_0_show_params_drop_2(out, (action_drop_2_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_3) {
+                eth_proto_filter_0_show_params_NoAction_3(out, (action_NoAction_3_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_ip_proto_filter_0) {
+            if (action_id == action_drop_3) {
+                ip_proto_filter_0_show_params_drop_3(out, (action_drop_3_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_4) {
+                ip_proto_filter_0_show_params_NoAction_4(out, (action_NoAction_4_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_ip_dstIP_filter_0) {
+            if (action_id == action_drop_4) {
+                ip_dstIP_filter_0_show_params_drop_4(out, (action_drop_4_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_5) {
+                ip_dstIP_filter_0_show_params_NoAction_5(out, (action_NoAction_5_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_ip_srcIP_filter_0) {
+            if (action_id == action_drop_5) {
+                ip_srcIP_filter_0_show_params_drop_5(out, (action_drop_5_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_6) {
+                ip_srcIP_filter_0_show_params_NoAction_6(out, (action_NoAction_6_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_tcp_srcPort_filter_0) {
+            if (action_id == action_drop_6) {
+                tcp_srcPort_filter_0_show_params_drop_6(out, (action_drop_6_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_7) {
+                tcp_srcPort_filter_0_show_params_NoAction_7(out, (action_NoAction_7_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_tcp_dstPort_filter_0) {
+            if (action_id == action_drop_7) {
+                tcp_dstPort_filter_0_show_params_drop_7(out, (action_drop_7_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_8) {
+                tcp_dstPort_filter_0_show_params_NoAction_8(out, (action_NoAction_8_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_udp_srcPort_filter_0) {
+            if (action_id == action_drop_8) {
+                udp_srcPort_filter_0_show_params_drop_8(out, (action_drop_8_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_9) {
+                udp_srcPort_filter_0_show_params_NoAction_9(out, (action_NoAction_9_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_udp_dstPort_filter_0) {
+            if (action_id == action_drop_9) {
+                udp_dstPort_filter_0_show_params_drop_9(out, (action_drop_9_params_t*)entry);
+                return;
+            }
+            if (action_id == action_NoAction_10) {
+                udp_dstPort_filter_0_show_params_NoAction_10(out, (action_NoAction_10_params_t*)entry);
+                return;
+            }
+        }
+        if (table_id == TABLE_tbl_firewall210) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_0) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall212) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_1) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_2) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall212_0) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall212_1) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_3) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_4) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall212_2) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall213) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_5) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_6) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall215) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_7) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_8) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall215_0) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall215_1) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_9) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_10) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall215_2) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall216) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_11) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_12) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall218) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_13) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_14) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall218_0) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall219) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_15) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_16) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_17) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_act_18) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall222) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall222_0) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall223) { sprintf(out, "%s", ""); return; }
+        if (table_id == TABLE_tbl_firewall229) { sprintf(out, "%s", ""); return; }
     }
     
-    void ipv4_lpm_0_show_params_set_nhop(char* out, const action_set_nhop_params_t* actpar) {
-        sprintf(out, "(%s" T4LIT(nhgroup_1,field) "/" T4LIT(32b) "=" T4LIT(%d) "=" T4LIT(%08x,bytes) ")%s",
-        4 > 1 ? "§" : "", // maybe cpu->BE conversion
-        (actpar->nhgroup_1), // decimal
-        (actpar->nhgroup_1), // hex
-        "");
-    }
-    
-    void ipv4_lpm_0_show_params__drop(char* out, const action__drop_params_t* actpar) {
+    void eth_dstMac_filter_0_show_params_drop(char* out, const action_drop_params_t* actpar) {
         sprintf(out, "%s",
         "");
     }
     
-    void ipv4_lpm_0_show_params_NoAction_1(char* out, const action_NoAction_1_params_t* actpar) {
+    void eth_dstMac_filter_0_show_params_NoAction_1(char* out, const action_NoAction_1_params_t* actpar) {
         sprintf(out, "%s",
         "");
     }
     
-    void nexthops_0_show_params_forward(char* out, const action_forward_params_t* actpar) {
-        sprintf(out, "(%s" T4LIT(dmac_val,field) "/" T4LIT(48b) "=(" T4LIT(%02x%02x %02x%02x %02x%02x,bytes) "), %s" T4LIT(smac_val,field) "/" T4LIT(48b) "=(" T4LIT(%02x%02x %02x%02x %02x%02x,bytes) "), %s" T4LIT(port,field) "/" T4LIT(9b) "=" T4LIT(%d) "=" T4LIT(%03x,bytes) ")%s",
-        "", // no cpu->BE conversion
-        (actpar->dmac_val)[0],
-        (actpar->dmac_val)[1],
-        (actpar->dmac_val)[2],
-        (actpar->dmac_val)[3],
-        (actpar->dmac_val)[4],
-        (actpar->dmac_val)[5],
-        "", // no cpu->BE conversion
-        (actpar->smac_val)[0],
-        (actpar->smac_val)[1],
-        (actpar->smac_val)[2],
-        (actpar->smac_val)[3],
-        (actpar->smac_val)[4],
-        (actpar->smac_val)[5],
-        2 > 1 ? "§" : "", // maybe cpu->BE conversion
-        (actpar->port), // decimal
-        (actpar->port), // hex
-        "");
-    }
-    
-    void nexthops_0_show_params__drop_1(char* out, const action__drop_1_params_t* actpar) {
+    void eth_srcMac_filter_0_show_params_drop_1(char* out, const action_drop_1_params_t* actpar) {
         sprintf(out, "%s",
         "");
     }
     
-    void nexthops_0_show_params_NoAction_2(char* out, const action_NoAction_2_params_t* actpar) {
+    void eth_srcMac_filter_0_show_params_NoAction_2(char* out, const action_NoAction_2_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void eth_proto_filter_0_show_params_drop_2(char* out, const action_drop_2_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void eth_proto_filter_0_show_params_NoAction_3(char* out, const action_NoAction_3_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void ip_proto_filter_0_show_params_drop_3(char* out, const action_drop_3_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void ip_proto_filter_0_show_params_NoAction_4(char* out, const action_NoAction_4_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void ip_dstIP_filter_0_show_params_drop_4(char* out, const action_drop_4_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void ip_dstIP_filter_0_show_params_NoAction_5(char* out, const action_NoAction_5_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void ip_srcIP_filter_0_show_params_drop_5(char* out, const action_drop_5_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void ip_srcIP_filter_0_show_params_NoAction_6(char* out, const action_NoAction_6_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void tcp_srcPort_filter_0_show_params_drop_6(char* out, const action_drop_6_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void tcp_srcPort_filter_0_show_params_NoAction_7(char* out, const action_NoAction_7_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void tcp_dstPort_filter_0_show_params_drop_7(char* out, const action_drop_7_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void tcp_dstPort_filter_0_show_params_NoAction_8(char* out, const action_NoAction_8_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void udp_srcPort_filter_0_show_params_drop_8(char* out, const action_drop_8_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void udp_srcPort_filter_0_show_params_NoAction_9(char* out, const action_NoAction_9_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void udp_dstPort_filter_0_show_params_drop_9(char* out, const action_drop_9_params_t* actpar) {
+        sprintf(out, "%s",
+        "");
+    }
+    
+    void udp_dstPort_filter_0_show_params_NoAction_10(char* out, const action_NoAction_10_params_t* actpar) {
         sprintf(out, "%s",
         "");
     }
@@ -102,49 +262,317 @@
         );
     }
     
-    void ipv4_lpm_0_apply_show_hit_with_key(bool hit, const ENTRY(ipv4_lpm_0)* entry  KEYTXTPARAM, STDPARAMS) {
+    void eth_dstMac_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(eth_dstMac_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
         char params_txt[1024];
-        if (!strcmp("set_nhop", action_names[entry->id])) {
-            ipv4_lpm_0_show_params_set_nhop(params_txt, &(entry->params.set_nhop_params));
-            apply_show_hit_with_key_msg(hit, table_config[TABLE_ipv4_lpm_0].entry.key_size,
-            4, "lpm", action_short_names[entry->id], params_txt, "ipv4_lpm"
-            KEYTXTPARAM_IN, STDPARAMS_IN);
-        }
-        if (!strcmp("_drop", action_names[entry->id])) {
-            ipv4_lpm_0_show_params__drop(params_txt, &(entry->params._drop_params));
-            apply_show_hit_with_key_msg(hit, table_config[TABLE_ipv4_lpm_0].entry.key_size,
-            4, "lpm", action_short_names[entry->id], params_txt, "ipv4_lpm"
+        if (!strcmp("drop", action_names[entry->id])) {
+            eth_dstMac_filter_0_show_params_drop(params_txt, &(entry->params.drop_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_eth_dstMac_filter_0].entry.key_size,
+            6, "exact", action_short_names[entry->id], params_txt, "eth_dstMac_filter"
             KEYTXTPARAM_IN, STDPARAMS_IN);
         }
         if (!strcmp("NoAction_1", action_names[entry->id])) {
-            ipv4_lpm_0_show_params_NoAction_1(params_txt, &(entry->params.NoAction_1_params));
-            apply_show_hit_with_key_msg(hit, table_config[TABLE_ipv4_lpm_0].entry.key_size,
-            4, "lpm", action_short_names[entry->id], params_txt, "ipv4_lpm"
+            eth_dstMac_filter_0_show_params_NoAction_1(params_txt, &(entry->params.NoAction_1_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_eth_dstMac_filter_0].entry.key_size,
+            6, "exact", action_short_names[entry->id], params_txt, "eth_dstMac_filter"
             KEYTXTPARAM_IN, STDPARAMS_IN);
         }
     }
     
-    void nexthops_0_apply_show_hit_with_key(bool hit, const ENTRY(nexthops_0)* entry  KEYTXTPARAM, STDPARAMS) {
+    void eth_srcMac_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(eth_srcMac_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
         char params_txt[1024];
-        if (!strcmp("forward", action_names[entry->id])) {
-            nexthops_0_show_params_forward(params_txt, &(entry->params.forward_params));
-            apply_show_hit_with_key_msg(hit, table_config[TABLE_nexthops_0].entry.key_size,
-            4, "exact", action_short_names[entry->id], params_txt, "nexthops"
-            KEYTXTPARAM_IN, STDPARAMS_IN);
-        }
-        if (!strcmp("_drop_1", action_names[entry->id])) {
-            nexthops_0_show_params__drop_1(params_txt, &(entry->params._drop_1_params));
-            apply_show_hit_with_key_msg(hit, table_config[TABLE_nexthops_0].entry.key_size,
-            4, "exact", action_short_names[entry->id], params_txt, "nexthops"
+        if (!strcmp("drop_1", action_names[entry->id])) {
+            eth_srcMac_filter_0_show_params_drop_1(params_txt, &(entry->params.drop_1_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_eth_srcMac_filter_0].entry.key_size,
+            6, "exact", action_short_names[entry->id], params_txt, "eth_srcMac_filter"
             KEYTXTPARAM_IN, STDPARAMS_IN);
         }
         if (!strcmp("NoAction_2", action_names[entry->id])) {
-            nexthops_0_show_params_NoAction_2(params_txt, &(entry->params.NoAction_2_params));
-            apply_show_hit_with_key_msg(hit, table_config[TABLE_nexthops_0].entry.key_size,
-            4, "exact", action_short_names[entry->id], params_txt, "nexthops"
+            eth_srcMac_filter_0_show_params_NoAction_2(params_txt, &(entry->params.NoAction_2_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_eth_srcMac_filter_0].entry.key_size,
+            6, "exact", action_short_names[entry->id], params_txt, "eth_srcMac_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void eth_proto_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(eth_proto_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_2", action_names[entry->id])) {
+            eth_proto_filter_0_show_params_drop_2(params_txt, &(entry->params.drop_2_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_eth_proto_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "eth_proto_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_3", action_names[entry->id])) {
+            eth_proto_filter_0_show_params_NoAction_3(params_txt, &(entry->params.NoAction_3_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_eth_proto_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "eth_proto_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void ip_proto_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(ip_proto_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_3", action_names[entry->id])) {
+            ip_proto_filter_0_show_params_drop_3(params_txt, &(entry->params.drop_3_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_ip_proto_filter_0].entry.key_size,
+            1, "exact", action_short_names[entry->id], params_txt, "ip_proto_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_4", action_names[entry->id])) {
+            ip_proto_filter_0_show_params_NoAction_4(params_txt, &(entry->params.NoAction_4_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_ip_proto_filter_0].entry.key_size,
+            1, "exact", action_short_names[entry->id], params_txt, "ip_proto_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void ip_dstIP_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(ip_dstIP_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_4", action_names[entry->id])) {
+            ip_dstIP_filter_0_show_params_drop_4(params_txt, &(entry->params.drop_4_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_ip_dstIP_filter_0].entry.key_size,
+            4, "lpm", action_short_names[entry->id], params_txt, "ip_dstIP_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_5", action_names[entry->id])) {
+            ip_dstIP_filter_0_show_params_NoAction_5(params_txt, &(entry->params.NoAction_5_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_ip_dstIP_filter_0].entry.key_size,
+            4, "lpm", action_short_names[entry->id], params_txt, "ip_dstIP_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void ip_srcIP_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(ip_srcIP_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_5", action_names[entry->id])) {
+            ip_srcIP_filter_0_show_params_drop_5(params_txt, &(entry->params.drop_5_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_ip_srcIP_filter_0].entry.key_size,
+            4, "lpm", action_short_names[entry->id], params_txt, "ip_srcIP_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_6", action_names[entry->id])) {
+            ip_srcIP_filter_0_show_params_NoAction_6(params_txt, &(entry->params.NoAction_6_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_ip_srcIP_filter_0].entry.key_size,
+            4, "lpm", action_short_names[entry->id], params_txt, "ip_srcIP_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void tcp_srcPort_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(tcp_srcPort_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_6", action_names[entry->id])) {
+            tcp_srcPort_filter_0_show_params_drop_6(params_txt, &(entry->params.drop_6_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_tcp_srcPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "tcp_srcPort_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_7", action_names[entry->id])) {
+            tcp_srcPort_filter_0_show_params_NoAction_7(params_txt, &(entry->params.NoAction_7_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_tcp_srcPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "tcp_srcPort_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void tcp_dstPort_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(tcp_dstPort_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_7", action_names[entry->id])) {
+            tcp_dstPort_filter_0_show_params_drop_7(params_txt, &(entry->params.drop_7_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_tcp_dstPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "tcp_dstPort_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_8", action_names[entry->id])) {
+            tcp_dstPort_filter_0_show_params_NoAction_8(params_txt, &(entry->params.NoAction_8_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_tcp_dstPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "tcp_dstPort_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void udp_srcPort_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(udp_srcPort_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_8", action_names[entry->id])) {
+            udp_srcPort_filter_0_show_params_drop_8(params_txt, &(entry->params.drop_8_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_udp_srcPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "udp_srcPort_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_9", action_names[entry->id])) {
+            udp_srcPort_filter_0_show_params_NoAction_9(params_txt, &(entry->params.NoAction_9_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_udp_srcPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "udp_srcPort_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+    }
+    
+    void udp_dstPort_filter_0_apply_show_hit_with_key(bool hit, const ENTRY(udp_dstPort_filter_0)* entry  KEYTXTPARAM, STDPARAMS) {
+        char params_txt[1024];
+        if (!strcmp("drop_9", action_names[entry->id])) {
+            udp_dstPort_filter_0_show_params_drop_9(params_txt, &(entry->params.drop_9_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_udp_dstPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "udp_dstPort_filter"
+            KEYTXTPARAM_IN, STDPARAMS_IN);
+        }
+        if (!strcmp("NoAction_10", action_names[entry->id])) {
+            udp_dstPort_filter_0_show_params_NoAction_10(params_txt, &(entry->params.NoAction_10_params));
+            apply_show_hit_with_key_msg(hit, table_config[TABLE_udp_dstPort_filter_0].entry.key_size,
+            2, "exact", action_short_names[entry->id], params_txt, "udp_dstPort_filter"
             KEYTXTPARAM_IN, STDPARAMS_IN);
         }
     }
     
 #endif
+
+void tbl_firewall210_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_0_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall212_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_1_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_2_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall212_0_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall212_1_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_3_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_4_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall212_2_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall213_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_5_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_6_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall215_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_7_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_8_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall215_0_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall215_1_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_9_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_10_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall215_2_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall216_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_11_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_12_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall218_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_13_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_14_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall218_0_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall219_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_15_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_16_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_17_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_act_18_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall222_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall222_0_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall223_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
+
+void tbl_firewall229_apply_show_hit(int action_id, STDPARAMS) {
+    debug(" ~~~~ Action " T4LIT(%s,action) "\n", action_short_names[action_id]);
+}
 

@@ -9,10 +9,10 @@
 #include "util_debug.h"
 
 #ifdef T4P4S_DEBUG
-    const char* all_table_short_names_sorted = "" T4LIT(ipv4_lpm,table) ", " T4LIT(nexthops,table);
-    const int   all_table_short_names_count  = 2;
-    const char* table_short_names_sorted     = "" T4LIT(ipv4_lpm,table) ", " T4LIT(nexthops,table);
-    const int   table_short_names_count      = 2;
+    const char* all_table_short_names_sorted = "" T4LIT([ingress#1],table) ", " T4LIT([ingress.if#2T.if#1F],table) ", " T4LIT([ingress.if#2T.if#1T],table) ", " T4LIT([ingress.if#2T.if#2F#2],table) ", " T4LIT([ingress.if#2T.if#2F.if#1F],table) ", " T4LIT([ingress.if#2T.if#2F.if#1T],table) ", " T4LIT([ingress.if#2T.if#2T],table) ", " T4LIT([ingress.if#2T.if#3F#2],table) ", " T4LIT([ingress.if#2T.if#3F.if#1F],table) ", " T4LIT([ingress.if#2T.if#3F.if#1T],table) ", " T4LIT([ingress.if#2T.if#3T],table) ", " T4LIT([ingress.if#2T.if#4T],table) ", " T4LIT([ingress.if#2T.if#5T.if#1F],table) ", " T4LIT([ingress.if#2T.if#5T.if#1T],table) ", " T4LIT([ingress.if#2T.if#5T.if#2F#2],table) ", " T4LIT([ingress.if#2T.if#5T.if#2F.if#1F],table) ", " T4LIT([ingress.if#2T.if#5T.if#2F.if#1T],table) ", " T4LIT([ingress.if#2T.if#5T.if#2T],table) ", " T4LIT([ingress.if#2T.if#5T.if#3F#2],table) ", " T4LIT([ingress.if#2T.if#5T.if#3F.if#1F],table) ", " T4LIT([ingress.if#2T.if#5T.if#3F.if#1T],table) ", " T4LIT([ingress.if#2T.if#5T.if#3T],table) ", " T4LIT([ingress.if#2T.if#5T.if#4T],table) ", " T4LIT([ingress.if#2T.if#5T.if#5FT.if#1F],table) ", " T4LIT([ingress.if#2T.if#5T.if#5FT.if#1T],table) ", " T4LIT([ingress.if#2T.if#5T.if#5FT.if#2F],table) ", " T4LIT([ingress.if#2T.if#5T.if#5FT.if#2T#2],table) ", " T4LIT([ingress.if#2T.if#5T.if#5FT.if#2T.if#1F],table) ", " T4LIT([ingress.if#2T.if#5T.if#5FT.if#2T.if#1T],table) ", " T4LIT([ingress.if#2T.if#5T.if#5FT.if#3T],table) ", " T4LIT([ingress.if#2T.if#5T.if#5T.if#1F],table) ", " T4LIT([ingress.if#2T.if#5T.if#5T.if#1T],table) ", " T4LIT([ingress.if#2T.if#5T.if#5T.if#2F#2],table) ", " T4LIT([ingress.if#2T.if#5T.if#5T.if#2F.if#1F],table) ", " T4LIT([ingress.if#2T.if#5T.if#5T.if#2F.if#1T],table) ", " T4LIT([ingress.if#2T.if#5T.if#5T.if#2T],table) ", " T4LIT([ingress.if#2T.if#5T.if#5T.if#3T],table) ", " T4LIT([ingress.if#2T.if#6T],table) ", " T4LIT(eth_dstMac_filter,table) ", " T4LIT(eth_proto_filter,table) ", " T4LIT(eth_srcMac_filter,table) ", " T4LIT(ip_dstIP_filter,table) ", " T4LIT(ip_proto_filter,table) ", " T4LIT(ip_srcIP_filter,table) ", " T4LIT(tcp_dstPort_filter,table) ", " T4LIT(tcp_srcPort_filter,table) ", " T4LIT(udp_dstPort_filter,table) ", " T4LIT(udp_srcPort_filter,table);
+    const int   all_table_short_names_count  = 48;
+    const char* table_short_names_sorted     = "" T4LIT(eth_dstMac_filter,table) ", " T4LIT(eth_proto_filter,table) ", " T4LIT(eth_srcMac_filter,table) ", " T4LIT(ip_dstIP_filter,table) ", " T4LIT(ip_proto_filter,table) ", " T4LIT(ip_srcIP_filter,table) ", " T4LIT(tcp_dstPort_filter,table) ", " T4LIT(tcp_srcPort_filter,table) ", " T4LIT(udp_dstPort_filter,table) ", " T4LIT(udp_srcPort_filter,table);
+    const int   table_short_names_count      = 10;
 #endif
 
 #define TABLE_CONFIG_ENTRY_DEF(tname,cname,sname,mt,hidden,keysize,size) (lookup_table_t) { \
@@ -34,17 +34,247 @@
 }
 
 lookup_table_t table_config[NB_TABLES] = {
-TABLE_CONFIG_ENTRY_DEF(ipv4_lpm_0,.ipv4_lpm,ipv4_lpm,lpm,false,4,1024),
-TABLE_CONFIG_ENTRY_DEF(nexthops_0,.nexthops,nexthops,exact,false,4,512),
+TABLE_CONFIG_ENTRY_DEF(eth_dstMac_filter_0,ingress.eth_dstMac_filter,eth_dstMac_filter,exact,false,6,1024),
+TABLE_CONFIG_ENTRY_DEF(eth_srcMac_filter_0,ingress.eth_srcMac_filter,eth_srcMac_filter,exact,false,6,1024),
+TABLE_CONFIG_ENTRY_DEF(eth_proto_filter_0,ingress.eth_proto_filter,eth_proto_filter,exact,false,2,1024),
+TABLE_CONFIG_ENTRY_DEF(ip_proto_filter_0,ingress.ip_proto_filter,ip_proto_filter,exact,false,1,1024),
+TABLE_CONFIG_ENTRY_DEF(ip_dstIP_filter_0,ingress.ip_dstIP_filter,ip_dstIP_filter,lpm,false,4,1024),
+TABLE_CONFIG_ENTRY_DEF(ip_srcIP_filter_0,ingress.ip_srcIP_filter,ip_srcIP_filter,lpm,false,4,1024),
+TABLE_CONFIG_ENTRY_DEF(tcp_srcPort_filter_0,ingress.tcp_srcPort_filter,tcp_srcPort_filter,exact,false,2,1024),
+TABLE_CONFIG_ENTRY_DEF(tcp_dstPort_filter_0,ingress.tcp_dstPort_filter,tcp_dstPort_filter,exact,false,2,1024),
+TABLE_CONFIG_ENTRY_DEF(udp_srcPort_filter_0,ingress.udp_srcPort_filter,udp_srcPort_filter,exact,false,2,1024),
+TABLE_CONFIG_ENTRY_DEF(udp_dstPort_filter_0,ingress.udp_dstPort_filter,udp_dstPort_filter,exact,false,2,1024),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall210,(firewall210),[ingress#1],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act,(act),[ingress.if#2T.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_0,(act_0),[ingress.if#2T.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall212,(firewall212),[ingress.if#2T.if#2T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_1,(act_1),[ingress.if#2T.if#2F.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_2,(act_2),[ingress.if#2T.if#2F.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall212_0,(firewall212_0),[ingress.if#2T.if#2F#2],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall212_1,(firewall212_1),[ingress.if#2T.if#3T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_3,(act_3),[ingress.if#2T.if#3F.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_4,(act_4),[ingress.if#2T.if#3F.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall212_2,(firewall212_2),[ingress.if#2T.if#3F#2],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall213,(firewall213),[ingress.if#2T.if#4T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_5,(act_5),[ingress.if#2T.if#5T.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_6,(act_6),[ingress.if#2T.if#5T.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall215,(firewall215),[ingress.if#2T.if#5T.if#2T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_7,(act_7),[ingress.if#2T.if#5T.if#2F.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_8,(act_8),[ingress.if#2T.if#5T.if#2F.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall215_0,(firewall215_0),[ingress.if#2T.if#5T.if#2F#2],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall215_1,(firewall215_1),[ingress.if#2T.if#5T.if#3T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_9,(act_9),[ingress.if#2T.if#5T.if#3F.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_10,(act_10),[ingress.if#2T.if#5T.if#3F.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall215_2,(firewall215_2),[ingress.if#2T.if#5T.if#3F#2],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall216,(firewall216),[ingress.if#2T.if#5T.if#4T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_11,(act_11),[ingress.if#2T.if#5T.if#5T.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_12,(act_12),[ingress.if#2T.if#5T.if#5T.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall218,(firewall218),[ingress.if#2T.if#5T.if#5T.if#2T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_13,(act_13),[ingress.if#2T.if#5T.if#5T.if#2F.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_14,(act_14),[ingress.if#2T.if#5T.if#5T.if#2F.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall218_0,(firewall218_0),[ingress.if#2T.if#5T.if#5T.if#2F#2],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall219,(firewall219),[ingress.if#2T.if#5T.if#5T.if#3T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_15,(act_15),[ingress.if#2T.if#5T.if#5FT.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_16,(act_16),[ingress.if#2T.if#5T.if#5FT.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_17,(act_17),[ingress.if#2T.if#5T.if#5FT.if#2T.if#1T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_act_18,(act_18),[ingress.if#2T.if#5T.if#5FT.if#2T.if#1F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall222,(firewall222),[ingress.if#2T.if#5T.if#5FT.if#2T#2],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall222_0,(firewall222_0),[ingress.if#2T.if#5T.if#5FT.if#2F],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall223,(firewall223),[ingress.if#2T.if#5T.if#5FT.if#3T],exact,true,0,NO_TABLE_SIZE),
+TABLE_CONFIG_ENTRY_DEF(tbl_firewall229,(firewall229),[ingress.if#2T.if#6T],exact,true,0,NO_TABLE_SIZE),
 };
 
-void setdefault_ipv4_lpm_0(actions_e action_id, bool show_info) {
-    ENTRY(ipv4_lpm_0) default_entry = { .id = action_id };
-    table_setdefault_promote(TABLE_ipv4_lpm_0, (ENTRYBASE*)&default_entry, show_info);
+void setdefault_eth_dstMac_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(eth_dstMac_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_eth_dstMac_filter_0, (ENTRYBASE*)&default_entry, show_info);
 }
-void setdefault_nexthops_0(actions_e action_id, bool show_info) {
-    ENTRY(nexthops_0) default_entry = { .id = action_id };
-    table_setdefault_promote(TABLE_nexthops_0, (ENTRYBASE*)&default_entry, show_info);
+void setdefault_eth_srcMac_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(eth_srcMac_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_eth_srcMac_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_eth_proto_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(eth_proto_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_eth_proto_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_ip_proto_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(ip_proto_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_ip_proto_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_ip_dstIP_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(ip_dstIP_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_ip_dstIP_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_ip_srcIP_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(ip_srcIP_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_ip_srcIP_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tcp_srcPort_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(tcp_srcPort_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tcp_srcPort_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tcp_dstPort_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(tcp_dstPort_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tcp_dstPort_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_udp_srcPort_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(udp_srcPort_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_udp_srcPort_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_udp_dstPort_filter_0(actions_e action_id, bool show_info) {
+    ENTRY(udp_dstPort_filter_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_udp_dstPort_filter_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall210(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall210) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall210, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_0(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall212(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall212) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall212, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_1(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_1) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_1, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_2(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_2) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_2, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall212_0(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall212_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall212_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall212_1(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall212_1) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall212_1, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_3(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_3) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_3, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_4(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_4) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_4, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall212_2(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall212_2) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall212_2, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall213(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall213) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall213, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_5(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_5) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_5, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_6(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_6) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_6, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall215(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall215) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall215, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_7(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_7) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_7, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_8(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_8) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_8, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall215_0(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall215_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall215_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall215_1(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall215_1) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall215_1, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_9(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_9) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_9, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_10(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_10) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_10, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall215_2(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall215_2) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall215_2, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall216(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall216) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall216, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_11(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_11) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_11, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_12(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_12) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_12, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall218(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall218) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall218, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_13(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_13) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_13, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_14(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_14) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_14, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall218_0(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall218_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall218_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall219(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall219) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall219, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_15(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_15) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_15, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_16(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_16) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_16, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_17(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_17) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_17, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_act_18(actions_e action_id, bool show_info) {
+    ENTRY(tbl_act_18) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_act_18, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall222(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall222) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall222, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall222_0(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall222_0) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall222_0, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall223(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall223) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall223, (ENTRYBASE*)&default_entry, show_info);
+}
+void setdefault_tbl_firewall229(actions_e action_id, bool show_info) {
+    ENTRY(tbl_firewall229) default_entry = { .id = action_id };
+    table_setdefault_promote(TABLE_tbl_firewall229, (ENTRYBASE*)&default_entry, show_info);
 }
 #define SOCKET0 0
 
@@ -52,13 +282,197 @@ extern struct socket_state state[NB_SOCKETS];
 
 void init_table_default_actions() {
     struct socket_state socket0 = state[SOCKET0];
-    int current_replica_ipv4_lpm_0 = socket0.active_replica[TABLE_ipv4_lpm_0];
-    if (likely(socket0.tables[TABLE_ipv4_lpm_0][current_replica_ipv4_lpm_0]->default_val == NULL)) {
-        setdefault_ipv4_lpm_0(action_NoAction_1, false);
+    int current_replica_tbl_firewall210 = socket0.active_replica[TABLE_tbl_firewall210];
+    if (likely(socket0.tables[TABLE_tbl_firewall210][current_replica_tbl_firewall210]->default_val == NULL)) {
+        setdefault_tbl_firewall210(action_firewall210, false);
     }
-    int current_replica_nexthops_0 = socket0.active_replica[TABLE_nexthops_0];
-    if (likely(socket0.tables[TABLE_nexthops_0][current_replica_nexthops_0]->default_val == NULL)) {
-        setdefault_nexthops_0(action_NoAction_2, false);
+    int current_replica_tbl_act_0 = socket0.active_replica[TABLE_tbl_act_0];
+    if (likely(socket0.tables[TABLE_tbl_act_0][current_replica_tbl_act_0]->default_val == NULL)) {
+        setdefault_tbl_act_0(action_act_0, false);
+    }
+    int current_replica_tbl_act = socket0.active_replica[TABLE_tbl_act];
+    if (likely(socket0.tables[TABLE_tbl_act][current_replica_tbl_act]->default_val == NULL)) {
+        setdefault_tbl_act(action_act, false);
+    }
+    int current_replica_tbl_firewall212_0 = socket0.active_replica[TABLE_tbl_firewall212_0];
+    if (likely(socket0.tables[TABLE_tbl_firewall212_0][current_replica_tbl_firewall212_0]->default_val == NULL)) {
+        setdefault_tbl_firewall212_0(action_firewall212_0, false);
+    }
+    int current_replica_tbl_act_2 = socket0.active_replica[TABLE_tbl_act_2];
+    if (likely(socket0.tables[TABLE_tbl_act_2][current_replica_tbl_act_2]->default_val == NULL)) {
+        setdefault_tbl_act_2(action_act_2, false);
+    }
+    int current_replica_tbl_act_1 = socket0.active_replica[TABLE_tbl_act_1];
+    if (likely(socket0.tables[TABLE_tbl_act_1][current_replica_tbl_act_1]->default_val == NULL)) {
+        setdefault_tbl_act_1(action_act_1, false);
+    }
+    int current_replica_tbl_firewall212 = socket0.active_replica[TABLE_tbl_firewall212];
+    if (likely(socket0.tables[TABLE_tbl_firewall212][current_replica_tbl_firewall212]->default_val == NULL)) {
+        setdefault_tbl_firewall212(action_firewall212, false);
+    }
+    int current_replica_tbl_firewall212_2 = socket0.active_replica[TABLE_tbl_firewall212_2];
+    if (likely(socket0.tables[TABLE_tbl_firewall212_2][current_replica_tbl_firewall212_2]->default_val == NULL)) {
+        setdefault_tbl_firewall212_2(action_firewall212_2, false);
+    }
+    int current_replica_tbl_act_4 = socket0.active_replica[TABLE_tbl_act_4];
+    if (likely(socket0.tables[TABLE_tbl_act_4][current_replica_tbl_act_4]->default_val == NULL)) {
+        setdefault_tbl_act_4(action_act_4, false);
+    }
+    int current_replica_tbl_act_3 = socket0.active_replica[TABLE_tbl_act_3];
+    if (likely(socket0.tables[TABLE_tbl_act_3][current_replica_tbl_act_3]->default_val == NULL)) {
+        setdefault_tbl_act_3(action_act_3, false);
+    }
+    int current_replica_tbl_firewall212_1 = socket0.active_replica[TABLE_tbl_firewall212_1];
+    if (likely(socket0.tables[TABLE_tbl_firewall212_1][current_replica_tbl_firewall212_1]->default_val == NULL)) {
+        setdefault_tbl_firewall212_1(action_firewall212_1, false);
+    }
+    int current_replica_tbl_firewall213 = socket0.active_replica[TABLE_tbl_firewall213];
+    if (likely(socket0.tables[TABLE_tbl_firewall213][current_replica_tbl_firewall213]->default_val == NULL)) {
+        setdefault_tbl_firewall213(action_firewall213, false);
+    }
+    int current_replica_tbl_act_6 = socket0.active_replica[TABLE_tbl_act_6];
+    if (likely(socket0.tables[TABLE_tbl_act_6][current_replica_tbl_act_6]->default_val == NULL)) {
+        setdefault_tbl_act_6(action_act_6, false);
+    }
+    int current_replica_tbl_act_5 = socket0.active_replica[TABLE_tbl_act_5];
+    if (likely(socket0.tables[TABLE_tbl_act_5][current_replica_tbl_act_5]->default_val == NULL)) {
+        setdefault_tbl_act_5(action_act_5, false);
+    }
+    int current_replica_tbl_firewall215_0 = socket0.active_replica[TABLE_tbl_firewall215_0];
+    if (likely(socket0.tables[TABLE_tbl_firewall215_0][current_replica_tbl_firewall215_0]->default_val == NULL)) {
+        setdefault_tbl_firewall215_0(action_firewall215_0, false);
+    }
+    int current_replica_tbl_act_8 = socket0.active_replica[TABLE_tbl_act_8];
+    if (likely(socket0.tables[TABLE_tbl_act_8][current_replica_tbl_act_8]->default_val == NULL)) {
+        setdefault_tbl_act_8(action_act_8, false);
+    }
+    int current_replica_tbl_act_7 = socket0.active_replica[TABLE_tbl_act_7];
+    if (likely(socket0.tables[TABLE_tbl_act_7][current_replica_tbl_act_7]->default_val == NULL)) {
+        setdefault_tbl_act_7(action_act_7, false);
+    }
+    int current_replica_tbl_firewall215 = socket0.active_replica[TABLE_tbl_firewall215];
+    if (likely(socket0.tables[TABLE_tbl_firewall215][current_replica_tbl_firewall215]->default_val == NULL)) {
+        setdefault_tbl_firewall215(action_firewall215, false);
+    }
+    int current_replica_tbl_firewall215_2 = socket0.active_replica[TABLE_tbl_firewall215_2];
+    if (likely(socket0.tables[TABLE_tbl_firewall215_2][current_replica_tbl_firewall215_2]->default_val == NULL)) {
+        setdefault_tbl_firewall215_2(action_firewall215_2, false);
+    }
+    int current_replica_tbl_act_10 = socket0.active_replica[TABLE_tbl_act_10];
+    if (likely(socket0.tables[TABLE_tbl_act_10][current_replica_tbl_act_10]->default_val == NULL)) {
+        setdefault_tbl_act_10(action_act_10, false);
+    }
+    int current_replica_tbl_act_9 = socket0.active_replica[TABLE_tbl_act_9];
+    if (likely(socket0.tables[TABLE_tbl_act_9][current_replica_tbl_act_9]->default_val == NULL)) {
+        setdefault_tbl_act_9(action_act_9, false);
+    }
+    int current_replica_tbl_firewall215_1 = socket0.active_replica[TABLE_tbl_firewall215_1];
+    if (likely(socket0.tables[TABLE_tbl_firewall215_1][current_replica_tbl_firewall215_1]->default_val == NULL)) {
+        setdefault_tbl_firewall215_1(action_firewall215_1, false);
+    }
+    int current_replica_tbl_firewall216 = socket0.active_replica[TABLE_tbl_firewall216];
+    if (likely(socket0.tables[TABLE_tbl_firewall216][current_replica_tbl_firewall216]->default_val == NULL)) {
+        setdefault_tbl_firewall216(action_firewall216, false);
+    }
+    int current_replica_tbl_act_16 = socket0.active_replica[TABLE_tbl_act_16];
+    if (likely(socket0.tables[TABLE_tbl_act_16][current_replica_tbl_act_16]->default_val == NULL)) {
+        setdefault_tbl_act_16(action_act_16, false);
+    }
+    int current_replica_tbl_act_15 = socket0.active_replica[TABLE_tbl_act_15];
+    if (likely(socket0.tables[TABLE_tbl_act_15][current_replica_tbl_act_15]->default_val == NULL)) {
+        setdefault_tbl_act_15(action_act_15, false);
+    }
+    int current_replica_tbl_firewall222_0 = socket0.active_replica[TABLE_tbl_firewall222_0];
+    if (likely(socket0.tables[TABLE_tbl_firewall222_0][current_replica_tbl_firewall222_0]->default_val == NULL)) {
+        setdefault_tbl_firewall222_0(action_firewall222_0, false);
+    }
+    int current_replica_tbl_firewall222 = socket0.active_replica[TABLE_tbl_firewall222];
+    if (likely(socket0.tables[TABLE_tbl_firewall222][current_replica_tbl_firewall222]->default_val == NULL)) {
+        setdefault_tbl_firewall222(action_firewall222, false);
+    }
+    int current_replica_tbl_act_18 = socket0.active_replica[TABLE_tbl_act_18];
+    if (likely(socket0.tables[TABLE_tbl_act_18][current_replica_tbl_act_18]->default_val == NULL)) {
+        setdefault_tbl_act_18(action_act_18, false);
+    }
+    int current_replica_tbl_act_17 = socket0.active_replica[TABLE_tbl_act_17];
+    if (likely(socket0.tables[TABLE_tbl_act_17][current_replica_tbl_act_17]->default_val == NULL)) {
+        setdefault_tbl_act_17(action_act_17, false);
+    }
+    int current_replica_tbl_firewall223 = socket0.active_replica[TABLE_tbl_firewall223];
+    if (likely(socket0.tables[TABLE_tbl_firewall223][current_replica_tbl_firewall223]->default_val == NULL)) {
+        setdefault_tbl_firewall223(action_firewall223, false);
+    }
+    int current_replica_tbl_act_12 = socket0.active_replica[TABLE_tbl_act_12];
+    if (likely(socket0.tables[TABLE_tbl_act_12][current_replica_tbl_act_12]->default_val == NULL)) {
+        setdefault_tbl_act_12(action_act_12, false);
+    }
+    int current_replica_tbl_act_11 = socket0.active_replica[TABLE_tbl_act_11];
+    if (likely(socket0.tables[TABLE_tbl_act_11][current_replica_tbl_act_11]->default_val == NULL)) {
+        setdefault_tbl_act_11(action_act_11, false);
+    }
+    int current_replica_tbl_firewall218_0 = socket0.active_replica[TABLE_tbl_firewall218_0];
+    if (likely(socket0.tables[TABLE_tbl_firewall218_0][current_replica_tbl_firewall218_0]->default_val == NULL)) {
+        setdefault_tbl_firewall218_0(action_firewall218_0, false);
+    }
+    int current_replica_tbl_act_14 = socket0.active_replica[TABLE_tbl_act_14];
+    if (likely(socket0.tables[TABLE_tbl_act_14][current_replica_tbl_act_14]->default_val == NULL)) {
+        setdefault_tbl_act_14(action_act_14, false);
+    }
+    int current_replica_tbl_act_13 = socket0.active_replica[TABLE_tbl_act_13];
+    if (likely(socket0.tables[TABLE_tbl_act_13][current_replica_tbl_act_13]->default_val == NULL)) {
+        setdefault_tbl_act_13(action_act_13, false);
+    }
+    int current_replica_tbl_firewall218 = socket0.active_replica[TABLE_tbl_firewall218];
+    if (likely(socket0.tables[TABLE_tbl_firewall218][current_replica_tbl_firewall218]->default_val == NULL)) {
+        setdefault_tbl_firewall218(action_firewall218, false);
+    }
+    int current_replica_tbl_firewall219 = socket0.active_replica[TABLE_tbl_firewall219];
+    if (likely(socket0.tables[TABLE_tbl_firewall219][current_replica_tbl_firewall219]->default_val == NULL)) {
+        setdefault_tbl_firewall219(action_firewall219, false);
+    }
+    int current_replica_tbl_firewall229 = socket0.active_replica[TABLE_tbl_firewall229];
+    if (likely(socket0.tables[TABLE_tbl_firewall229][current_replica_tbl_firewall229]->default_val == NULL)) {
+        setdefault_tbl_firewall229(action_firewall229, false);
+    }
+    int current_replica_eth_dstMac_filter_0 = socket0.active_replica[TABLE_eth_dstMac_filter_0];
+    if (likely(socket0.tables[TABLE_eth_dstMac_filter_0][current_replica_eth_dstMac_filter_0]->default_val == NULL)) {
+        setdefault_eth_dstMac_filter_0(action_NoAction_1, false);
+    }
+    int current_replica_eth_proto_filter_0 = socket0.active_replica[TABLE_eth_proto_filter_0];
+    if (likely(socket0.tables[TABLE_eth_proto_filter_0][current_replica_eth_proto_filter_0]->default_val == NULL)) {
+        setdefault_eth_proto_filter_0(action_NoAction_3, false);
+    }
+    int current_replica_eth_srcMac_filter_0 = socket0.active_replica[TABLE_eth_srcMac_filter_0];
+    if (likely(socket0.tables[TABLE_eth_srcMac_filter_0][current_replica_eth_srcMac_filter_0]->default_val == NULL)) {
+        setdefault_eth_srcMac_filter_0(action_NoAction_2, false);
+    }
+    int current_replica_ip_dstIP_filter_0 = socket0.active_replica[TABLE_ip_dstIP_filter_0];
+    if (likely(socket0.tables[TABLE_ip_dstIP_filter_0][current_replica_ip_dstIP_filter_0]->default_val == NULL)) {
+        setdefault_ip_dstIP_filter_0(action_NoAction_5, false);
+    }
+    int current_replica_ip_proto_filter_0 = socket0.active_replica[TABLE_ip_proto_filter_0];
+    if (likely(socket0.tables[TABLE_ip_proto_filter_0][current_replica_ip_proto_filter_0]->default_val == NULL)) {
+        setdefault_ip_proto_filter_0(action_NoAction_4, false);
+    }
+    int current_replica_ip_srcIP_filter_0 = socket0.active_replica[TABLE_ip_srcIP_filter_0];
+    if (likely(socket0.tables[TABLE_ip_srcIP_filter_0][current_replica_ip_srcIP_filter_0]->default_val == NULL)) {
+        setdefault_ip_srcIP_filter_0(action_NoAction_6, false);
+    }
+    int current_replica_tcp_dstPort_filter_0 = socket0.active_replica[TABLE_tcp_dstPort_filter_0];
+    if (likely(socket0.tables[TABLE_tcp_dstPort_filter_0][current_replica_tcp_dstPort_filter_0]->default_val == NULL)) {
+        setdefault_tcp_dstPort_filter_0(action_NoAction_8, false);
+    }
+    int current_replica_tcp_srcPort_filter_0 = socket0.active_replica[TABLE_tcp_srcPort_filter_0];
+    if (likely(socket0.tables[TABLE_tcp_srcPort_filter_0][current_replica_tcp_srcPort_filter_0]->default_val == NULL)) {
+        setdefault_tcp_srcPort_filter_0(action_NoAction_7, false);
+    }
+    int current_replica_udp_dstPort_filter_0 = socket0.active_replica[TABLE_udp_dstPort_filter_0];
+    if (likely(socket0.tables[TABLE_udp_dstPort_filter_0][current_replica_udp_dstPort_filter_0]->default_val == NULL)) {
+        setdefault_udp_dstPort_filter_0(action_NoAction_10, false);
+    }
+    int current_replica_udp_srcPort_filter_0 = socket0.active_replica[TABLE_udp_srcPort_filter_0];
+    if (likely(socket0.tables[TABLE_udp_srcPort_filter_0][current_replica_udp_srcPort_filter_0]->default_val == NULL)) {
+        setdefault_udp_srcPort_filter_0(action_NoAction_9, false);
     }
 }
 
@@ -77,8 +491,54 @@ void print_const_entry_summary() {
 }
 
 void init_table_const_entries() {
-    // no const entries in table ipv4_lpm_0
-    // no const entries in table nexthops_0
+    // no const entries in table eth_dstMac_filter_0
+    // no const entries in table eth_srcMac_filter_0
+    // no const entries in table eth_proto_filter_0
+    // no const entries in table ip_proto_filter_0
+    // no const entries in table ip_dstIP_filter_0
+    // no const entries in table ip_srcIP_filter_0
+    // no const entries in table tcp_srcPort_filter_0
+    // no const entries in table tcp_dstPort_filter_0
+    // no const entries in table udp_srcPort_filter_0
+    // no const entries in table udp_dstPort_filter_0
+    // no const entries in table tbl_firewall210
+    // no const entries in table tbl_act
+    // no const entries in table tbl_act_0
+    // no const entries in table tbl_firewall212
+    // no const entries in table tbl_act_1
+    // no const entries in table tbl_act_2
+    // no const entries in table tbl_firewall212_0
+    // no const entries in table tbl_firewall212_1
+    // no const entries in table tbl_act_3
+    // no const entries in table tbl_act_4
+    // no const entries in table tbl_firewall212_2
+    // no const entries in table tbl_firewall213
+    // no const entries in table tbl_act_5
+    // no const entries in table tbl_act_6
+    // no const entries in table tbl_firewall215
+    // no const entries in table tbl_act_7
+    // no const entries in table tbl_act_8
+    // no const entries in table tbl_firewall215_0
+    // no const entries in table tbl_firewall215_1
+    // no const entries in table tbl_act_9
+    // no const entries in table tbl_act_10
+    // no const entries in table tbl_firewall215_2
+    // no const entries in table tbl_firewall216
+    // no const entries in table tbl_act_11
+    // no const entries in table tbl_act_12
+    // no const entries in table tbl_firewall218
+    // no const entries in table tbl_act_13
+    // no const entries in table tbl_act_14
+    // no const entries in table tbl_firewall218_0
+    // no const entries in table tbl_firewall219
+    // no const entries in table tbl_act_15
+    // no const entries in table tbl_act_16
+    // no const entries in table tbl_act_17
+    // no const entries in table tbl_act_18
+    // no const entries in table tbl_firewall222
+    // no const entries in table tbl_firewall222_0
+    // no const entries in table tbl_firewall223
+    // no const entries in table tbl_firewall229
     print_const_entry_summary();
 }
 

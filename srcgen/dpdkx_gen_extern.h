@@ -5,10 +5,6 @@
 #include "util_debug.h"
 
 void SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS);
-void SHORT_EXTERNCALL2(update_checksum,tuple_0,u16)(bool condition, tuple_0_t* data, uint16_t* /* inout */  checksum, enum_HashAlgorithm_t algo, SHORT_STDPARAMS);
-void SHORT_EXTERNCALL2(verify_checksum,tuple_0,u16)(bool condition, tuple_0_t* data, uint16_t checksum, enum_HashAlgorithm_t algo, SHORT_STDPARAMS);
 
 void EXTERNIMPL0(mark_to_drop)(SHORT_STDPARAMS);
-void EXTERNIMPL2(update_checksum,u8s,u16)(bool condition, uint8_buffer_t data, uint16_t* /* inout */  checksum, enum_HashAlgorithm_t algo, SHORT_STDPARAMS);
-void EXTERNIMPL2(verify_checksum,u8s,u16)(bool condition, uint8_buffer_t data, uint16_t checksum, enum_HashAlgorithm_t algo, SHORT_STDPARAMS);
 

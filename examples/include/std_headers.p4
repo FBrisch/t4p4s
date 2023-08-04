@@ -12,8 +12,8 @@ header cpu_header_t {
 }
 
 header ethernet_t {
-    macAddr_t dstAddr;
-    macAddr_t srcAddr;
+    bit<48> dstAddr;
+    bit<48> srcAddr;
     bit<16>   etherType;
 }
 
@@ -31,8 +31,8 @@ header ipv4_t {
     bit<8>  ttl;
     bit<8>  protocol;
     bit<16> hdrChecksum;
-    ip4Addr_t srcAddr;
-    ip4Addr_t dstAddr;
+    bit<32> srcAddr;
+    bit<32> dstAddr;
 }
 
 header ipv4_options_t {

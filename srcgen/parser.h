@@ -32,93 +32,168 @@ typedef struct {
     uint8_t FLD(ethernet,dstAddr)[(48 + 7) / 8];
     uint8_t FLD(ethernet,srcAddr)[(48 + 7) / 8];
     uint16_t FLD(ethernet,etherType);
-    uint8_t FLD(ipv4,versionIhl);
+    uint16_t FLD(arp,htype);
+    uint16_t FLD(arp,ptype);
+    uint8_t FLD(arp,hlen);
+    uint8_t FLD(arp,plen);
+    uint16_t FLD(arp,oper);
+    uint8_t FLD(ipv4,version);
+    uint8_t FLD(ipv4,ihl);
     uint8_t FLD(ipv4,diffserv);
     uint16_t FLD(ipv4,totalLen);
     uint16_t FLD(ipv4,identification);
+    uint8_t FLD(ipv4,flags);
     uint16_t FLD(ipv4,fragOffset);
     uint8_t FLD(ipv4,ttl);
     uint8_t FLD(ipv4,protocol);
     uint16_t FLD(ipv4,hdrChecksum);
     uint32_t FLD(ipv4,srcAddr);
     uint32_t FLD(ipv4,dstAddr);
-    uint16_t FLD(arp,hardware_type);
-    uint16_t FLD(arp,protocol_type);
-    uint8_t FLD(arp,HLEN);
-    uint8_t FLD(arp,PLEN);
-    uint16_t FLD(arp,OPER);
-    uint8_t FLD(arp,sender_ha)[(48 + 7) / 8];
-    uint32_t FLD(arp,sender_ip);
-    uint8_t FLD(arp,target_ha)[(48 + 7) / 8];
-    uint32_t FLD(arp,target_ip);
+    uint8_t FLD(icmp,type);
+    uint8_t FLD(icmp,code);
+    uint16_t FLD(icmp,checksum);
+    uint16_t FLD(icmp,identifier);
+    uint16_t FLD(icmp,sequence_number);
+    uint16_t FLD(tcp,_srcPort0);
+    uint16_t FLD(tcp,_dstPort1);
+    uint32_t FLD(tcp,_seqNo2);
+    uint32_t FLD(tcp,_ackNo3);
+    uint8_t FLD(tcp,_dataOffset4);
+    uint8_t FLD(tcp,_res5);
+    uint8_t FLD(tcp,_flags_cwr6);
+    uint8_t FLD(tcp,_flags_ece7);
+    uint8_t FLD(tcp,_flags_urg8);
+    uint8_t FLD(tcp,_flags_ack9);
+    uint8_t FLD(tcp,_flags_psh10);
+    uint8_t FLD(tcp,_flags_rst11);
+    uint8_t FLD(tcp,_flags_syn12);
+    uint8_t FLD(tcp,_flags_fin13);
+    uint16_t FLD(tcp,_window14);
+    uint16_t FLD(tcp,_checksum15);
+    uint16_t FLD(tcp,_urgentPtr16);
+    uint16_t FLD(udp,srcPort);
+    uint16_t FLD(udp,dstPort);
+    uint16_t FLD(udp,plength);
+    uint16_t FLD(udp,checksum);
     
     
     parsed_field_attr_t FLD_ATTR(ethernet,dstAddr);
     parsed_field_attr_t FLD_ATTR(ethernet,srcAddr);
     parsed_field_attr_t FLD_ATTR(ethernet,etherType);
-    parsed_field_attr_t FLD_ATTR(ipv4,versionIhl);
+    parsed_field_attr_t FLD_ATTR(arp,htype);
+    parsed_field_attr_t FLD_ATTR(arp,ptype);
+    parsed_field_attr_t FLD_ATTR(arp,hlen);
+    parsed_field_attr_t FLD_ATTR(arp,plen);
+    parsed_field_attr_t FLD_ATTR(arp,oper);
+    parsed_field_attr_t FLD_ATTR(ipv4,version);
+    parsed_field_attr_t FLD_ATTR(ipv4,ihl);
     parsed_field_attr_t FLD_ATTR(ipv4,diffserv);
     parsed_field_attr_t FLD_ATTR(ipv4,totalLen);
     parsed_field_attr_t FLD_ATTR(ipv4,identification);
+    parsed_field_attr_t FLD_ATTR(ipv4,flags);
     parsed_field_attr_t FLD_ATTR(ipv4,fragOffset);
     parsed_field_attr_t FLD_ATTR(ipv4,ttl);
     parsed_field_attr_t FLD_ATTR(ipv4,protocol);
     parsed_field_attr_t FLD_ATTR(ipv4,hdrChecksum);
     parsed_field_attr_t FLD_ATTR(ipv4,srcAddr);
     parsed_field_attr_t FLD_ATTR(ipv4,dstAddr);
-    parsed_field_attr_t FLD_ATTR(arp,hardware_type);
-    parsed_field_attr_t FLD_ATTR(arp,protocol_type);
-    parsed_field_attr_t FLD_ATTR(arp,HLEN);
-    parsed_field_attr_t FLD_ATTR(arp,PLEN);
-    parsed_field_attr_t FLD_ATTR(arp,OPER);
-    parsed_field_attr_t FLD_ATTR(arp,sender_ha);
-    parsed_field_attr_t FLD_ATTR(arp,sender_ip);
-    parsed_field_attr_t FLD_ATTR(arp,target_ha);
-    parsed_field_attr_t FLD_ATTR(arp,target_ip);
+    parsed_field_attr_t FLD_ATTR(icmp,type);
+    parsed_field_attr_t FLD_ATTR(icmp,code);
+    parsed_field_attr_t FLD_ATTR(icmp,checksum);
+    parsed_field_attr_t FLD_ATTR(icmp,identifier);
+    parsed_field_attr_t FLD_ATTR(icmp,sequence_number);
+    parsed_field_attr_t FLD_ATTR(tcp,_srcPort0);
+    parsed_field_attr_t FLD_ATTR(tcp,_dstPort1);
+    parsed_field_attr_t FLD_ATTR(tcp,_seqNo2);
+    parsed_field_attr_t FLD_ATTR(tcp,_ackNo3);
+    parsed_field_attr_t FLD_ATTR(tcp,_dataOffset4);
+    parsed_field_attr_t FLD_ATTR(tcp,_res5);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_cwr6);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_ece7);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_urg8);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_ack9);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_psh10);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_rst11);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_syn12);
+    parsed_field_attr_t FLD_ATTR(tcp,_flags_fin13);
+    parsed_field_attr_t FLD_ATTR(tcp,_window14);
+    parsed_field_attr_t FLD_ATTR(tcp,_checksum15);
+    parsed_field_attr_t FLD_ATTR(tcp,_urgentPtr16);
+    parsed_field_attr_t FLD_ATTR(udp,srcPort);
+    parsed_field_attr_t FLD_ATTR(udp,dstPort);
+    parsed_field_attr_t FLD_ATTR(udp,plength);
+    parsed_field_attr_t FLD_ATTR(udp,checksum);
     
 } parsed_fields_t;
 
 // Header instance infos
 // ---------------------
 
-#define HEADER_COUNT 3
-#define FIELD_COUNT 22
+#define HEADER_COUNT 6
+#define FIELD_COUNT 46
 #define STACK_COUNT 1
 
 extern const char*const field_names[FIELD_COUNT];
 extern const char*const header_instance_names[HEADER_COUNT];
 
-#define NONMETA_HDR_TOTAL_LENGTH (14+20+28)
+#define NONMETA_HDR_TOTAL_LENGTH (14+8+20+8+20+8)
 
 typedef enum {
     HDR(ethernet),
-    HDR(ipv4),
     HDR(arp),
+    HDR(ipv4),
+    HDR(icmp),
+    HDR(tcp),
+    HDR(udp),
 } header_instance_e;
 
 typedef enum {
     FLD(ethernet,dstAddr),
     FLD(ethernet,srcAddr),
     FLD(ethernet,etherType),
-    FLD(ipv4,versionIhl),
+    FLD(arp,htype),
+    FLD(arp,ptype),
+    FLD(arp,hlen),
+    FLD(arp,plen),
+    FLD(arp,oper),
+    FLD(ipv4,version),
+    FLD(ipv4,ihl),
     FLD(ipv4,diffserv),
     FLD(ipv4,totalLen),
     FLD(ipv4,identification),
+    FLD(ipv4,flags),
     FLD(ipv4,fragOffset),
     FLD(ipv4,ttl),
     FLD(ipv4,protocol),
     FLD(ipv4,hdrChecksum),
     FLD(ipv4,srcAddr),
     FLD(ipv4,dstAddr),
-    FLD(arp,hardware_type),
-    FLD(arp,protocol_type),
-    FLD(arp,HLEN),
-    FLD(arp,PLEN),
-    FLD(arp,OPER),
-    FLD(arp,sender_ha),
-    FLD(arp,sender_ip),
-    FLD(arp,target_ha),
-    FLD(arp,target_ip),
+    FLD(icmp,type),
+    FLD(icmp,code),
+    FLD(icmp,checksum),
+    FLD(icmp,identifier),
+    FLD(icmp,sequence_number),
+    FLD(tcp,_srcPort0),
+    FLD(tcp,_dstPort1),
+    FLD(tcp,_seqNo2),
+    FLD(tcp,_ackNo3),
+    FLD(tcp,_dataOffset4),
+    FLD(tcp,_res5),
+    FLD(tcp,_flags_cwr6),
+    FLD(tcp,_flags_ece7),
+    FLD(tcp,_flags_urg8),
+    FLD(tcp,_flags_ack9),
+    FLD(tcp,_flags_psh10),
+    FLD(tcp,_flags_rst11),
+    FLD(tcp,_flags_syn12),
+    FLD(tcp,_flags_fin13),
+    FLD(tcp,_window14),
+    FLD(tcp,_checksum15),
+    FLD(tcp,_urgentPtr16),
+    FLD(udp,srcPort),
+    FLD(udp,dstPort),
+    FLD(udp,plength),
+    FLD(udp,checksum),
 } field_instance_e;
 
 typedef enum {

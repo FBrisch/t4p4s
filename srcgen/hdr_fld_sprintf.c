@@ -56,51 +56,108 @@ const char* detailed_sprintf_hdr_ethernet(char* out, packet_descriptor_t* pd, he
     return sprintf_hdr_general(out, 3, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
 }
 
-const char* detailed_sprintf_hdr_ipv4(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
-    uint32_t vals[10];
-    uint8_t* ptrs[10];
-    int offsets[10] = { 0, 8, 16, 32, 48, 64, 72, 80, 96, 128 };
-    int sizes[10] = { 8, 8, 16, 16, 16, 8, 8, 16, 32, 32 };
-    int vw_sizes[10] = { NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT };
-    const char*const fld_short_names[10] = { "versionIhl", "diffserv", "totalLen", "identification", "fragOffset", "ttl", "protocol", "hdrChecksum", "srcAddr", "dstAddr" };
-    vals[0] = GET32(src_pkt(pd), FLD(ipv4, versionIhl));  // ipv4.versionIhl/8b
-    vals[1] = GET32(src_pkt(pd), FLD(ipv4, diffserv));  // ipv4.diffserv/8b
-    vals[2] = GET32(src_pkt(pd), FLD(ipv4, totalLen));  // ipv4.totalLen/16b
-    vals[3] = GET32(src_pkt(pd), FLD(ipv4, identification));  // ipv4.identification/16b
-    vals[4] = GET32(src_pkt(pd), FLD(ipv4, fragOffset));  // ipv4.fragOffset/16b
-    vals[5] = GET32(src_pkt(pd), FLD(ipv4, ttl));  // ipv4.ttl/8b
-    vals[6] = GET32(src_pkt(pd), FLD(ipv4, protocol));  // ipv4.protocol/8b
-    vals[7] = GET32(src_pkt(pd), FLD(ipv4, hdrChecksum));  // ipv4.hdrChecksum/16b
-    vals[8] = GET32(src_pkt(pd), FLD(ipv4, srcAddr));  // ipv4.srcAddr/32b
-    vals[9] = GET32(src_pkt(pd), FLD(ipv4, dstAddr));  // ipv4.dstAddr/32b
-    return sprintf_hdr_general(out, 10, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
+const char* detailed_sprintf_hdr_arp(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
+    uint32_t vals[5];
+    uint8_t* ptrs[5];
+    int offsets[5] = { 0, 16, 32, 40, 48 };
+    int sizes[5] = { 16, 16, 8, 8, 16 };
+    int vw_sizes[5] = { NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT };
+    const char*const fld_short_names[5] = { "htype", "ptype", "hlen", "plen", "oper" };
+    vals[0] = GET32(src_pkt(pd), FLD(arp, htype));  // arp.htype/16b
+    vals[1] = GET32(src_pkt(pd), FLD(arp, ptype));  // arp.ptype/16b
+    vals[2] = GET32(src_pkt(pd), FLD(arp, hlen));  // arp.hlen/8b
+    vals[3] = GET32(src_pkt(pd), FLD(arp, plen));  // arp.plen/8b
+    vals[4] = GET32(src_pkt(pd), FLD(arp, oper));  // arp.oper/16b
+    return sprintf_hdr_general(out, 5, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
 }
 
-const char* detailed_sprintf_hdr_arp(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
-    uint32_t vals[9];
-    uint8_t* ptrs[9];
-    int offsets[9] = { 0, 16, 32, 40, 48, 64, 112, 144, 192 };
-    int sizes[9] = { 16, 16, 8, 8, 16, 48, 32, 48, 32 };
-    int vw_sizes[9] = { NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT };
-    const char*const fld_short_names[9] = { "hardware_type", "protocol_type", "HLEN", "PLEN", "OPER", "sender_ha", "sender_ip", "target_ha", "target_ip" };
-    vals[0] = GET32(src_pkt(pd), FLD(arp, hardware_type));  // arp.hardware_type/16b
-    vals[1] = GET32(src_pkt(pd), FLD(arp, protocol_type));  // arp.protocol_type/16b
-    vals[2] = GET32(src_pkt(pd), FLD(arp, HLEN));  // arp.HLEN/8b
-    vals[3] = GET32(src_pkt(pd), FLD(arp, PLEN));  // arp.PLEN/8b
-    vals[4] = GET32(src_pkt(pd), FLD(arp, OPER));  // arp.OPER/16b
-    ptrs[5] = hdr->pointer + fld_infos[FLD(arp,sender_ha)].byte_offset;  // arp.sender_ha/6B
-    vals[6] = GET32(src_pkt(pd), FLD(arp, sender_ip));  // arp.sender_ip/32b
-    ptrs[7] = hdr->pointer + fld_infos[FLD(arp,target_ha)].byte_offset;  // arp.target_ha/6B
-    vals[8] = GET32(src_pkt(pd), FLD(arp, target_ip));  // arp.target_ip/32b
-    return sprintf_hdr_general(out, 9, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
+const char* detailed_sprintf_hdr_ipv4(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
+    uint32_t vals[12];
+    uint8_t* ptrs[12];
+    int offsets[12] = { 0, 4, 8, 16, 32, 48, 51, 64, 72, 80, 96, 128 };
+    int sizes[12] = { 4, 4, 8, 16, 16, 3, 13, 8, 8, 16, 32, 32 };
+    int vw_sizes[12] = { NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT };
+    const char*const fld_short_names[12] = { "version", "ihl", "diffserv", "totalLen", "identification", "flags", "fragOffset", "ttl", "protocol", "hdrChecksum", "srcAddr", "dstAddr" };
+    vals[0] = GET32(src_pkt(pd), FLD(ipv4, version));  // ipv4.version/4b
+    vals[1] = GET32(src_pkt(pd), FLD(ipv4, ihl));  // ipv4.ihl/4b
+    vals[2] = GET32(src_pkt(pd), FLD(ipv4, diffserv));  // ipv4.diffserv/8b
+    vals[3] = GET32(src_pkt(pd), FLD(ipv4, totalLen));  // ipv4.totalLen/16b
+    vals[4] = GET32(src_pkt(pd), FLD(ipv4, identification));  // ipv4.identification/16b
+    vals[5] = GET32(src_pkt(pd), FLD(ipv4, flags));  // ipv4.flags/3b
+    vals[6] = GET32(src_pkt(pd), FLD(ipv4, fragOffset));  // ipv4.fragOffset/13b
+    vals[7] = GET32(src_pkt(pd), FLD(ipv4, ttl));  // ipv4.ttl/8b
+    vals[8] = GET32(src_pkt(pd), FLD(ipv4, protocol));  // ipv4.protocol/8b
+    vals[9] = GET32(src_pkt(pd), FLD(ipv4, hdrChecksum));  // ipv4.hdrChecksum/16b
+    vals[10] = GET32(src_pkt(pd), FLD(ipv4, srcAddr));  // ipv4.srcAddr/32b
+    vals[11] = GET32(src_pkt(pd), FLD(ipv4, dstAddr));  // ipv4.dstAddr/32b
+    return sprintf_hdr_general(out, 12, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
+}
+
+const char* detailed_sprintf_hdr_icmp(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
+    uint32_t vals[5];
+    uint8_t* ptrs[5];
+    int offsets[5] = { 0, 8, 16, 32, 48 };
+    int sizes[5] = { 8, 8, 16, 16, 16 };
+    int vw_sizes[5] = { NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT };
+    const char*const fld_short_names[5] = { "type", "code", "checksum", "identifier", "sequence_number" };
+    vals[0] = GET32(src_pkt(pd), FLD(icmp, type));  // icmp.type/8b
+    vals[1] = GET32(src_pkt(pd), FLD(icmp, code));  // icmp.code/8b
+    vals[2] = GET32(src_pkt(pd), FLD(icmp, checksum));  // icmp.checksum/16b
+    vals[3] = GET32(src_pkt(pd), FLD(icmp, identifier));  // icmp.identifier/16b
+    vals[4] = GET32(src_pkt(pd), FLD(icmp, sequence_number));  // icmp.sequence_number/16b
+    return sprintf_hdr_general(out, 5, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
+}
+
+const char* detailed_sprintf_hdr_tcp(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
+    uint32_t vals[17];
+    uint8_t* ptrs[17];
+    int offsets[17] = { 0, 16, 32, 64, 96, 100, 104, 105, 106, 107, 108, 109, 110, 111, 112, 128, 144 };
+    int sizes[17] = { 16, 16, 32, 32, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 16, 16, 16 };
+    int vw_sizes[17] = { NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT };
+    const char*const fld_short_names[17] = { "srcPort", "dstPort", "seqNo", "ackNo", "dataOffset", "res", "flags.cwr", "flags.ece", "flags.urg", "flags.ack", "flags.psh", "flags.rst", "flags.syn", "flags.fin", "window", "checksum", "urgentPtr" };
+    vals[0] = GET32(src_pkt(pd), FLD(tcp, _srcPort0));  // tcp._srcPort0/16b
+    vals[1] = GET32(src_pkt(pd), FLD(tcp, _dstPort1));  // tcp._dstPort1/16b
+    vals[2] = GET32(src_pkt(pd), FLD(tcp, _seqNo2));  // tcp._seqNo2/32b
+    vals[3] = GET32(src_pkt(pd), FLD(tcp, _ackNo3));  // tcp._ackNo3/32b
+    vals[4] = GET32(src_pkt(pd), FLD(tcp, _dataOffset4));  // tcp._dataOffset4/4b
+    vals[5] = GET32(src_pkt(pd), FLD(tcp, _res5));  // tcp._res5/4b
+    vals[6] = GET32(src_pkt(pd), FLD(tcp, _flags_cwr6));  // tcp._flags_cwr6/1b
+    vals[7] = GET32(src_pkt(pd), FLD(tcp, _flags_ece7));  // tcp._flags_ece7/1b
+    vals[8] = GET32(src_pkt(pd), FLD(tcp, _flags_urg8));  // tcp._flags_urg8/1b
+    vals[9] = GET32(src_pkt(pd), FLD(tcp, _flags_ack9));  // tcp._flags_ack9/1b
+    vals[10] = GET32(src_pkt(pd), FLD(tcp, _flags_psh10));  // tcp._flags_psh10/1b
+    vals[11] = GET32(src_pkt(pd), FLD(tcp, _flags_rst11));  // tcp._flags_rst11/1b
+    vals[12] = GET32(src_pkt(pd), FLD(tcp, _flags_syn12));  // tcp._flags_syn12/1b
+    vals[13] = GET32(src_pkt(pd), FLD(tcp, _flags_fin13));  // tcp._flags_fin13/1b
+    vals[14] = GET32(src_pkt(pd), FLD(tcp, _window14));  // tcp._window14/16b
+    vals[15] = GET32(src_pkt(pd), FLD(tcp, _checksum15));  // tcp._checksum15/16b
+    vals[16] = GET32(src_pkt(pd), FLD(tcp, _urgentPtr16));  // tcp._urgentPtr16/16b
+    return sprintf_hdr_general(out, 17, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
+}
+
+const char* detailed_sprintf_hdr_udp(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
+    uint32_t vals[4];
+    uint8_t* ptrs[4];
+    int offsets[4] = { 0, 16, 32, 48 };
+    int sizes[4] = { 16, 16, 16, 16 };
+    int vw_sizes[4] = { NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT, NO_VW_FIELD_PRESENT };
+    const char*const fld_short_names[4] = { "srcPort", "dstPort", "plength", "checksum" };
+    vals[0] = GET32(src_pkt(pd), FLD(udp, srcPort));  // udp.srcPort/16b
+    vals[1] = GET32(src_pkt(pd), FLD(udp, dstPort));  // udp.dstPort/16b
+    vals[2] = GET32(src_pkt(pd), FLD(udp, plength));  // udp.plength/16b
+    vals[3] = GET32(src_pkt(pd), FLD(udp, checksum));  // udp.checksum/16b
+    return sprintf_hdr_general(out, 4, vals, ptrs, offsets, sizes, vw_sizes, fld_short_names);
 }
 
 const char* sprintf_hdr(char* out, packet_descriptor_t* pd, header_descriptor_t* hdr) {
     #ifdef T4P4S_DEBUG
         const char* name = hdr_infos[hdr->type].name;
         if (!strcmp("ethernet", name))    return detailed_sprintf_hdr_ethernet(out, pd, hdr);
-        if (!strcmp("ipv4", name))    return detailed_sprintf_hdr_ipv4(out, pd, hdr);
         if (!strcmp("arp", name))    return detailed_sprintf_hdr_arp(out, pd, hdr);
+        if (!strcmp("ipv4", name))    return detailed_sprintf_hdr_ipv4(out, pd, hdr);
+        if (!strcmp("icmp", name))    return detailed_sprintf_hdr_icmp(out, pd, hdr);
+        if (!strcmp("tcp", name))    return detailed_sprintf_hdr_tcp(out, pd, hdr);
+        if (!strcmp("udp", name))    return detailed_sprintf_hdr_udp(out, pd, hdr);
     #endif
     return NULL; // should never happen
 }

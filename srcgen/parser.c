@@ -65,9 +65,11 @@ void cannot_parse_hdr(const char* varwidth_txt, const char* hdr_name, int hdrlen
     #endif
 }
 
-void parser_state_ParserImpl_parse_ipv4(STDPARAMS);
 void parser_state_ParserImpl_parse_arp(STDPARAMS);
-void parser_state_ParserImpl_parse_ethernet(STDPARAMS);
+void parser_state_ParserImpl_parse_icmp(STDPARAMS);
+void parser_state_ParserImpl_parse_tcp(STDPARAMS);
+void parser_state_ParserImpl_parse_udp(STDPARAMS);
+void parser_state_ParserImpl_parse_ipv4(STDPARAMS);
 void parser_state_ParserImpl_start(STDPARAMS);
 void parser_state_ParserImpl_accept(STDPARAMS);
 void parser_state_ParserImpl_reject(STDPARAMS);
@@ -81,49 +83,91 @@ void print_missed_transition_conditions(const char*const* texts, int idx) {
     #endif
 }
 
-void parser_state_ParserImpl_parse_ethernet_next_state(STDPARAMS) {
+void parser_state_ParserImpl_parse_arp_next_state(STDPARAMS) {
+    parser_state_t* local_vars = pstate;
+    parser_state_t parameters = *pstate;
+    if (unlikely(!is_header_valid(HDR(arp), pd))) {
+     debug("   " T4LIT(!!,warning) " Access to field in invalid header " T4LIT(%s,warning) "." T4LIT(oper,field) ", returning \"unspecified\" value " T4LIT(0xf4f3 /* pseudorandom 16 bit value */) "\n", hdr_infos[HDR(arp)].name);
+ }
+ uint16_t Member647542_arp__oper = (GET32_def(src_pkt(pd), FLD(arp,oper), 0xf4f3 /* pseudorandom 16 bit value */));
+ const char*const transition_texts[] = {
+     " <== " T4LIT(arp,header) "." T4LIT(oper,field) "/" T4LIT(16) "b=" T4LIT(1)  " ",
+     "" /* no transition condition */,
+ };
+if (Member647542_arp__oper == 1) { // select case #1
+    print_missed_transition_conditions(transition_texts, 0);
+    set_transition_txt(transition_texts[0]);
+    parser_state_ParserImpl_accept(STDPARAMS_IN);
+    } else if (true /* default */) { // select case #2
+    print_missed_transition_conditions(transition_texts, 1);
+    parser_state_ParserImpl_accept(STDPARAMS_IN);
+}
+    
+}
+
+void parser_state_ParserImpl_parse_ipv4_next_state(STDPARAMS) {
+    parser_state_t* local_vars = pstate;
+    parser_state_t parameters = *pstate;
+    if (unlikely(!is_header_valid(HDR(ipv4), pd))) {
+     debug("   " T4LIT(!!,warning) " Access to field in invalid header " T4LIT(%s,warning) "." T4LIT(protocol,field) ", returning \"unspecified\" value " T4LIT(0xe8 /* pseudorandom 8 bit value */) "\n", hdr_infos[HDR(ipv4)].name);
+ }
+ uint8_t Member647573_ipv4__protocol = (GET32_def(src_pkt(pd), FLD(ipv4,protocol), 0xe8 /* pseudorandom 8 bit value */));
+ const char*const transition_texts[] = {
+     " <== " T4LIT(ipv4,header) "." T4LIT(protocol,field) "/" T4LIT(8) "b=" T4LIT(1)  " ",
+     " <== " T4LIT(ipv4,header) "." T4LIT(protocol,field) "/" T4LIT(8) "b=" T4LIT(6)  " ",
+     " <== " T4LIT(ipv4,header) "." T4LIT(protocol,field) "/" T4LIT(8) "b=" T4LIT(17) "=" T4LIT(0x11,bytes) " ",
+     "" /* no transition condition */,
+ };
+if (Member647573_ipv4__protocol == 1) { // select case #1
+    print_missed_transition_conditions(transition_texts, 0);
+    set_transition_txt(transition_texts[0]);
+    parser_state_ParserImpl_parse_icmp(STDPARAMS_IN);
+    } else if (Member647573_ipv4__protocol == 6) { // select case #2
+    print_missed_transition_conditions(transition_texts, 1);
+    set_transition_txt(transition_texts[1]);
+    parser_state_ParserImpl_parse_tcp(STDPARAMS_IN);
+    } else if (Member647573_ipv4__protocol == 17) { // select case #3
+    print_missed_transition_conditions(transition_texts, 2);
+    set_transition_txt(transition_texts[2]);
+    parser_state_ParserImpl_parse_udp(STDPARAMS_IN);
+    } else if (true /* default */) { // select case #4
+    print_missed_transition_conditions(transition_texts, 3);
+    parser_state_ParserImpl_accept(STDPARAMS_IN);
+}
+    
+}
+
+void parser_state_ParserImpl_start_next_state(STDPARAMS) {
     parser_state_t* local_vars = pstate;
     parser_state_t parameters = *pstate;
     if (unlikely(!is_header_valid(HDR(ethernet), pd))) {
      debug("   " T4LIT(!!,warning) " Access to field in invalid header " T4LIT(%s,warning) "." T4LIT(etherType,field) ", returning \"unspecified\" value " T4LIT(0xf4f3 /* pseudorandom 16 bit value */) "\n", hdr_infos[HDR(ethernet)].name);
  }
- uint16_t Member272085_ethernet__etherType = (GET32_def(src_pkt(pd), FLD(ethernet,etherType), 0xf4f3 /* pseudorandom 16 bit value */));
+ uint16_t Member647507_ethernet__etherType = (GET32_def(src_pkt(pd), FLD(ethernet,etherType), 0xf4f3 /* pseudorandom 16 bit value */));
  const char*const transition_texts[] = {
+     " <== " T4LIT(ethernet,header) "." T4LIT(etherType,field) "/" T4LIT(16) "b=" T4LIT(2054) "=" T4LIT(0x0806,bytes) " ",
      " <== " T4LIT(ethernet,header) "." T4LIT(etherType,field) "/" T4LIT(16) "b=" T4LIT(2048) "=" T4LIT(0x0800,bytes) " ",
      "" /* no transition condition */,
-     " <== " T4LIT(ethernet,header) "." T4LIT(etherType,field) "/" T4LIT(16) "b=" T4LIT(2054) "=" T4LIT(0x0806,bytes) " ",
  };
-if (Member272085_ethernet__etherType == 0x800) { // select case #1
+if (Member647507_ethernet__etherType == 0x806) { // select case #1
     print_missed_transition_conditions(transition_texts, 0);
     set_transition_txt(transition_texts[0]);
-    parser_state_ParserImpl_parse_ipv4(STDPARAMS_IN);
-    } else if (true /* default */) { // select case #2
-    print_missed_transition_conditions(transition_texts, 1);
-    parser_state_ParserImpl_accept(STDPARAMS_IN);
-    } else if (Member272085_ethernet__etherType == 0x806) { // select case #3
-    print_missed_transition_conditions(transition_texts, 2);
-    set_transition_txt(transition_texts[2]);
     parser_state_ParserImpl_parse_arp(STDPARAMS_IN);
+    } else if (Member647507_ethernet__etherType == 0x800) { // select case #2
+    print_missed_transition_conditions(transition_texts, 1);
+    set_transition_txt(transition_texts[1]);
+    parser_state_ParserImpl_parse_ipv4(STDPARAMS_IN);
+    } else if (true /* default */) { // select case #3
+    print_missed_transition_conditions(transition_texts, 2);
+    parser_state_ParserImpl_accept(STDPARAMS_IN);
 }
     
 }
 
-bool parser_state_ParserImpl_parse_ipv4_000_extract_ipv4(STDPARAMS) {
-    parser_state_t* local_vars = pstate;
-    int vwlen_0006 = 0;
-    int ipv4_len = parser_extract_ipv4(vwlen_0006, STDPARAMS_IN);
-    if (unlikely(ipv4_len < 0)) {
-        gen_parse_drop_msg(ipv4_len, "ipv4", -1 /* ignored */);
-        drop_packet(STDPARAMS_IN);
-        return false;
-    }
-    return true;
-}
-
 bool parser_state_ParserImpl_parse_arp_000_extract_arp(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0007 = 0;
-    int arp_len = parser_extract_arp(vwlen_0007, STDPARAMS_IN);
+    int vwlen_0019 = 0;
+    int arp_len = parser_extract_arp(vwlen_0019, STDPARAMS_IN);
     if (unlikely(arp_len < 0)) {
         gen_parse_drop_msg(arp_len, "arp", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
@@ -132,10 +176,58 @@ bool parser_state_ParserImpl_parse_arp_000_extract_arp(STDPARAMS) {
     return true;
 }
 
-bool parser_state_ParserImpl_parse_ethernet_000_extract_ethernet(STDPARAMS) {
+bool parser_state_ParserImpl_parse_icmp_000_extract_icmp(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0008 = 0;
-    int ethernet_len = parser_extract_ethernet(vwlen_0008, STDPARAMS_IN);
+    int vwlen_0020 = 0;
+    int icmp_len = parser_extract_icmp(vwlen_0020, STDPARAMS_IN);
+    if (unlikely(icmp_len < 0)) {
+        gen_parse_drop_msg(icmp_len, "icmp", -1 /* ignored */);
+        drop_packet(STDPARAMS_IN);
+        return false;
+    }
+    return true;
+}
+
+bool parser_state_ParserImpl_parse_tcp_000_extract_tcp(STDPARAMS) {
+    parser_state_t* local_vars = pstate;
+    int vwlen_0021 = 0;
+    int tcp_len = parser_extract_tcp(vwlen_0021, STDPARAMS_IN);
+    if (unlikely(tcp_len < 0)) {
+        gen_parse_drop_msg(tcp_len, "tcp", -1 /* ignored */);
+        drop_packet(STDPARAMS_IN);
+        return false;
+    }
+    return true;
+}
+
+bool parser_state_ParserImpl_parse_udp_000_extract_udp(STDPARAMS) {
+    parser_state_t* local_vars = pstate;
+    int vwlen_0022 = 0;
+    int udp_len = parser_extract_udp(vwlen_0022, STDPARAMS_IN);
+    if (unlikely(udp_len < 0)) {
+        gen_parse_drop_msg(udp_len, "udp", -1 /* ignored */);
+        drop_packet(STDPARAMS_IN);
+        return false;
+    }
+    return true;
+}
+
+bool parser_state_ParserImpl_parse_ipv4_000_extract_ipv4(STDPARAMS) {
+    parser_state_t* local_vars = pstate;
+    int vwlen_0023 = 0;
+    int ipv4_len = parser_extract_ipv4(vwlen_0023, STDPARAMS_IN);
+    if (unlikely(ipv4_len < 0)) {
+        gen_parse_drop_msg(ipv4_len, "ipv4", -1 /* ignored */);
+        drop_packet(STDPARAMS_IN);
+        return false;
+    }
+    return true;
+}
+
+bool parser_state_ParserImpl_start_000_extract_ethernet(STDPARAMS) {
+    parser_state_t* local_vars = pstate;
+    int vwlen_0024 = 0;
+    int ethernet_len = parser_extract_ethernet(vwlen_0024, STDPARAMS_IN);
     if (unlikely(ethernet_len < 0)) {
         gen_parse_drop_msg(ethernet_len, "ethernet", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
@@ -146,7 +238,7 @@ bool parser_state_ParserImpl_parse_ethernet_000_extract_ethernet(STDPARAMS) {
 
 int get_active_hdr_count(STDPARAMS) {
     int retval = 0;
-    for (int i = 0; i < 3; ++i) {
+    for (int i = 0; i < 6; ++i) {
         retval += is_header_valid(i, pd) ? 1 : 0;
     }
     return retval;
@@ -167,22 +259,6 @@ void print_parsing_success(STDPARAMS) {
     #endif
 }
 
-void parser_state_ParserImpl_parse_ipv4(STDPARAMS) {
-    #ifdef T4P4S_STATS
-        t4p4s_stats_global.T4STAT(parser,state,parse_ipv4) = true;
-        t4p4s_stats_per_packet.T4STAT(parser,state,parse_ipv4) = true;
-    #endif
-    
-    debug(" %%%%%%%% Parser state " T4LIT(parse_ipv4,parserstate) "%s\n", transition_cond);
-    set_transition_txt("");
-    bool success0 = parser_state_ParserImpl_parse_ipv4_000_extract_ipv4(STDPARAMS_IN);
-    if (unlikely(!success0)) {
-        debug("    " T4LIT(!,error) " Parsing " T4LIT(failed,error) ", " T4LIT(dropping,status) " packet\n");
-        return;
-    }
-    parser_state_ParserImpl_accept(STDPARAMS_IN);
-}
-
 void parser_state_ParserImpl_parse_arp(STDPARAMS) {
     #ifdef T4P4S_STATS
         t4p4s_stats_global.T4STAT(parser,state,parse_arp) = true;
@@ -196,23 +272,71 @@ void parser_state_ParserImpl_parse_arp(STDPARAMS) {
         debug("    " T4LIT(!,error) " Parsing " T4LIT(failed,error) ", " T4LIT(dropping,status) " packet\n");
         return;
     }
-    parser_state_ParserImpl_accept(STDPARAMS_IN);
+    parser_state_ParserImpl_parse_arp_next_state(STDPARAMS_IN);
 }
 
-void parser_state_ParserImpl_parse_ethernet(STDPARAMS) {
+void parser_state_ParserImpl_parse_icmp(STDPARAMS) {
     #ifdef T4P4S_STATS
-        t4p4s_stats_global.T4STAT(parser,state,parse_ethernet) = true;
-        t4p4s_stats_per_packet.T4STAT(parser,state,parse_ethernet) = true;
+        t4p4s_stats_global.T4STAT(parser,state,parse_icmp) = true;
+        t4p4s_stats_per_packet.T4STAT(parser,state,parse_icmp) = true;
     #endif
     
-    debug(" %%%%%%%% Parser state " T4LIT(parse_ethernet,parserstate) "%s\n", transition_cond);
+    debug(" %%%%%%%% Parser state " T4LIT(parse_icmp,parserstate) "%s\n", transition_cond);
     set_transition_txt("");
-    bool success0 = parser_state_ParserImpl_parse_ethernet_000_extract_ethernet(STDPARAMS_IN);
+    bool success0 = parser_state_ParserImpl_parse_icmp_000_extract_icmp(STDPARAMS_IN);
     if (unlikely(!success0)) {
         debug("    " T4LIT(!,error) " Parsing " T4LIT(failed,error) ", " T4LIT(dropping,status) " packet\n");
         return;
     }
-    parser_state_ParserImpl_parse_ethernet_next_state(STDPARAMS_IN);
+    parser_state_ParserImpl_accept(STDPARAMS_IN);
+}
+
+void parser_state_ParserImpl_parse_tcp(STDPARAMS) {
+    #ifdef T4P4S_STATS
+        t4p4s_stats_global.T4STAT(parser,state,parse_tcp) = true;
+        t4p4s_stats_per_packet.T4STAT(parser,state,parse_tcp) = true;
+    #endif
+    
+    debug(" %%%%%%%% Parser state " T4LIT(parse_tcp,parserstate) "%s\n", transition_cond);
+    set_transition_txt("");
+    bool success0 = parser_state_ParserImpl_parse_tcp_000_extract_tcp(STDPARAMS_IN);
+    if (unlikely(!success0)) {
+        debug("    " T4LIT(!,error) " Parsing " T4LIT(failed,error) ", " T4LIT(dropping,status) " packet\n");
+        return;
+    }
+    parser_state_ParserImpl_accept(STDPARAMS_IN);
+}
+
+void parser_state_ParserImpl_parse_udp(STDPARAMS) {
+    #ifdef T4P4S_STATS
+        t4p4s_stats_global.T4STAT(parser,state,parse_udp) = true;
+        t4p4s_stats_per_packet.T4STAT(parser,state,parse_udp) = true;
+    #endif
+    
+    debug(" %%%%%%%% Parser state " T4LIT(parse_udp,parserstate) "%s\n", transition_cond);
+    set_transition_txt("");
+    bool success0 = parser_state_ParserImpl_parse_udp_000_extract_udp(STDPARAMS_IN);
+    if (unlikely(!success0)) {
+        debug("    " T4LIT(!,error) " Parsing " T4LIT(failed,error) ", " T4LIT(dropping,status) " packet\n");
+        return;
+    }
+    parser_state_ParserImpl_accept(STDPARAMS_IN);
+}
+
+void parser_state_ParserImpl_parse_ipv4(STDPARAMS) {
+    #ifdef T4P4S_STATS
+        t4p4s_stats_global.T4STAT(parser,state,parse_ipv4) = true;
+        t4p4s_stats_per_packet.T4STAT(parser,state,parse_ipv4) = true;
+    #endif
+    
+    debug(" %%%%%%%% Parser state " T4LIT(parse_ipv4,parserstate) "%s\n", transition_cond);
+    set_transition_txt("");
+    bool success0 = parser_state_ParserImpl_parse_ipv4_000_extract_ipv4(STDPARAMS_IN);
+    if (unlikely(!success0)) {
+        debug("    " T4LIT(!,error) " Parsing " T4LIT(failed,error) ", " T4LIT(dropping,status) " packet\n");
+        return;
+    }
+    parser_state_ParserImpl_parse_ipv4_next_state(STDPARAMS_IN);
 }
 
 void parser_state_ParserImpl_start(STDPARAMS) {
@@ -223,7 +347,12 @@ void parser_state_ParserImpl_start(STDPARAMS) {
     
     debug(" %%%%%%%% Parser state " T4LIT(start,parserstate) "%s\n", transition_cond);
     set_transition_txt("");
-    parser_state_ParserImpl_parse_ethernet(STDPARAMS_IN);
+    bool success0 = parser_state_ParserImpl_start_000_extract_ethernet(STDPARAMS_IN);
+    if (unlikely(!success0)) {
+        debug("    " T4LIT(!,error) " Parsing " T4LIT(failed,error) ", " T4LIT(dropping,status) " packet\n");
+        return;
+    }
+    parser_state_ParserImpl_start_next_state(STDPARAMS_IN);
 }
 
 void parser_state_ParserImpl_accept(STDPARAMS) {

@@ -9,11 +9,3 @@ void SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS) {
     EXTERNIMPL0(mark_to_drop)(SHORT_STDPARAMS_IN);
 }
 
-void SHORT_EXTERNCALL2(update_checksum,tuple_0,u16)(bool condition, tuple_0_t* data, uint16_t* /* inout */  checksum, enum_HashAlgorithm_t algo, SHORT_STDPARAMS) {
-    EXTERNIMPL2(update_checksum,u8s,u16)(is_header_valid(HDR(ipv4), pd), (uint8_buffer_t){.size = (8+8+16+16+16+8+8+32+32+7) / 8, .buffer = (uint8_t*)data, .part_count = 9, .part_bit_offsets = {0, 0+8, 0+8+8, 0+8+8+16, 0+8+8+16+16, 0+8+8+16+16+16, 0+8+8+16+16+16+8, 0+8+8+16+16+16+8+8, 0+8+8+16+16+16+8+8+32}, .part_bit_sizes = {8, 8, 16, 16, 16, 8, 8, 32, 32}, .name = "tuple_0", .part_names = {"f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8"}, .part_types = {"u8", "u8", "u16", "u16", "u16", "u8", "u8", "u32", "u32"}}, GET32(src_pkt(pd), FLD(ipv4, hdrChecksum)), enum_HashAlgorithm_csum16, SHORT_STDPARAMS_IN);
-}
-
-void SHORT_EXTERNCALL2(verify_checksum,tuple_0,u16)(bool condition, tuple_0_t* data, uint16_t checksum, enum_HashAlgorithm_t algo, SHORT_STDPARAMS) {
-    EXTERNIMPL2(verify_checksum,u8s,u16)(is_header_valid(HDR(ipv4), pd), (uint8_buffer_t){.size = (8+8+16+16+16+8+8+32+32+7) / 8, .buffer = (uint8_t*)data, .part_count = 9, .part_bit_offsets = {0, 0+8, 0+8+8, 0+8+8+16, 0+8+8+16+16, 0+8+8+16+16+16, 0+8+8+16+16+16+8, 0+8+8+16+16+16+8+8, 0+8+8+16+16+16+8+8+32}, .part_bit_sizes = {8, 8, 16, 16, 16, 8, 8, 32, 32}, .name = "tuple_0", .part_names = {"f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8"}, .part_types = {"u8", "u8", "u16", "u16", "u16", "u8", "u8", "u32", "u32"}}, GET32(src_pkt(pd), FLD(ipv4, hdrChecksum)), enum_HashAlgorithm_csum16, SHORT_STDPARAMS_IN);
-}
-

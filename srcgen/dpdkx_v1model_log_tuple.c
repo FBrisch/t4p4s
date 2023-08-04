@@ -35,24 +35,479 @@ printf("    : " T4LIT(Logged,status) ": %s\n", msg);
 #endif
 }
 
-void log_msg__routing_metadata(const char** msg, const routing_metadata_t* parts, SHORT_STDPARAMS) {
+void log_msg__tcp_flags(const char** msg, const tcp_flags_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b");
+    sprintf(text, fmt, "parts->cwr, parts->cwr, parts->ece, parts->ece, parts->urg, parts->urg, parts->ack, parts->ack, parts->psh, parts->psh, parts->rst, parts->rst, parts->syn, parts->syn, parts->fin, parts->fin");
+    print_log_msg_tuple(text);
+}
+void log_msg__mac_learn_digest(const char** msg, const mac_learn_digest_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B", T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(9) "b");
+    sprintf(text, fmt, "((uint8_t*)parts->srcAddr)[0], ((uint8_t*)parts->srcAddr)[1], ((uint8_t*)parts->srcAddr)[2], ((uint8_t*)parts->srcAddr)[3], ((uint8_t*)parts->srcAddr)[4], ((uint8_t*)parts->srcAddr)[5], parts->ingress_port, parts->ingress_port");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded_bool(const char** msg, const padded_bool_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(7) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b");
+    sprintf(text, fmt, "parts->pad1, parts->pad1, parts->b, parts->b");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded1(const char** msg, const padded1_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(7) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b");
+    sprintf(text, fmt, "parts->pad1, parts->pad1, parts->f1, parts->f1");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded2(const char** msg, const padded2_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(6) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(2) "b");
+    sprintf(text, fmt, "parts->pad2, parts->pad2, parts->f2, parts->f2");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded3(const char** msg, const padded3_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(5) "b", T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(3) "b");
+    sprintf(text, fmt, "parts->pad3, parts->pad3, parts->f3, parts->f3");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded4(const char** msg, const padded4_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b", T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b");
+    sprintf(text, fmt, "parts->pad4, parts->pad4, parts->f4, parts->f4");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded5(const char** msg, const padded5_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(3) "b", T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(5) "b");
+    sprintf(text, fmt, "parts->pad5, parts->pad5, parts->f5, parts->f5");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded6(const char** msg, const padded6_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(2) "b", T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(6) "b");
+    sprintf(text, fmt, "parts->pad6, parts->pad6, parts->f6, parts->f6");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded7(const char** msg, const padded7_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(7) "b");
+    sprintf(text, fmt, "parts->pad7, parts->pad7, parts->f7, parts->f7");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded8(const char** msg, const padded8_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b");
+    sprintf(text, fmt, "parts->f8, parts->f8");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded9(const char** msg, const padded9_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(7) "b", T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(9) "b");
+    sprintf(text, fmt, "parts->pad9, parts->pad9, parts->f9, parts->f9");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded10(const char** msg, const padded10_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(6) "b", T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(10) "b");
+    sprintf(text, fmt, "parts->pad10, parts->pad10, parts->f10, parts->f10");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded11(const char** msg, const padded11_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(5) "b", T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(11) "b");
+    sprintf(text, fmt, "parts->pad11, parts->pad11, parts->f11, parts->f11");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded12(const char** msg, const padded12_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b", T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(12) "b");
+    sprintf(text, fmt, "parts->pad12, parts->pad12, parts->f12, parts->f12");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded13(const char** msg, const padded13_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(3) "b", T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(13) "b");
+    sprintf(text, fmt, "parts->pad13, parts->pad13, parts->f13, parts->f13");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded14(const char** msg, const padded14_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(2) "b", T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(14) "b");
+    sprintf(text, fmt, "parts->pad14, parts->pad14, parts->f14, parts->f14");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded15(const char** msg, const padded15_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(15) "b");
+    sprintf(text, fmt, "parts->pad15, parts->pad15, parts->f15, parts->f15");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded16(const char** msg, const padded16_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b");
+    sprintf(text, fmt, "parts->f16, parts->f16");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded17(const char** msg, const padded17_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(15) "b", T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(17) "b");
+    sprintf(text, fmt, "parts->pad17, parts->pad17, parts->f17, parts->f17");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded18(const char** msg, const padded18_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(14) "b", T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(18) "b");
+    sprintf(text, fmt, "parts->pad18, parts->pad18, parts->f18, parts->f18");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded19(const char** msg, const padded19_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(13) "b", T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(19) "b");
+    sprintf(text, fmt, "parts->pad19, parts->pad19, parts->f19, parts->f19");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded20(const char** msg, const padded20_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(12) "b", T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(20) "b");
+    sprintf(text, fmt, "parts->pad20, parts->pad20, parts->f20, parts->f20");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded21(const char** msg, const padded21_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(11) "b", T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(21) "b");
+    sprintf(text, fmt, "parts->pad21, parts->pad21, parts->f21, parts->f21");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded22(const char** msg, const padded22_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(10) "b", T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(22) "b");
+    sprintf(text, fmt, "parts->pad22, parts->pad22, parts->f22, parts->f22");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded23(const char** msg, const padded23_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(9) "b", T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(23) "b");
+    sprintf(text, fmt, "parts->pad23, parts->pad23, parts->f23, parts->f23");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded24(const char** msg, const padded24_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b", T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(24) "b");
+    sprintf(text, fmt, "parts->pad24, parts->pad24, parts->f24, parts->f24");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded25(const char** msg, const padded25_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(7) "b", T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(25) "b");
+    sprintf(text, fmt, "parts->pad25, parts->pad25, parts->f25, parts->f25");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded26(const char** msg, const padded26_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(6) "b", T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(26) "b");
+    sprintf(text, fmt, "parts->pad26, parts->pad26, parts->f26, parts->f26");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded27(const char** msg, const padded27_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(5) "b", T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(27) "b");
+    sprintf(text, fmt, "parts->pad27, parts->pad27, parts->f27, parts->f27");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded28(const char** msg, const padded28_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b", T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(28) "b");
+    sprintf(text, fmt, "parts->pad28, parts->pad28, parts->f28, parts->f28");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded29(const char** msg, const padded29_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(3) "b", T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(29) "b");
+    sprintf(text, fmt, "parts->pad29, parts->pad29, parts->f29, parts->f29");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded30(const char** msg, const padded30_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(2) "b", T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(30) "b");
+    sprintf(text, fmt, "parts->pad30, parts->pad30, parts->f30, parts->f30");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded31(const char** msg, const padded31_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(31) "b");
+    sprintf(text, fmt, "parts->pad31, parts->pad31, parts->f31, parts->f31");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded32(const char** msg, const padded32_t* parts, SHORT_STDPARAMS) {
     char fmt[1024];
     char text[1024];
     make_formatter_tuple(fmt, *msg, T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b");
-    sprintf(text, fmt, "parts->nhgroup, parts->nhgroup");
+    sprintf(text, fmt, "parts->f32, parts->f32");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded33(const char** msg, const padded33_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(31) "b", T4LIT(0x%02x%02x%02x%02x,bytes) "/" T4LIT(4) "B");
+    sprintf(text, fmt, "parts->pad33, parts->pad33, ((uint8_t*)parts->f33)[0], ((uint8_t*)parts->f33)[1], ((uint8_t*)parts->f33)[2], ((uint8_t*)parts->f33)[3]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded34(const char** msg, const padded34_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(30) "b", T4LIT(0x%02x%02x%02x%02x,bytes) "/" T4LIT(4) "B");
+    sprintf(text, fmt, "parts->pad34, parts->pad34, ((uint8_t*)parts->f34)[0], ((uint8_t*)parts->f34)[1], ((uint8_t*)parts->f34)[2], ((uint8_t*)parts->f34)[3]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded35(const char** msg, const padded35_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(29) "b", T4LIT(0x%02x%02x%02x%02x,bytes) "/" T4LIT(4) "B");
+    sprintf(text, fmt, "parts->pad35, parts->pad35, ((uint8_t*)parts->f35)[0], ((uint8_t*)parts->f35)[1], ((uint8_t*)parts->f35)[2], ((uint8_t*)parts->f35)[3]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded36(const char** msg, const padded36_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%07x,bytes) "=" T4LIT(%d) "/" T4LIT(28) "b", T4LIT(0x%02x%02x%02x%02x,bytes) "/" T4LIT(4) "B");
+    sprintf(text, fmt, "parts->pad36, parts->pad36, ((uint8_t*)parts->f36)[0], ((uint8_t*)parts->f36)[1], ((uint8_t*)parts->f36)[2], ((uint8_t*)parts->f36)[3]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded37(const char** msg, const padded37_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(27) "b", T4LIT(0x%02x%02x%02x%02x,bytes) "/" T4LIT(4) "B");
+    sprintf(text, fmt, "parts->pad37, parts->pad37, ((uint8_t*)parts->f37)[0], ((uint8_t*)parts->f37)[1], ((uint8_t*)parts->f37)[2], ((uint8_t*)parts->f37)[3]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded38(const char** msg, const padded38_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(26) "b", T4LIT(0x%02x%02x%02x%02x,bytes) "/" T4LIT(4) "B");
+    sprintf(text, fmt, "parts->pad38, parts->pad38, ((uint8_t*)parts->f38)[0], ((uint8_t*)parts->f38)[1], ((uint8_t*)parts->f38)[2], ((uint8_t*)parts->f38)[3]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded39(const char** msg, const padded39_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(25) "b", T4LIT(0x%02x%02x%02x%02x,bytes) "/" T4LIT(4) "B");
+    sprintf(text, fmt, "parts->pad39, parts->pad39, ((uint8_t*)parts->f39)[0], ((uint8_t*)parts->f39)[1], ((uint8_t*)parts->f39)[2], ((uint8_t*)parts->f39)[3]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded40(const char** msg, const padded40_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%06x,bytes) "=" T4LIT(%d) "/" T4LIT(24) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad40, parts->pad40, ((uint8_t*)parts->f40)[0], ((uint8_t*)parts->f40)[1], ((uint8_t*)parts->f40)[2], ((uint8_t*)parts->f40)[3], ((uint8_t*)parts->f40)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded41(const char** msg, const padded41_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(23) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad41, parts->pad41, ((uint8_t*)parts->f41)[0], ((uint8_t*)parts->f41)[1], ((uint8_t*)parts->f41)[2], ((uint8_t*)parts->f41)[3], ((uint8_t*)parts->f41)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded42(const char** msg, const padded42_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(22) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad42, parts->pad42, ((uint8_t*)parts->f42)[0], ((uint8_t*)parts->f42)[1], ((uint8_t*)parts->f42)[2], ((uint8_t*)parts->f42)[3], ((uint8_t*)parts->f42)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded43(const char** msg, const padded43_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(21) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad43, parts->pad43, ((uint8_t*)parts->f43)[0], ((uint8_t*)parts->f43)[1], ((uint8_t*)parts->f43)[2], ((uint8_t*)parts->f43)[3], ((uint8_t*)parts->f43)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded44(const char** msg, const padded44_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%05x,bytes) "=" T4LIT(%d) "/" T4LIT(20) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad44, parts->pad44, ((uint8_t*)parts->f44)[0], ((uint8_t*)parts->f44)[1], ((uint8_t*)parts->f44)[2], ((uint8_t*)parts->f44)[3], ((uint8_t*)parts->f44)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded45(const char** msg, const padded45_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(19) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad45, parts->pad45, ((uint8_t*)parts->f45)[0], ((uint8_t*)parts->f45)[1], ((uint8_t*)parts->f45)[2], ((uint8_t*)parts->f45)[3], ((uint8_t*)parts->f45)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded46(const char** msg, const padded46_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(18) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad46, parts->pad46, ((uint8_t*)parts->f46)[0], ((uint8_t*)parts->f46)[1], ((uint8_t*)parts->f46)[2], ((uint8_t*)parts->f46)[3], ((uint8_t*)parts->f46)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded47(const char** msg, const padded47_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(17) "b", T4LIT(0x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(5) "B");
+    sprintf(text, fmt, "parts->pad47, parts->pad47, ((uint8_t*)parts->f47)[0], ((uint8_t*)parts->f47)[1], ((uint8_t*)parts->f47)[2], ((uint8_t*)parts->f47)[3], ((uint8_t*)parts->f47)[4]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded48(const char** msg, const padded48_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad48, parts->pad48, ((uint8_t*)parts->f48)[0], ((uint8_t*)parts->f48)[1], ((uint8_t*)parts->f48)[2], ((uint8_t*)parts->f48)[3], ((uint8_t*)parts->f48)[4], ((uint8_t*)parts->f48)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded49(const char** msg, const padded49_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(15) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad49, parts->pad49, ((uint8_t*)parts->f49)[0], ((uint8_t*)parts->f49)[1], ((uint8_t*)parts->f49)[2], ((uint8_t*)parts->f49)[3], ((uint8_t*)parts->f49)[4], ((uint8_t*)parts->f49)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded50(const char** msg, const padded50_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(14) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad50, parts->pad50, ((uint8_t*)parts->f50)[0], ((uint8_t*)parts->f50)[1], ((uint8_t*)parts->f50)[2], ((uint8_t*)parts->f50)[3], ((uint8_t*)parts->f50)[4], ((uint8_t*)parts->f50)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded51(const char** msg, const padded51_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(13) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad51, parts->pad51, ((uint8_t*)parts->f51)[0], ((uint8_t*)parts->f51)[1], ((uint8_t*)parts->f51)[2], ((uint8_t*)parts->f51)[3], ((uint8_t*)parts->f51)[4], ((uint8_t*)parts->f51)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded52(const char** msg, const padded52_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(12) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad52, parts->pad52, ((uint8_t*)parts->f52)[0], ((uint8_t*)parts->f52)[1], ((uint8_t*)parts->f52)[2], ((uint8_t*)parts->f52)[3], ((uint8_t*)parts->f52)[4], ((uint8_t*)parts->f52)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded53(const char** msg, const padded53_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(11) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad53, parts->pad53, ((uint8_t*)parts->f53)[0], ((uint8_t*)parts->f53)[1], ((uint8_t*)parts->f53)[2], ((uint8_t*)parts->f53)[3], ((uint8_t*)parts->f53)[4], ((uint8_t*)parts->f53)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded54(const char** msg, const padded54_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(10) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad54, parts->pad54, ((uint8_t*)parts->f54)[0], ((uint8_t*)parts->f54)[1], ((uint8_t*)parts->f54)[2], ((uint8_t*)parts->f54)[3], ((uint8_t*)parts->f54)[4], ((uint8_t*)parts->f54)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded55(const char** msg, const padded55_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(9) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B");
+    sprintf(text, fmt, "parts->pad55, parts->pad55, ((uint8_t*)parts->f55)[0], ((uint8_t*)parts->f55)[1], ((uint8_t*)parts->f55)[2], ((uint8_t*)parts->f55)[3], ((uint8_t*)parts->f55)[4], ((uint8_t*)parts->f55)[5]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded56(const char** msg, const padded56_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad56, parts->pad56, ((uint8_t*)parts->f56)[0], ((uint8_t*)parts->f56)[1], ((uint8_t*)parts->f56)[2], ((uint8_t*)parts->f56)[3], ((uint8_t*)parts->f56)[4], ((uint8_t*)parts->f56)[5], ((uint8_t*)parts->f56)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded57(const char** msg, const padded57_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(7) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad57, parts->pad57, ((uint8_t*)parts->f57)[0], ((uint8_t*)parts->f57)[1], ((uint8_t*)parts->f57)[2], ((uint8_t*)parts->f57)[3], ((uint8_t*)parts->f57)[4], ((uint8_t*)parts->f57)[5], ((uint8_t*)parts->f57)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded58(const char** msg, const padded58_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(6) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad58, parts->pad58, ((uint8_t*)parts->f58)[0], ((uint8_t*)parts->f58)[1], ((uint8_t*)parts->f58)[2], ((uint8_t*)parts->f58)[3], ((uint8_t*)parts->f58)[4], ((uint8_t*)parts->f58)[5], ((uint8_t*)parts->f58)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded59(const char** msg, const padded59_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(5) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad59, parts->pad59, ((uint8_t*)parts->f59)[0], ((uint8_t*)parts->f59)[1], ((uint8_t*)parts->f59)[2], ((uint8_t*)parts->f59)[3], ((uint8_t*)parts->f59)[4], ((uint8_t*)parts->f59)[5], ((uint8_t*)parts->f59)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded60(const char** msg, const padded60_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad60, parts->pad60, ((uint8_t*)parts->f60)[0], ((uint8_t*)parts->f60)[1], ((uint8_t*)parts->f60)[2], ((uint8_t*)parts->f60)[3], ((uint8_t*)parts->f60)[4], ((uint8_t*)parts->f60)[5], ((uint8_t*)parts->f60)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded61(const char** msg, const padded61_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(3) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad61, parts->pad61, ((uint8_t*)parts->f61)[0], ((uint8_t*)parts->f61)[1], ((uint8_t*)parts->f61)[2], ((uint8_t*)parts->f61)[3], ((uint8_t*)parts->f61)[4], ((uint8_t*)parts->f61)[5], ((uint8_t*)parts->f61)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded62(const char** msg, const padded62_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(2) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad62, parts->pad62, ((uint8_t*)parts->f62)[0], ((uint8_t*)parts->f62)[1], ((uint8_t*)parts->f62)[2], ((uint8_t*)parts->f62)[3], ((uint8_t*)parts->f62)[4], ((uint8_t*)parts->f62)[5], ((uint8_t*)parts->f62)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded63(const char** msg, const padded63_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b", T4LIT(0x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(7) "B");
+    sprintf(text, fmt, "parts->pad63, parts->pad63, ((uint8_t*)parts->f63)[0], ((uint8_t*)parts->f63)[1], ((uint8_t*)parts->f63)[2], ((uint8_t*)parts->f63)[3], ((uint8_t*)parts->f63)[4], ((uint8_t*)parts->f63)[5], ((uint8_t*)parts->f63)[6]");
+    print_log_msg_tuple(text);
+}
+void log_msg__padded64(const char** msg, const padded64_t* parts, SHORT_STDPARAMS) {
+    char fmt[1024];
+    char text[1024];
+    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x%02x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(8) "B");
+    sprintf(text, fmt, "((uint8_t*)parts->f64)[0], ((uint8_t*)parts->f64)[1], ((uint8_t*)parts->f64)[2], ((uint8_t*)parts->f64)[3], ((uint8_t*)parts->f64)[4], ((uint8_t*)parts->f64)[5], ((uint8_t*)parts->f64)[6], ((uint8_t*)parts->f64)[7]");
     print_log_msg_tuple(text);
 }
 void log_msg__headers(const char** msg, const headers_t* parts, SHORT_STDPARAMS) {
     char fmt[1024];
     char text[1024];
-    make_formatter_tuple(fmt, *msg, "[""dstAddr="T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B"", ""srcAddr="T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B"", ""etherType="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b""]", "[""versionIhl="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""diffserv="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""totalLen="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""identification="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""fragOffset="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""ttl="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""protocol="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""hdrChecksum="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""srcAddr="T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b"", ""dstAddr="T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b""]");
-    sprintf(text, fmt, "dstAddr=((uint8_t*)parts->ethernet.dstAddr)[0], ((uint8_t*)parts->ethernet.dstAddr)[1], ((uint8_t*)parts->ethernet.dstAddr)[2], ((uint8_t*)parts->ethernet.dstAddr)[3], ((uint8_t*)parts->ethernet.dstAddr)[4], ((uint8_t*)parts->ethernet.dstAddr)[5], srcAddr=((uint8_t*)parts->ethernet.srcAddr)[0], ((uint8_t*)parts->ethernet.srcAddr)[1], ((uint8_t*)parts->ethernet.srcAddr)[2], ((uint8_t*)parts->ethernet.srcAddr)[3], ((uint8_t*)parts->ethernet.srcAddr)[4], ((uint8_t*)parts->ethernet.srcAddr)[5], etherType=parts->ethernet.etherType, parts->ethernet.etherType, versionIhl=parts->ipv4.versionIhl, parts->ipv4.versionIhl, diffserv=parts->ipv4.diffserv, parts->ipv4.diffserv, totalLen=parts->ipv4.totalLen, parts->ipv4.totalLen, identification=parts->ipv4.identification, parts->ipv4.identification, fragOffset=parts->ipv4.fragOffset, parts->ipv4.fragOffset, ttl=parts->ipv4.ttl, parts->ipv4.ttl, protocol=parts->ipv4.protocol, parts->ipv4.protocol, hdrChecksum=parts->ipv4.hdrChecksum, parts->ipv4.hdrChecksum, srcAddr=parts->ipv4.srcAddr, parts->ipv4.srcAddr, dstAddr=parts->ipv4.dstAddr, parts->ipv4.dstAddr");
-    print_log_msg_tuple(text);
-}
-void log_msg__tuple_0(const char** msg, const tuple_0_t* parts, SHORT_STDPARAMS) {
-    char fmt[1024];
-    char text[1024];
-    make_formatter_tuple(fmt, *msg, T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b", T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b", T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b", T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b", T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b", T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b", T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b", T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b", T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b");
-    sprintf(text, fmt, "parts->f0, parts->f0, parts->f1, parts->f1, parts->f2, parts->f2, parts->f3, parts->f3, parts->f4, parts->f4, parts->f5, parts->f5, parts->f6, parts->f6, parts->f7, parts->f7, parts->f8, parts->f8");
+    make_formatter_tuple(fmt, *msg, "[""dstAddr="T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B"", ""srcAddr="T4LIT(0x%02x%02x%02x%02x%02x%02x,bytes) "/" T4LIT(6) "B"", ""etherType="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b""]", "[""htype="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""ptype="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""hlen="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""plen="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""oper="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b""]", "[""version="T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b"", ""ihl="T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b"", ""diffserv="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""totalLen="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""identification="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""flags="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(3) "b"", ""fragOffset="T4LIT(0x%03x,bytes) "=" T4LIT(%d) "/" T4LIT(13) "b"", ""ttl="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""protocol="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""hdrChecksum="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""srcAddr="T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b"", ""dstAddr="T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b""]", "[""_srcPort0="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""_dstPort1="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""_seqNo2="T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b"", ""_ackNo3="T4LIT(0x%08x,bytes) "=" T4LIT(%d) "/" T4LIT(32) "b"", ""_dataOffset4="T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b"", ""_res5="T4LIT(0x%01x,bytes) "=" T4LIT(%d) "/" T4LIT(4) "b"", ""_flags_cwr6="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_flags_ece7="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_flags_urg8="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_flags_ack9="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_flags_psh10="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_flags_rst11="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_flags_syn12="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_flags_fin13="T4LIT(0x%00x,bytes) "=" T4LIT(%d) "/" T4LIT(1) "b"", ""_window14="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""_checksum15="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""_urgentPtr16="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b""]", "[""srcPort="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""dstPort="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""plength="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""checksum="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b""]", "[""type="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""code="T4LIT(0x%02x,bytes) "=" T4LIT(%d) "/" T4LIT(8) "b"", ""checksum="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""identifier="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b"", ""sequence_number="T4LIT(0x%04x,bytes) "=" T4LIT(%d) "/" T4LIT(16) "b""]");
+    sprintf(text, fmt, "dstAddr=((uint8_t*)parts->ethernet.dstAddr)[0], ((uint8_t*)parts->ethernet.dstAddr)[1], ((uint8_t*)parts->ethernet.dstAddr)[2], ((uint8_t*)parts->ethernet.dstAddr)[3], ((uint8_t*)parts->ethernet.dstAddr)[4], ((uint8_t*)parts->ethernet.dstAddr)[5], srcAddr=((uint8_t*)parts->ethernet.srcAddr)[0], ((uint8_t*)parts->ethernet.srcAddr)[1], ((uint8_t*)parts->ethernet.srcAddr)[2], ((uint8_t*)parts->ethernet.srcAddr)[3], ((uint8_t*)parts->ethernet.srcAddr)[4], ((uint8_t*)parts->ethernet.srcAddr)[5], etherType=parts->ethernet.etherType, parts->ethernet.etherType, htype=parts->arp.htype, parts->arp.htype, ptype=parts->arp.ptype, parts->arp.ptype, hlen=parts->arp.hlen, parts->arp.hlen, plen=parts->arp.plen, parts->arp.plen, oper=parts->arp.oper, parts->arp.oper, version=parts->ipv4.version, parts->ipv4.version, ihl=parts->ipv4.ihl, parts->ipv4.ihl, diffserv=parts->ipv4.diffserv, parts->ipv4.diffserv, totalLen=parts->ipv4.totalLen, parts->ipv4.totalLen, identification=parts->ipv4.identification, parts->ipv4.identification, flags=parts->ipv4.flags, parts->ipv4.flags, fragOffset=parts->ipv4.fragOffset, parts->ipv4.fragOffset, ttl=parts->ipv4.ttl, parts->ipv4.ttl, protocol=parts->ipv4.protocol, parts->ipv4.protocol, hdrChecksum=parts->ipv4.hdrChecksum, parts->ipv4.hdrChecksum, srcAddr=parts->ipv4.srcAddr, parts->ipv4.srcAddr, dstAddr=parts->ipv4.dstAddr, parts->ipv4.dstAddr, _srcPort0=parts->tcp._srcPort0, parts->tcp._srcPort0, _dstPort1=parts->tcp._dstPort1, parts->tcp._dstPort1, _seqNo2=parts->tcp._seqNo2, parts->tcp._seqNo2, _ackNo3=parts->tcp._ackNo3, parts->tcp._ackNo3, _dataOffset4=parts->tcp._dataOffset4, parts->tcp._dataOffset4, _res5=parts->tcp._res5, parts->tcp._res5, _flags_cwr6=parts->tcp._flags_cwr6, parts->tcp._flags_cwr6, _flags_ece7=parts->tcp._flags_ece7, parts->tcp._flags_ece7, _flags_urg8=parts->tcp._flags_urg8, parts->tcp._flags_urg8, _flags_ack9=parts->tcp._flags_ack9, parts->tcp._flags_ack9, _flags_psh10=parts->tcp._flags_psh10, parts->tcp._flags_psh10, _flags_rst11=parts->tcp._flags_rst11, parts->tcp._flags_rst11, _flags_syn12=parts->tcp._flags_syn12, parts->tcp._flags_syn12, _flags_fin13=parts->tcp._flags_fin13, parts->tcp._flags_fin13, _window14=parts->tcp._window14, parts->tcp._window14, _checksum15=parts->tcp._checksum15, parts->tcp._checksum15, _urgentPtr16=parts->tcp._urgentPtr16, parts->tcp._urgentPtr16, srcPort=parts->udp.srcPort, parts->udp.srcPort, dstPort=parts->udp.dstPort, parts->udp.dstPort, plength=parts->udp.plength, parts->udp.plength, checksum=parts->udp.checksum, parts->udp.checksum, type=parts->icmp.type, parts->icmp.type, code=parts->icmp.code, parts->icmp.code, checksum=parts->icmp.checksum, parts->icmp.checksum, identifier=parts->icmp.identifier, parts->icmp.identifier, sequence_number=parts->icmp.sequence_number, parts->icmp.sequence_number");
     print_log_msg_tuple(text);
 }

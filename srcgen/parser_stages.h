@@ -7,6 +7,9 @@
 #include "util_packet.h"
 
 int parser_extract_ethernet(int vwlen, STDPARAMS);
+int parser_extract_udp(int vwlen, STDPARAMS);
 int parser_extract_arp(int vwlen, STDPARAMS);
+int parser_extract_icmp(int vwlen, STDPARAMS);
 int parser_extract_ipv4(int vwlen, STDPARAMS);
+int parser_extract_tcp(int vwlen, STDPARAMS);
 void cannot_parse_hdr(const char* varwidth_txt, const char* hdr_name, int hdrlen, int vwlen, STDPARAMS);

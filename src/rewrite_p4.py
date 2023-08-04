@@ -30,7 +30,16 @@ def expr_to_string(expr):
     
     if expr.node_type == 'Add':
         return f'{expr_to_string(expr.left)} + {expr_to_string(expr.right)}'
-
+    
+    if expr.node_type == 'BAnd' or expr.node_type == 'LAnd':
+        return f'{expr_to_string(expr.left)} && {expr_to_string(expr.right)}'
+    if expr.node_type == 'Equ':
+        return f'{expr_to_string(expr.left)} == {expr_to_string(expr.right)}'
+    if expr.node_type == 'Neq':
+        return f'{expr_to_string(expr.left)} != {expr_to_string(expr.right)}'
+    if expr.node_type == 'BoolLiteral':
+        return f'{expr.value}'
+    breakpoint()
     return 'TODO_EXPR'
 
 def print_body_component(level, node):
@@ -45,6 +54,8 @@ def print_body_component(level, node):
             name = mc.method.member
             if name == 'emit':
                 print(f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});')
+            elif name == 'apply':
+                print(f'{indent}{mc.method.expr.path.name}.{name}({exprs});')
             else:
                 print(f'{indent}{mc.type.name}.{name}({exprs});')
             return
@@ -54,6 +65,19 @@ def print_body_component(level, node):
             return
     if node.node_type == 'AssignmentStatement':
         print(f'{indent}{expr_to_string(node.left)} = {expr_to_string(node.right)};')
+        return
+    if node.node_type == 'IfStatement':
+        print(f'{indent}if({expr_to_string(node.condition)}){{')
+        print_body_component(level+1,node.ifTrue)
+        print(f'{indent}}}')
+        if 'ifFalse' in node:
+            print(f'{indent}else{{')
+            print_body_component(level+1,node.ifFalse)
+            print(f'{indent}}}')
+        return
+    if node.node_type == 'BlockStatement':
+        for component in node.components:
+            print_body_component(level,component)
         return
     breakpoint()
     print('TODO_COMP')
@@ -67,6 +91,7 @@ def printHLIR(hlir):
     def type_to_str(node):
         if node.node_type == 'Type_Bits':
             return f'bit<{node.size}>'
+        breakpoint()
         return 'TODO_TYPE'
 
     print(f'#include <{import_files[hlir.news.model]}>')
@@ -106,7 +131,7 @@ def printHLIR(hlir):
                 if stateComponent.call == 'extract_header':
                     print(f'        {stateComponent.call}(')
                     for argument in stateComponent.methodCall.arguments:
-                        print(f'          {argument.expression.expr.path.name}.{argument.expression.hdr_ref.name}(')
+                        print(f'          {argument.expression.expr.path.name}.{argument.expression.hdr_ref.name}')
                     print(f'        );')
                 else:
                     print()
@@ -123,6 +148,7 @@ def printHLIR(hlir):
                         print(f'          {case.keyset.value}:{case.state.path.name};')
                 if state.selectExpression.select.components[0].fld_ref.name == 'accept':
                     print(f'        transition accept;')
+                print('        }')
             print(f'    }}')
         print(f'}}')
         print()

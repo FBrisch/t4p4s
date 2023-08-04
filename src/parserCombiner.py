@@ -171,7 +171,7 @@ class ParserCombiner:
         if treeIsInTree2:
             currentState = self.stateDict2[statename]
         else:
-            currentState = self.stateDict2[statename]
+            currentState = self.stateDict1[statename]
         self.addedNodes.append(self.getExtractedHeader(currentState))
         self.resultingHeaders.append(self.getExtractedHeader(currentState))
         self.resultingStates[statename] = deep_copy(currentState)
@@ -181,7 +181,7 @@ class ParserCombiner:
             self.addDistinctTree(currentState.selectExpression.path.name,treeIsInTree2)
         else:
             for case in currentState.selectExpression.selectCases:
-                self.addDistinctTree(case.state.path.name)
+                self.addDistinctTree(case.state.path.name,treeIsInTree2)
 
 
     def sumExtractedHeaderLength(self,state):
@@ -220,12 +220,13 @@ class ParserCombiner:
         metadata2 = self.headerDict2["all_metadatas_t"]
         resultingMetadata = self.headerDict1["all_metadatas_t"]
 
+
         for field in metadata1.fields:
             metadatapresent.append(field.name)
 
         for field in metadata2.fields:
             if field.name not in metadatapresent:
-                resultingMetadata.vec.append(deep_copy(field))
+                resultingMetadata.fields.append(field)
                 metadatapresent.append(field.name)
         self.addedNodes.append(resultingMetadata)
         self.resultingHeaders.append(resultingMetadata)

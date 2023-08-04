@@ -9,8 +9,11 @@
 
 const char*const header_instance_names[HEADER_COUNT] = {
     "ethernet",
-    "ipv4",
     "arp",
+    "ipv4",
+    "icmp",
+    "tcp",
+    "udp",
 };
 
 const char*const field_names[FIELD_COUNT] = {
@@ -18,27 +21,54 @@ const char*const field_names[FIELD_COUNT] = {
     "dstAddr", // ethernet.dstAddr
     "srcAddr", // ethernet.srcAddr
     "etherType", // ethernet.etherType
+    // arp
+    "htype", // arp.htype
+    "ptype", // arp.ptype
+    "hlen", // arp.hlen
+    "plen", // arp.plen
+    "oper", // arp.oper
     // ipv4
-    "versionIhl", // ipv4.versionIhl
+    "version", // ipv4.version
+    "ihl", // ipv4.ihl
     "diffserv", // ipv4.diffserv
     "totalLen", // ipv4.totalLen
     "identification", // ipv4.identification
+    "flags", // ipv4.flags
     "fragOffset", // ipv4.fragOffset
     "ttl", // ipv4.ttl
     "protocol", // ipv4.protocol
     "hdrChecksum", // ipv4.hdrChecksum
     "srcAddr", // ipv4.srcAddr
     "dstAddr", // ipv4.dstAddr
-    // arp
-    "hardware_type", // arp.hardware_type
-    "protocol_type", // arp.protocol_type
-    "HLEN", // arp.HLEN
-    "PLEN", // arp.PLEN
-    "OPER", // arp.OPER
-    "sender_ha", // arp.sender_ha
-    "sender_ip", // arp.sender_ip
-    "target_ha", // arp.target_ha
-    "target_ip", // arp.target_ip
+    // icmp
+    "type", // icmp.type
+    "code", // icmp.code
+    "checksum", // icmp.checksum
+    "identifier", // icmp.identifier
+    "sequence_number", // icmp.sequence_number
+    // tcp
+    "srcPort", // tcp._srcPort0
+    "dstPort", // tcp._dstPort1
+    "seqNo", // tcp._seqNo2
+    "ackNo", // tcp._ackNo3
+    "dataOffset", // tcp._dataOffset4
+    "res", // tcp._res5
+    "flags.cwr", // tcp._flags_cwr6
+    "flags.ece", // tcp._flags_ece7
+    "flags.urg", // tcp._flags_urg8
+    "flags.ack", // tcp._flags_ack9
+    "flags.psh", // tcp._flags_psh10
+    "flags.rst", // tcp._flags_rst11
+    "flags.syn", // tcp._flags_syn12
+    "flags.fin", // tcp._flags_fin13
+    "window", // tcp._window14
+    "checksum", // tcp._checksum15
+    "urgentPtr", // tcp._urgentPtr16
+    // udp
+    "srcPort", // udp.srcPort
+    "dstPort", // udp.dstPort
+    "plength", // udp.plength
+    "checksum", // udp.checksum
 };
 
 const hdr_info_t hdr_infos[HEADER_COUNT] = {
@@ -55,30 +85,69 @@ const hdr_info_t hdr_infos[HEADER_COUNT] = {
         .last_fld = FLD(ethernet,etherType),
     },
     
-    // header ipv4
+    // header arp
     {
         .idx = 1,
-        .name = "ipv4",
-        .byte_width = 20, // 160 bits, 20.0 bytes
+        .name = "arp",
+        .byte_width = 8, // 64 bits, 8.0 bytes
         .byte_offset = 0+14,
         .is_metadata = false,
         .var_width_field = NO_VW_FIELD_PRESENT,
         .var_width_size  = 0,
-        .first_fld = FLD(ipv4,versionIhl),
-        .last_fld = FLD(ipv4,dstAddr),
+        .first_fld = FLD(arp,htype),
+        .last_fld = FLD(arp,oper),
     },
     
-    // header arp
+    // header ipv4
     {
         .idx = 2,
-        .name = "arp",
-        .byte_width = 28, // 224 bits, 28.0 bytes
-        .byte_offset = 0+14+20,
+        .name = "ipv4",
+        .byte_width = 20, // 160 bits, 20.0 bytes
+        .byte_offset = 0+14+8,
         .is_metadata = false,
         .var_width_field = NO_VW_FIELD_PRESENT,
         .var_width_size  = 0,
-        .first_fld = FLD(arp,hardware_type),
-        .last_fld = FLD(arp,target_ip),
+        .first_fld = FLD(ipv4,version),
+        .last_fld = FLD(ipv4,dstAddr),
+    },
+    
+    // header icmp
+    {
+        .idx = 3,
+        .name = "icmp",
+        .byte_width = 8, // 64 bits, 8.0 bytes
+        .byte_offset = 0+14+8+20,
+        .is_metadata = false,
+        .var_width_field = NO_VW_FIELD_PRESENT,
+        .var_width_size  = 0,
+        .first_fld = FLD(icmp,type),
+        .last_fld = FLD(icmp,sequence_number),
+    },
+    
+    // header tcp
+    {
+        .idx = 4,
+        .name = "tcp",
+        .byte_width = 20, // 160 bits, 20.0 bytes
+        .byte_offset = 0+14+8+20+8,
+        .is_metadata = false,
+        .var_width_field = NO_VW_FIELD_PRESENT,
+        .var_width_size  = 0,
+        .first_fld = FLD(tcp,_srcPort0),
+        .last_fld = FLD(tcp,_urgentPtr16),
+    },
+    
+    // header udp
+    {
+        .idx = 5,
+        .name = "udp",
+        .byte_width = 8, // 64 bits, 8.0 bytes
+        .byte_offset = 0+14+8+20+8+20,
+        .is_metadata = false,
+        .var_width_field = NO_VW_FIELD_PRESENT,
+        .var_width_size  = 0,
+        .first_fld = FLD(udp,srcPort),
+        .last_fld = FLD(udp,checksum),
     },
     
 };
@@ -126,18 +195,102 @@ const fld_info_t fld_infos[FIELD_COUNT] = {
         .mask = 0xffff0000, // 16b at offset 12B+0b: 0b11111111_11111111
     },
     
-    // field ipv4.versionIhl
+    // field arp.htype
     {
-        .instance = FLD(ipv4, versionIhl),
-        .header_instance = HDR(ipv4),
-        .size = 8,
-        .byte_width = to_bytes(8),
+        .instance = FLD(arp, htype),
+        .header_instance = HDR(arp),
+        .size = 16,
+        .byte_width = to_bytes(16),
         .bit_offset = 0 % 8,
         .byte_offset = 0 / 8,
         .is_vw = false,
-        .name = "versionIhl",
-        .short_name = "versionIhl",
-        .mask = 0xff000000, // 8b at offset 0B+0b: 0b11111111
+        .name = "htype",
+        .short_name = "htype",
+        .mask = 0xffff0000, // 16b at offset 0B+0b: 0b11111111_11111111
+    },
+    
+    // field arp.ptype
+    {
+        .instance = FLD(arp, ptype),
+        .header_instance = HDR(arp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 16 % 8,
+        .byte_offset = 16 / 8,
+        .is_vw = false,
+        .name = "ptype",
+        .short_name = "ptype",
+        .mask = 0xffff0000, // 16b at offset 2B+0b: 0b11111111_11111111
+    },
+    
+    // field arp.hlen
+    {
+        .instance = FLD(arp, hlen),
+        .header_instance = HDR(arp),
+        .size = 8,
+        .byte_width = to_bytes(8),
+        .bit_offset = 32 % 8,
+        .byte_offset = 32 / 8,
+        .is_vw = false,
+        .name = "hlen",
+        .short_name = "hlen",
+        .mask = 0xff000000, // 8b at offset 4B+0b: 0b11111111
+    },
+    
+    // field arp.plen
+    {
+        .instance = FLD(arp, plen),
+        .header_instance = HDR(arp),
+        .size = 8,
+        .byte_width = to_bytes(8),
+        .bit_offset = 40 % 8,
+        .byte_offset = 40 / 8,
+        .is_vw = false,
+        .name = "plen",
+        .short_name = "plen",
+        .mask = 0xff000000, // 8b at offset 5B+0b: 0b11111111
+    },
+    
+    // field arp.oper
+    {
+        .instance = FLD(arp, oper),
+        .header_instance = HDR(arp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 48 % 8,
+        .byte_offset = 48 / 8,
+        .is_vw = false,
+        .name = "oper",
+        .short_name = "oper",
+        .mask = 0xffff0000, // 16b at offset 6B+0b: 0b11111111_11111111
+    },
+    
+    // field ipv4.version
+    {
+        .instance = FLD(ipv4, version),
+        .header_instance = HDR(ipv4),
+        .size = 4,
+        .byte_width = to_bytes(4),
+        .bit_offset = 0 % 8,
+        .byte_offset = 0 / 8,
+        .is_vw = false,
+        .name = "version",
+        .short_name = "version",
+        .mask = 0xf0000000, // 4b at offset 0B+0b: 0b11110000
+    },
+    
+    // field ipv4.ihl
+    {
+        .instance = FLD(ipv4, ihl),
+        .header_instance = HDR(ipv4),
+        .size = 4,
+        .byte_width = to_bytes(4),
+        .bit_offset = 4 % 8,
+        .byte_offset = 4 / 8,
+        .is_vw = false,
+        .name = "ihl",
+        .short_name = "ihl",
+        .mask = 0x0f000000, // 4b at offset 0B+4b: 0b11110000
     },
     
     // field ipv4.diffserv
@@ -182,18 +335,32 @@ const fld_info_t fld_infos[FIELD_COUNT] = {
         .mask = 0xffff0000, // 16b at offset 4B+0b: 0b11111111_11111111
     },
     
+    // field ipv4.flags
+    {
+        .instance = FLD(ipv4, flags),
+        .header_instance = HDR(ipv4),
+        .size = 3,
+        .byte_width = to_bytes(3),
+        .bit_offset = 48 % 8,
+        .byte_offset = 48 / 8,
+        .is_vw = false,
+        .name = "flags",
+        .short_name = "flags",
+        .mask = 0xe0000000, // 3b at offset 6B+0b: 0b11100000
+    },
+    
     // field ipv4.fragOffset
     {
         .instance = FLD(ipv4, fragOffset),
         .header_instance = HDR(ipv4),
-        .size = 16,
-        .byte_width = to_bytes(16),
-        .bit_offset = 48 % 8,
-        .byte_offset = 48 / 8,
+        .size = 13,
+        .byte_width = to_bytes(13),
+        .bit_offset = 51 % 8,
+        .byte_offset = 51 / 8,
         .is_vw = false,
         .name = "fragOffset",
         .short_name = "fragOffset",
-        .mask = 0xffff0000, // 16b at offset 6B+0b: 0b11111111_11111111
+        .mask = 0x1fff0000, // 13b at offset 6B+3b: 0b11111111_11111000
     },
     
     // field ipv4.ttl
@@ -266,130 +433,368 @@ const fld_info_t fld_infos[FIELD_COUNT] = {
         .mask = 0xffffffff, // 32b at offset 16B+0b: 0b11111111_11111111_11111111_11111111
     },
     
-    // field arp.hardware_type
+    // field icmp.type
     {
-        .instance = FLD(arp, hardware_type),
-        .header_instance = HDR(arp),
-        .size = 16,
-        .byte_width = to_bytes(16),
+        .instance = FLD(icmp, type),
+        .header_instance = HDR(icmp),
+        .size = 8,
+        .byte_width = to_bytes(8),
         .bit_offset = 0 % 8,
         .byte_offset = 0 / 8,
         .is_vw = false,
-        .name = "hardware_type",
-        .short_name = "hardware_type",
-        .mask = 0xffff0000, // 16b at offset 0B+0b: 0b11111111_11111111
+        .name = "type",
+        .short_name = "type",
+        .mask = 0xff000000, // 8b at offset 0B+0b: 0b11111111
     },
     
-    // field arp.protocol_type
+    // field icmp.code
     {
-        .instance = FLD(arp, protocol_type),
-        .header_instance = HDR(arp),
+        .instance = FLD(icmp, code),
+        .header_instance = HDR(icmp),
+        .size = 8,
+        .byte_width = to_bytes(8),
+        .bit_offset = 8 % 8,
+        .byte_offset = 8 / 8,
+        .is_vw = false,
+        .name = "code",
+        .short_name = "code",
+        .mask = 0xff000000, // 8b at offset 1B+0b: 0b11111111
+    },
+    
+    // field icmp.checksum
+    {
+        .instance = FLD(icmp, checksum),
+        .header_instance = HDR(icmp),
         .size = 16,
         .byte_width = to_bytes(16),
         .bit_offset = 16 % 8,
         .byte_offset = 16 / 8,
         .is_vw = false,
-        .name = "protocol_type",
-        .short_name = "protocol_type",
+        .name = "checksum",
+        .short_name = "checksum",
         .mask = 0xffff0000, // 16b at offset 2B+0b: 0b11111111_11111111
     },
     
-    // field arp.HLEN
+    // field icmp.identifier
     {
-        .instance = FLD(arp, HLEN),
-        .header_instance = HDR(arp),
-        .size = 8,
-        .byte_width = to_bytes(8),
+        .instance = FLD(icmp, identifier),
+        .header_instance = HDR(icmp),
+        .size = 16,
+        .byte_width = to_bytes(16),
         .bit_offset = 32 % 8,
         .byte_offset = 32 / 8,
         .is_vw = false,
-        .name = "HLEN",
-        .short_name = "HLEN",
-        .mask = 0xff000000, // 8b at offset 4B+0b: 0b11111111
+        .name = "identifier",
+        .short_name = "identifier",
+        .mask = 0xffff0000, // 16b at offset 4B+0b: 0b11111111_11111111
     },
     
-    // field arp.PLEN
+    // field icmp.sequence_number
     {
-        .instance = FLD(arp, PLEN),
-        .header_instance = HDR(arp),
-        .size = 8,
-        .byte_width = to_bytes(8),
-        .bit_offset = 40 % 8,
-        .byte_offset = 40 / 8,
-        .is_vw = false,
-        .name = "PLEN",
-        .short_name = "PLEN",
-        .mask = 0xff000000, // 8b at offset 5B+0b: 0b11111111
-    },
-    
-    // field arp.OPER
-    {
-        .instance = FLD(arp, OPER),
-        .header_instance = HDR(arp),
+        .instance = FLD(icmp, sequence_number),
+        .header_instance = HDR(icmp),
         .size = 16,
         .byte_width = to_bytes(16),
         .bit_offset = 48 % 8,
         .byte_offset = 48 / 8,
         .is_vw = false,
-        .name = "OPER",
-        .short_name = "OPER",
+        .name = "sequence_number",
+        .short_name = "sequence_number",
         .mask = 0xffff0000, // 16b at offset 6B+0b: 0b11111111_11111111
     },
     
-    // field arp.sender_ha
+    // field tcp._srcPort0
     {
-        .instance = FLD(arp, sender_ha),
-        .header_instance = HDR(arp),
-        .size = 48,
-        .byte_width = to_bytes(48),
+        .instance = FLD(tcp, _srcPort0),
+        .header_instance = HDR(tcp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 0 % 8,
+        .byte_offset = 0 / 8,
+        .is_vw = false,
+        .name = "_srcPort0",
+        .short_name = "srcPort",
+        .mask = 0xffff0000, // 16b at offset 0B+0b: 0b11111111_11111111
+    },
+    
+    // field tcp._dstPort1
+    {
+        .instance = FLD(tcp, _dstPort1),
+        .header_instance = HDR(tcp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 16 % 8,
+        .byte_offset = 16 / 8,
+        .is_vw = false,
+        .name = "_dstPort1",
+        .short_name = "dstPort",
+        .mask = 0xffff0000, // 16b at offset 2B+0b: 0b11111111_11111111
+    },
+    
+    // field tcp._seqNo2
+    {
+        .instance = FLD(tcp, _seqNo2),
+        .header_instance = HDR(tcp),
+        .size = 32,
+        .byte_width = to_bytes(32),
+        .bit_offset = 32 % 8,
+        .byte_offset = 32 / 8,
+        .is_vw = false,
+        .name = "_seqNo2",
+        .short_name = "seqNo",
+        .mask = 0xffffffff, // 32b at offset 4B+0b: 0b11111111_11111111_11111111_11111111
+    },
+    
+    // field tcp._ackNo3
+    {
+        .instance = FLD(tcp, _ackNo3),
+        .header_instance = HDR(tcp),
+        .size = 32,
+        .byte_width = to_bytes(32),
         .bit_offset = 64 % 8,
         .byte_offset = 64 / 8,
         .is_vw = false,
-        .name = "sender_ha",
-        .short_name = "sender_ha",
-        // .mask ignored: 48b field is restricted to be byte aligned (over 32b)
+        .name = "_ackNo3",
+        .short_name = "ackNo",
+        .mask = 0xffffffff, // 32b at offset 8B+0b: 0b11111111_11111111_11111111_11111111
     },
     
-    // field arp.sender_ip
+    // field tcp._dataOffset4
     {
-        .instance = FLD(arp, sender_ip),
-        .header_instance = HDR(arp),
-        .size = 32,
-        .byte_width = to_bytes(32),
+        .instance = FLD(tcp, _dataOffset4),
+        .header_instance = HDR(tcp),
+        .size = 4,
+        .byte_width = to_bytes(4),
+        .bit_offset = 96 % 8,
+        .byte_offset = 96 / 8,
+        .is_vw = false,
+        .name = "_dataOffset4",
+        .short_name = "dataOffset",
+        .mask = 0xf0000000, // 4b at offset 12B+0b: 0b11110000
+    },
+    
+    // field tcp._res5
+    {
+        .instance = FLD(tcp, _res5),
+        .header_instance = HDR(tcp),
+        .size = 4,
+        .byte_width = to_bytes(4),
+        .bit_offset = 100 % 8,
+        .byte_offset = 100 / 8,
+        .is_vw = false,
+        .name = "_res5",
+        .short_name = "res",
+        .mask = 0x0f000000, // 4b at offset 12B+4b: 0b11110000
+    },
+    
+    // field tcp._flags_cwr6
+    {
+        .instance = FLD(tcp, _flags_cwr6),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 104 % 8,
+        .byte_offset = 104 / 8,
+        .is_vw = false,
+        .name = "_flags_cwr6",
+        .short_name = "flags.cwr",
+        .mask = 0x80000000, // 1b at offset 13B+0b: 0b10000000
+    },
+    
+    // field tcp._flags_ece7
+    {
+        .instance = FLD(tcp, _flags_ece7),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 105 % 8,
+        .byte_offset = 105 / 8,
+        .is_vw = false,
+        .name = "_flags_ece7",
+        .short_name = "flags.ece",
+        .mask = 0x40000000, // 1b at offset 13B+1b: 0b10000000
+    },
+    
+    // field tcp._flags_urg8
+    {
+        .instance = FLD(tcp, _flags_urg8),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 106 % 8,
+        .byte_offset = 106 / 8,
+        .is_vw = false,
+        .name = "_flags_urg8",
+        .short_name = "flags.urg",
+        .mask = 0x20000000, // 1b at offset 13B+2b: 0b10000000
+    },
+    
+    // field tcp._flags_ack9
+    {
+        .instance = FLD(tcp, _flags_ack9),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 107 % 8,
+        .byte_offset = 107 / 8,
+        .is_vw = false,
+        .name = "_flags_ack9",
+        .short_name = "flags.ack",
+        .mask = 0x10000000, // 1b at offset 13B+3b: 0b10000000
+    },
+    
+    // field tcp._flags_psh10
+    {
+        .instance = FLD(tcp, _flags_psh10),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 108 % 8,
+        .byte_offset = 108 / 8,
+        .is_vw = false,
+        .name = "_flags_psh10",
+        .short_name = "flags.psh",
+        .mask = 0x08000000, // 1b at offset 13B+4b: 0b10000000
+    },
+    
+    // field tcp._flags_rst11
+    {
+        .instance = FLD(tcp, _flags_rst11),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 109 % 8,
+        .byte_offset = 109 / 8,
+        .is_vw = false,
+        .name = "_flags_rst11",
+        .short_name = "flags.rst",
+        .mask = 0x04000000, // 1b at offset 13B+5b: 0b10000000
+    },
+    
+    // field tcp._flags_syn12
+    {
+        .instance = FLD(tcp, _flags_syn12),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 110 % 8,
+        .byte_offset = 110 / 8,
+        .is_vw = false,
+        .name = "_flags_syn12",
+        .short_name = "flags.syn",
+        .mask = 0x02000000, // 1b at offset 13B+6b: 0b10000000
+    },
+    
+    // field tcp._flags_fin13
+    {
+        .instance = FLD(tcp, _flags_fin13),
+        .header_instance = HDR(tcp),
+        .size = 1,
+        .byte_width = to_bytes(1),
+        .bit_offset = 111 % 8,
+        .byte_offset = 111 / 8,
+        .is_vw = false,
+        .name = "_flags_fin13",
+        .short_name = "flags.fin",
+        .mask = 0x01000000, // 1b at offset 13B+7b: 0b10000000
+    },
+    
+    // field tcp._window14
+    {
+        .instance = FLD(tcp, _window14),
+        .header_instance = HDR(tcp),
+        .size = 16,
+        .byte_width = to_bytes(16),
         .bit_offset = 112 % 8,
         .byte_offset = 112 / 8,
         .is_vw = false,
-        .name = "sender_ip",
-        .short_name = "sender_ip",
-        .mask = 0xffffffff, // 32b at offset 14B+0b: 0b11111111_11111111_11111111_11111111
+        .name = "_window14",
+        .short_name = "window",
+        .mask = 0xffff0000, // 16b at offset 14B+0b: 0b11111111_11111111
     },
     
-    // field arp.target_ha
+    // field tcp._checksum15
     {
-        .instance = FLD(arp, target_ha),
-        .header_instance = HDR(arp),
-        .size = 48,
-        .byte_width = to_bytes(48),
+        .instance = FLD(tcp, _checksum15),
+        .header_instance = HDR(tcp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 128 % 8,
+        .byte_offset = 128 / 8,
+        .is_vw = false,
+        .name = "_checksum15",
+        .short_name = "checksum",
+        .mask = 0xffff0000, // 16b at offset 16B+0b: 0b11111111_11111111
+    },
+    
+    // field tcp._urgentPtr16
+    {
+        .instance = FLD(tcp, _urgentPtr16),
+        .header_instance = HDR(tcp),
+        .size = 16,
+        .byte_width = to_bytes(16),
         .bit_offset = 144 % 8,
         .byte_offset = 144 / 8,
         .is_vw = false,
-        .name = "target_ha",
-        .short_name = "target_ha",
-        // .mask ignored: 48b field is restricted to be byte aligned (over 32b)
+        .name = "_urgentPtr16",
+        .short_name = "urgentPtr",
+        .mask = 0xffff0000, // 16b at offset 18B+0b: 0b11111111_11111111
     },
     
-    // field arp.target_ip
+    // field udp.srcPort
     {
-        .instance = FLD(arp, target_ip),
-        .header_instance = HDR(arp),
-        .size = 32,
-        .byte_width = to_bytes(32),
-        .bit_offset = 192 % 8,
-        .byte_offset = 192 / 8,
+        .instance = FLD(udp, srcPort),
+        .header_instance = HDR(udp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 0 % 8,
+        .byte_offset = 0 / 8,
         .is_vw = false,
-        .name = "target_ip",
-        .short_name = "target_ip",
-        .mask = 0xffffffff, // 32b at offset 24B+0b: 0b11111111_11111111_11111111_11111111
+        .name = "srcPort",
+        .short_name = "srcPort",
+        .mask = 0xffff0000, // 16b at offset 0B+0b: 0b11111111_11111111
+    },
+    
+    // field udp.dstPort
+    {
+        .instance = FLD(udp, dstPort),
+        .header_instance = HDR(udp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 16 % 8,
+        .byte_offset = 16 / 8,
+        .is_vw = false,
+        .name = "dstPort",
+        .short_name = "dstPort",
+        .mask = 0xffff0000, // 16b at offset 2B+0b: 0b11111111_11111111
+    },
+    
+    // field udp.plength
+    {
+        .instance = FLD(udp, plength),
+        .header_instance = HDR(udp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 32 % 8,
+        .byte_offset = 32 / 8,
+        .is_vw = false,
+        .name = "plength",
+        .short_name = "plength",
+        .mask = 0xffff0000, // 16b at offset 4B+0b: 0b11111111_11111111
+    },
+    
+    // field udp.checksum
+    {
+        .instance = FLD(udp, checksum),
+        .header_instance = HDR(udp),
+        .size = 16,
+        .byte_width = to_bytes(16),
+        .bit_offset = 48 % 8,
+        .byte_offset = 48 / 8,
+        .is_vw = false,
+        .name = "checksum",
+        .short_name = "checksum",
+        .mask = 0xffff0000, // 16b at offset 6B+0b: 0b11111111_11111111
     },
     
 };

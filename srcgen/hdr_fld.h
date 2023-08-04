@@ -14,10 +14,20 @@ typedef struct {
 } __attribute__((packed)) HDRT(ethernet_t);
 
 typedef struct {
-    uint8_t versionIhl;
+    uint16_t htype;
+    uint16_t ptype;
+    uint8_t hlen;
+    uint8_t plen;
+    uint16_t oper;
+} __attribute__((packed)) HDRT(arp_t);
+
+typedef struct {
+    uint8_t version;
+    uint8_t ihl;
     uint8_t diffserv;
     uint16_t totalLen;
     uint16_t identification;
+    uint8_t flags;
     uint16_t fragOffset;
     uint8_t ttl;
     uint8_t protocol;
@@ -27,35 +37,383 @@ typedef struct {
 } __attribute__((packed)) HDRT(ipv4_t);
 
 typedef struct {
-    uint16_t hardware_type;
-    uint16_t protocol_type;
-    uint8_t HLEN;
-    uint8_t PLEN;
-    uint16_t OPER;
-    uint8_t* sender_ha;
-    uint32_t sender_ip;
-    uint8_t* target_ha;
-    uint32_t target_ip;
-} __attribute__((packed)) HDRT(arp_t);
+    uint8_t type;
+    uint8_t code;
+    uint16_t checksum;
+    uint16_t identifier;
+    uint16_t sequence_number;
+} __attribute__((packed)) HDRT(icmp_t);
 
 typedef struct {
-    uint32_t nhgroup;
-} __attribute__((packed)) routing_metadata_t;
+    uint16_t _srcPort0;
+    uint16_t _dstPort1;
+    uint32_t _seqNo2;
+    uint32_t _ackNo3;
+    uint8_t _dataOffset4;
+    uint8_t _res5;
+    uint8_t _flags_cwr6;
+    uint8_t _flags_ece7;
+    uint8_t _flags_urg8;
+    uint8_t _flags_ack9;
+    uint8_t _flags_psh10;
+    uint8_t _flags_rst11;
+    uint8_t _flags_syn12;
+    uint8_t _flags_fin13;
+    uint16_t _window14;
+    uint16_t _checksum15;
+    uint16_t _urgentPtr16;
+} __attribute__((packed)) HDRT(tcp_t);
+
+typedef struct {
+    uint16_t srcPort;
+    uint16_t dstPort;
+    uint16_t plength;
+    uint16_t checksum;
+} __attribute__((packed)) HDRT(udp_t);
+
+typedef struct {
+    uint8_t cwr;
+    uint8_t ece;
+    uint8_t urg;
+    uint8_t ack;
+    uint8_t psh;
+    uint8_t rst;
+    uint8_t syn;
+    uint8_t fin;
+} __attribute__((packed)) tcp_flags_t;
+
+typedef struct {
+    uint8_t srcAddr[(48 + 7) / 8];
+    uint16_t ingress_port;
+} __attribute__((packed)) mac_learn_digest_t;
+
+typedef struct {
+    uint8_t pad1;
+    bool b;
+} __attribute__((packed)) padded_bool_t;
+
+typedef struct {
+    uint8_t pad1;
+    uint8_t f1;
+} __attribute__((packed)) padded1_t;
+
+typedef struct {
+    uint8_t pad2;
+    uint8_t f2;
+} __attribute__((packed)) padded2_t;
+
+typedef struct {
+    uint8_t pad3;
+    uint8_t f3;
+} __attribute__((packed)) padded3_t;
+
+typedef struct {
+    uint8_t pad4;
+    uint8_t f4;
+} __attribute__((packed)) padded4_t;
+
+typedef struct {
+    uint8_t pad5;
+    uint8_t f5;
+} __attribute__((packed)) padded5_t;
+
+typedef struct {
+    uint8_t pad6;
+    uint8_t f6;
+} __attribute__((packed)) padded6_t;
+
+typedef struct {
+    uint8_t pad7;
+    uint8_t f7;
+} __attribute__((packed)) padded7_t;
+
+typedef struct {
+    uint8_t f8;
+} __attribute__((packed)) padded8_t;
+
+typedef struct {
+    uint8_t pad9;
+    uint16_t f9;
+} __attribute__((packed)) padded9_t;
+
+typedef struct {
+    uint8_t pad10;
+    uint16_t f10;
+} __attribute__((packed)) padded10_t;
+
+typedef struct {
+    uint8_t pad11;
+    uint16_t f11;
+} __attribute__((packed)) padded11_t;
+
+typedef struct {
+    uint8_t pad12;
+    uint16_t f12;
+} __attribute__((packed)) padded12_t;
+
+typedef struct {
+    uint8_t pad13;
+    uint16_t f13;
+} __attribute__((packed)) padded13_t;
+
+typedef struct {
+    uint8_t pad14;
+    uint16_t f14;
+} __attribute__((packed)) padded14_t;
+
+typedef struct {
+    uint8_t pad15;
+    uint16_t f15;
+} __attribute__((packed)) padded15_t;
+
+typedef struct {
+    uint16_t f16;
+} __attribute__((packed)) padded16_t;
+
+typedef struct {
+    uint16_t pad17;
+    uint32_t f17;
+} __attribute__((packed)) padded17_t;
+
+typedef struct {
+    uint16_t pad18;
+    uint32_t f18;
+} __attribute__((packed)) padded18_t;
+
+typedef struct {
+    uint16_t pad19;
+    uint32_t f19;
+} __attribute__((packed)) padded19_t;
+
+typedef struct {
+    uint16_t pad20;
+    uint32_t f20;
+} __attribute__((packed)) padded20_t;
+
+typedef struct {
+    uint16_t pad21;
+    uint32_t f21;
+} __attribute__((packed)) padded21_t;
+
+typedef struct {
+    uint16_t pad22;
+    uint32_t f22;
+} __attribute__((packed)) padded22_t;
+
+typedef struct {
+    uint16_t pad23;
+    uint32_t f23;
+} __attribute__((packed)) padded23_t;
+
+typedef struct {
+    uint8_t pad24;
+    uint32_t f24;
+} __attribute__((packed)) padded24_t;
+
+typedef struct {
+    uint8_t pad25;
+    uint32_t f25;
+} __attribute__((packed)) padded25_t;
+
+typedef struct {
+    uint8_t pad26;
+    uint32_t f26;
+} __attribute__((packed)) padded26_t;
+
+typedef struct {
+    uint8_t pad27;
+    uint32_t f27;
+} __attribute__((packed)) padded27_t;
+
+typedef struct {
+    uint8_t pad28;
+    uint32_t f28;
+} __attribute__((packed)) padded28_t;
+
+typedef struct {
+    uint8_t pad29;
+    uint32_t f29;
+} __attribute__((packed)) padded29_t;
+
+typedef struct {
+    uint8_t pad30;
+    uint32_t f30;
+} __attribute__((packed)) padded30_t;
+
+typedef struct {
+    uint8_t pad31;
+    uint32_t f31;
+} __attribute__((packed)) padded31_t;
+
+typedef struct {
+    uint32_t f32;
+} __attribute__((packed)) padded32_t;
+
+typedef struct {
+    uint32_t pad33;
+    uint8_t f33[(33 + 7) / 8];
+} __attribute__((packed)) padded33_t;
+
+typedef struct {
+    uint32_t pad34;
+    uint8_t f34[(34 + 7) / 8];
+} __attribute__((packed)) padded34_t;
+
+typedef struct {
+    uint32_t pad35;
+    uint8_t f35[(35 + 7) / 8];
+} __attribute__((packed)) padded35_t;
+
+typedef struct {
+    uint32_t pad36;
+    uint8_t f36[(36 + 7) / 8];
+} __attribute__((packed)) padded36_t;
+
+typedef struct {
+    uint32_t pad37;
+    uint8_t f37[(37 + 7) / 8];
+} __attribute__((packed)) padded37_t;
+
+typedef struct {
+    uint32_t pad38;
+    uint8_t f38[(38 + 7) / 8];
+} __attribute__((packed)) padded38_t;
+
+typedef struct {
+    uint32_t pad39;
+    uint8_t f39[(39 + 7) / 8];
+} __attribute__((packed)) padded39_t;
+
+typedef struct {
+    uint32_t pad40;
+    uint8_t f40[(40 + 7) / 8];
+} __attribute__((packed)) padded40_t;
+
+typedef struct {
+    uint32_t pad41;
+    uint8_t f41[(41 + 7) / 8];
+} __attribute__((packed)) padded41_t;
+
+typedef struct {
+    uint32_t pad42;
+    uint8_t f42[(42 + 7) / 8];
+} __attribute__((packed)) padded42_t;
+
+typedef struct {
+    uint32_t pad43;
+    uint8_t f43[(43 + 7) / 8];
+} __attribute__((packed)) padded43_t;
+
+typedef struct {
+    uint32_t pad44;
+    uint8_t f44[(44 + 7) / 8];
+} __attribute__((packed)) padded44_t;
+
+typedef struct {
+    uint32_t pad45;
+    uint8_t f45[(45 + 7) / 8];
+} __attribute__((packed)) padded45_t;
+
+typedef struct {
+    uint32_t pad46;
+    uint8_t f46[(46 + 7) / 8];
+} __attribute__((packed)) padded46_t;
+
+typedef struct {
+    uint32_t pad47;
+    uint8_t f47[(47 + 7) / 8];
+} __attribute__((packed)) padded47_t;
+
+typedef struct {
+    uint16_t pad48;
+    uint8_t f48[(48 + 7) / 8];
+} __attribute__((packed)) padded48_t;
+
+typedef struct {
+    uint16_t pad49;
+    uint8_t f49[(49 + 7) / 8];
+} __attribute__((packed)) padded49_t;
+
+typedef struct {
+    uint16_t pad50;
+    uint8_t f50[(50 + 7) / 8];
+} __attribute__((packed)) padded50_t;
+
+typedef struct {
+    uint16_t pad51;
+    uint8_t f51[(51 + 7) / 8];
+} __attribute__((packed)) padded51_t;
+
+typedef struct {
+    uint16_t pad52;
+    uint8_t f52[(52 + 7) / 8];
+} __attribute__((packed)) padded52_t;
+
+typedef struct {
+    uint16_t pad53;
+    uint8_t f53[(53 + 7) / 8];
+} __attribute__((packed)) padded53_t;
+
+typedef struct {
+    uint16_t pad54;
+    uint8_t f54[(54 + 7) / 8];
+} __attribute__((packed)) padded54_t;
+
+typedef struct {
+    uint16_t pad55;
+    uint8_t f55[(55 + 7) / 8];
+} __attribute__((packed)) padded55_t;
+
+typedef struct {
+    uint8_t pad56;
+    uint8_t f56[(56 + 7) / 8];
+} __attribute__((packed)) padded56_t;
+
+typedef struct {
+    uint8_t pad57;
+    uint8_t f57[(57 + 7) / 8];
+} __attribute__((packed)) padded57_t;
+
+typedef struct {
+    uint8_t pad58;
+    uint8_t f58[(58 + 7) / 8];
+} __attribute__((packed)) padded58_t;
+
+typedef struct {
+    uint8_t pad59;
+    uint8_t f59[(59 + 7) / 8];
+} __attribute__((packed)) padded59_t;
+
+typedef struct {
+    uint8_t pad60;
+    uint8_t f60[(60 + 7) / 8];
+} __attribute__((packed)) padded60_t;
+
+typedef struct {
+    uint8_t pad61;
+    uint8_t f61[(61 + 7) / 8];
+} __attribute__((packed)) padded61_t;
+
+typedef struct {
+    uint8_t pad62;
+    uint8_t f62[(62 + 7) / 8];
+} __attribute__((packed)) padded62_t;
+
+typedef struct {
+    uint8_t pad63;
+    uint8_t f63[(63 + 7) / 8];
+} __attribute__((packed)) padded63_t;
+
+typedef struct {
+    uint8_t f64[(64 + 7) / 8];
+} __attribute__((packed)) padded64_t;
 
 typedef struct {
     HDRT(ethernet_t) ethernet;
+    HDRT(arp_t) arp;
     HDRT(ipv4_t) ipv4;
+    HDRT(tcp_t) tcp;
+    HDRT(udp_t) udp;
+    HDRT(icmp_t) icmp;
 } __attribute__((packed)) headers_t;
-
-typedef struct {
-    uint8_t f0;
-    uint8_t f1;
-    uint16_t f2;
-    uint16_t f3;
-    uint16_t f4;
-    uint8_t f5;
-    uint8_t f6;
-    uint32_t f7;
-    uint32_t f8;
-} __attribute__((packed)) tuple_0_t;
 

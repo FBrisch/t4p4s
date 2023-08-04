@@ -17,8 +17,11 @@ void reset_vw_fields(SHORT_STDPARAMS) {
 void reset_headers(SHORT_STDPARAMS) {
     pd->is_deparse_reordering = false;
     pd->headers[HDR(ethernet)].pointer = NULL;
-    pd->headers[HDR(ipv4)].pointer = NULL;
     pd->headers[HDR(arp)].pointer = NULL;
+    pd->headers[HDR(ipv4)].pointer = NULL;
+    pd->headers[HDR(icmp)].pointer = NULL;
+    pd->headers[HDR(tcp)].pointer = NULL;
+    pd->headers[HDR(udp)].pointer = NULL;
     // reset metadatas
     memset(pd->headers[HDR(all_metadatas)].pointer, 0, hdr_infos[HDR(all_metadatas)].byte_width * sizeof(uint8_t));
     
@@ -48,8 +51,11 @@ void init_metadata_header(SHORT_STDPARAMS) {
 
 void init_headers(SHORT_STDPARAMS) {
     init_header(HDR(ethernet), "ethernet", SHORT_STDPARAMS_IN);
-    init_header(HDR(ipv4), "ipv4", SHORT_STDPARAMS_IN);
     init_header(HDR(arp), "arp", SHORT_STDPARAMS_IN);
+    init_header(HDR(ipv4), "ipv4", SHORT_STDPARAMS_IN);
+    init_header(HDR(icmp), "icmp", SHORT_STDPARAMS_IN);
+    init_header(HDR(tcp), "tcp", SHORT_STDPARAMS_IN);
+    init_header(HDR(udp), "udp", SHORT_STDPARAMS_IN);
     init_metadata_header(SHORT_STDPARAMS_IN);
 }
 
@@ -60,7 +66,6 @@ void init_dataplane(SHORT_STDPARAMS) {
     MODIFY(dst_pkt(pd), EGRESS_META_FLD, src_32(EGRESS_INIT_VALUE), ENDIAN_KEEP);
 }
 
-// skipping method generation for empty control egress
 void control_ingress(STDPARAMS)  {
     control_locals_ingress_t local_vars_struct;
     pd->control_locals = (void*)&local_vars_struct;
@@ -73,27 +78,23 @@ void control_DeparserImpl(STDPARAMS)  {
     pd->control_locals = (void*)&local_vars_struct;
     control_stage_DeparserImpl_0(&local_vars_struct, STDPARAMS_IN);
     control_stage_DeparserImpl_1(&local_vars_struct, STDPARAMS_IN);
+    control_stage_DeparserImpl_2(&local_vars_struct, STDPARAMS_IN);
+    control_stage_DeparserImpl_3(&local_vars_struct, STDPARAMS_IN);
+    control_stage_DeparserImpl_4(&local_vars_struct, STDPARAMS_IN);
+    control_stage_DeparserImpl_5(&local_vars_struct, STDPARAMS_IN);
 }
 
-void control_verifyChecksum(STDPARAMS)  {
-    control_locals_verifyChecksum_t local_vars_struct;
-    pd->control_locals = (void*)&local_vars_struct;
-    control_stage_verifyChecksum_0(&local_vars_struct, STDPARAMS_IN);
-}
-
-void control_computeChecksum(STDPARAMS)  {
-    control_locals_computeChecksum_t local_vars_struct;
-    pd->control_locals = (void*)&local_vars_struct;
-    control_stage_computeChecksum_0(&local_vars_struct, STDPARAMS_IN);
-}
+// skipping method generation for empty control egress
+// skipping method generation for empty control verifyChecksum
+// skipping method generation for empty control computeChecksum
 
 void process_packet(STDPARAMS) {
 parser_state_ParserImpl_start(STDPARAMS_IN);
 if (unlikely(is_packet_dropped(pd)))   return;
-control_verifyChecksum(STDPARAMS_IN);
+// control verifyChecksum is empty
 control_ingress(STDPARAMS_IN);
 // control egress is empty
-control_computeChecksum(STDPARAMS_IN);
+// control computeChecksum is empty
 control_DeparserImpl(STDPARAMS_IN);
 }
 

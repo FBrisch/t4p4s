@@ -16,5 +16,9 @@
 
 #define T4P4S_BROADCAST_PORT 100
 
-#define NB_TABLES 2
+#define NB_TABLES 48
+
+typedef uint16_t PortId_t;
+typedef uint8_t* macAddr_t;
+typedef uint32_t ip4Addr_t;
 

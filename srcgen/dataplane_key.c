@@ -28,7 +28,57 @@ header_instance_e hdr = fld_infos[fld].header_instance;
 return pd->headers[hdr].pointer + fld_infos[fld].byte_offset;
 }
 
-void table_ipv4_lpm_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+void table_eth_dstMac_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(ethernet), "ethernet", "dstAddr"))    return;
+    GET_BUF(key, src_pkt(pd), FLD(ethernet,dstAddr));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(ethernet,header) "." T4LIT(dstAddr,field) "/" T4LIT(%db) "=" T4COLOR(T4LIGHT_bytes), 48);
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(ethernet,dstAddr)), 6, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 6;
+    
+}
+
+void table_eth_srcMac_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(ethernet), "ethernet", "srcAddr"))    return;
+    GET_BUF(key, src_pkt(pd), FLD(ethernet,srcAddr));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(ethernet,header) "." T4LIT(srcAddr,field) "/" T4LIT(%db) "=" T4COLOR(T4LIGHT_bytes), 48);
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(ethernet,srcAddr)), 6, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 6;
+    
+}
+
+void table_eth_proto_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(ethernet), "ethernet", "etherType"))    return;
+    *(uint16_t*)key = GET32(src_pkt(pd), FLD(ethernet,etherType));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(ethernet,header) "." T4LIT(etherType,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
+        16, net2t4p4s_2(*(uint16_t*)key));
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(ethernet,etherType)), 2, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 2;
+    
+}
+
+void table_ip_proto_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(ipv4), "ipv4", "protocol"))    return;
+    *(uint8_t*)key = GET32(src_pkt(pd), FLD(ipv4,protocol));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(ipv4,header) "." T4LIT(protocol,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
+        8, net2t4p4s_1(*(uint8_t*)key));
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(ipv4,protocol)), 1, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 1;
+    
+}
+
+void table_ip_dstIP_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
     if (is_invalid(pd, HDR(ipv4), "ipv4", "dstAddr"))    return;
     *(uint32_t*)key = GET32(src_pkt(pd), FLD(ipv4,dstAddr));
     #ifdef T4P4S_DEBUG
@@ -41,16 +91,68 @@ void table_ipv4_lpm_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
     
 }
 
-void table_nexthops_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
-    if (is_invalid(pd, HDR(all_metadatas), "all_metadatas", "_routing_metadata_nhgroup0"))    return;
-    *(uint32_t*)key = GET32(src_pkt(pd), FLD(all_metadatas,_routing_metadata_nhgroup0));
+void table_ip_srcIP_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(ipv4), "ipv4", "srcAddr"))    return;
+    *(uint32_t*)key = GET32(src_pkt(pd), FLD(ipv4,srcAddr));
     #ifdef T4P4S_DEBUG
-        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(all_metadatas,header) "." T4LIT(_routing_metadata_nhgroup0,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(ipv4,header) "." T4LIT(srcAddr,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
         32, net2t4p4s_4(*(uint32_t*)key));
-        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(all_metadatas,_routing_metadata_nhgroup0)), 4, 12, "_");
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(ipv4,srcAddr)), 4, 12, "_");
         *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
     #endif
     key += 4;
+    
+}
+
+void table_tcp_srcPort_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(tcp), "tcp", "_srcPort0"))    return;
+    *(uint16_t*)key = GET32(src_pkt(pd), FLD(tcp,_srcPort0));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(tcp,header) "." T4LIT(srcPort,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
+        16, net2t4p4s_2(*(uint16_t*)key));
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(tcp,_srcPort0)), 2, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 2;
+    
+}
+
+void table_tcp_dstPort_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(tcp), "tcp", "_dstPort1"))    return;
+    *(uint16_t*)key = GET32(src_pkt(pd), FLD(tcp,_dstPort1));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(tcp,header) "." T4LIT(dstPort,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
+        16, net2t4p4s_2(*(uint16_t*)key));
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(tcp,_dstPort1)), 2, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 2;
+    
+}
+
+void table_udp_srcPort_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(udp), "udp", "srcPort"))    return;
+    *(uint16_t*)key = GET32(src_pkt(pd), FLD(udp,srcPort));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(udp,header) "." T4LIT(srcPort,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
+        16, net2t4p4s_2(*(uint16_t*)key));
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(udp,srcPort)), 2, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 2;
+    
+}
+
+void table_udp_dstPort_filter_0_key(packet_descriptor_t* pd, uint8_t* key KEYTXTPARAMS) {
+    if (is_invalid(pd, HDR(udp), "udp", "dstPort"))    return;
+    *(uint16_t*)key = GET32(src_pkt(pd), FLD(udp,dstPort));
+    #ifdef T4P4S_DEBUG
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4LIT(udp,header) "." T4LIT(dstPort,field) "/" T4LIT(%db) "=" T4LIT(%d) "=" T4COLOR(T4LIGHT_bytes) "0x",
+        16, net2t4p4s_2(*(uint16_t*)key));
+        *key_txt_idx += dbg_sprint_bytes_limit(key_txt + *key_txt_idx, get_fld_ptr(pd, FLD(udp,dstPort)), 2, 12, "_");
+        *key_txt_idx += sprintf(key_txt + *key_txt_idx, T4COLOR(T4LIGHT_off) " ");
+    #endif
+    key += 2;
     
 }
 
