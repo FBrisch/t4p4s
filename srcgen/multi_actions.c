@@ -446,3 +446,61 @@ dbg_bytes(&(local_vars->dropped_0), 1, "    : Set " T4LIT(dropped_0,field) "/" T
     }
 #endif // T4P4S_MULTI_IDX == 1
 
+#if T4P4S_MULTI_IDX == 0
+    // action name: ._drop; ._drop
+    void action_code__drop(action__drop_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: ._drop; ._drop
+    void action_code__drop_1(action__drop_1_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+SHORT_EXTERNCALL0(mark_to_drop)(SHORT_STDPARAMS_IN);
+;
+    }
+#endif // T4P4S_MULTI_IDX == 1
+
+#if T4P4S_MULTI_IDX == 0
+    // action name: .set_nhop; .set_nhop
+    void action_code_set_nhop(action_set_nhop_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+uint32_t value32b_0019;
+memcpy(&value32b_0019, &(parameters.nhgroup_1), 4);
+if (likely(is_header_valid(HDR(all_metadatas), pd))) {
+    set_fld(pd, FLD(all_metadatas,_routing_metadata_nhgroup0), value32b_0019);
+    } else {
+    debug("   " T4LIT(!!,warning) " Ignoring assignment to field in invalid header: " T4LIT(%s,warning) "." T4LIT(%s,field) "\n", hdr_infos[HDR(all_metadatas)].name, field_names[FLD(all_metadatas,_routing_metadata_nhgroup0)]);
+}
+
+ if (unlikely(!is_header_valid(HDR(ipv4), pd))) {
+     debug("   " T4LIT(!!,warning) " Access to field in invalid header " T4LIT(%s,warning) "." T4LIT(ttl,field) ", returning \"unspecified\" value " T4LIT(0xd3 /* pseudorandom 8 bit value */) "\n", hdr_infos[HDR(ipv4)].name);
+ }
+ if (unlikely(!is_header_valid(HDR(ipv4), pd))) {
+     debug("   " T4LIT(!!,warning) " Access to field in invalid header " T4LIT(%s,warning) "." T4LIT(ttl,field) ", returning \"unspecified\" value " T4LIT(0xd3 /* pseudorandom 8 bit value */) "\n", hdr_infos[HDR(ipv4)].name);
+ }
+ uint8_t bitmask_8b_0021 = 0xff;
+ uint8_t casting_0023 = (uint8_t)((((uint8_t)GET32_def(src_pkt(pd), FLD(ipv4,ttl), 0xd3 /* pseudorandom 8 bit value */)) + 0xff /* probably -1 */));
+ uint8_t masking_0022 = (uint8_t)(casting_0023);
+uint8_t value8b_0020 = (bitmask_8b_0021 & masking_0022);
+if (likely(is_header_valid(HDR(ipv4), pd))) {
+    set_fld(pd, FLD(ipv4,ttl), value8b_0020);
+    } else {
+    debug("   " T4LIT(!!,warning) " Ignoring assignment to field in invalid header: " T4LIT(%s,warning) "." T4LIT(%s,field) "\n", hdr_infos[HDR(ipv4)].name, field_names[FLD(ipv4,ttl)]);
+}
+    }
+#endif // T4P4S_MULTI_IDX == 0
+
+#if T4P4S_MULTI_IDX == 1
+    // action name: .forward; .forward
+    void action_code_forward(action_forward_params_t parameters, SHORT_STDPARAMS) {
+        control_locals_ingress_t* local_vars = (control_locals_ingress_t*) pd->control_locals;
+set_fld_buf(pd, FLD(ethernet,dstAddr), parameters.dmac_val);
+set_fld(pd, FLD(all_metadatas,egress_port), parameters.port);
+set_fld_buf(pd, FLD(ethernet,srcAddr), parameters.smac_val);
+    }
+#endif // T4P4S_MULTI_IDX == 1
+

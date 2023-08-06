@@ -309,6 +309,32 @@ typedef struct {
     FIELD(DUMMY_FIELD, 0);
 } action_firewall210_params_t;
 
+typedef struct {
+    FIELD(DUMMY_FIELD, 0);
+} action_NoAction_1_params_t;
+
+typedef struct {
+    FIELD(DUMMY_FIELD, 0);
+} action_NoAction_2_params_t;
+
+typedef struct {
+    uint32_t nhgroup_1;
+} action_set_nhop_params_t;
+
+typedef struct {
+    FIELD(DUMMY_FIELD, 0);
+} action__drop_params_t;
+
+typedef struct {
+    FIELD(DUMMY_FIELD, 0);
+} action__drop_1_params_t;
+
+typedef struct {
+    uint8_t dmac_val[(48 + 7) / 8];
+    uint8_t smac_val[(48 + 7) / 8];
+    uint16_t port;
+} action_forward_params_t;
+
 typedef union {
     action_drop_params_t drop_params;
     action_NoAction_1_params_t NoAction_1_params;

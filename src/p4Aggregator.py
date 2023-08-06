@@ -30,12 +30,13 @@ class P4Aggregator:
             header.is_local = False
         self.mergeHeaderInstances(combiner.resultingHeaders)
 
+        newControls = []
 
         for control1 in self.p4program1.controls:
             for control2 in self.p4program2.controls:
                 if control1.name == control2.name:
-                    resultingControl = self.mergeControl(control1,control2)
-        
+                    newControls.append(self.mergeControl(control1,control2,combiner.headerNameTranslationDictionary))
+        self.resultingProgram.controls.vec = newControls    
             
 
         printHLIR(self.resultingProgram)
@@ -76,6 +77,38 @@ class P4Aggregator:
                     found = True
         self.resultingProgram.header_instances.vec = newInstances
 
-    def mergeControl():
-        print('mergingControl')
+    def mergeControl(self,control1,control2,headers):
+        resultingControl = deep_copy(control1)
+        index1 = 0
+        index2 = 0
+        if control1.name == 'DeparserImpl':
+            resultComponents = []
+            for header2,header1 in headers.items():
+                while index2 < len(control2.body.components.vec) and control2.body.components[index2].methodCall.arguments[0].expression.type.name != header2:
+                    resultComponents.append(control2.body.components[index2])
+                    index2 = index2 + 1
+                index2 = index2 + 1
+                while index1 < len(control1.body.components.vec) and control1.body.components[index1].methodCall.arguments[0].expression.type.name != header1:
+                    resultComponents.append(control1.body.components[index1])
+                    index1 = index1 + 1
+                resultComponents.append(control1.body.components[index1])
+                index1 = index1 + 1
+            while index2 < len(control2.body.components.vec):
+                resultComponents.append(control2.body.components[index2])
+                index2 = index2 + 1
+            while index1 < len(control1.body.components.vec):
+                resultComponents.append(control1.body.components[index1])
+                index1 = index1 + 1
+            resultingControl.body.components = resultComponents
+            print('Deparser')
+        else:
+            for action in control2.actions:
+                resultingControl.actions.append(action)
+            for table in control2.tables:
+                resultingControl.tables.append(table)
+            
+            for controlBlock in control2.body.components:
+                resultingControl.body.components.append(controlBlock)
+
+        return resultingControl
         

@@ -59,7 +59,8 @@ class ParserCombiner:
         if self.getExtractedHeader(state1) is not None:
             self.addedNodes.append(self.getExtractedHeader(state1))
             self.resultingHeaders.append(self.getExtractedHeader(state1))
-
+            self.headerNameTranslationDictionary[self.getExtractedHeader(state2).name] = self.getExtractedHeader(state1).name
+        
         mergedSelect,resultingSelectStatement = self.mergeSelects(state1.selectExpression,state2.selectExpression)
 
         for key,case in mergedSelect.items():
@@ -70,7 +71,7 @@ class ParserCombiner:
                     self.addDistinctTree(case.state1,False)
                 else:
                     self.iterateOverStates(self.stateDict1[case.state1],self.stateDict2[case.state2])
-                    self.headerNameTranslationDictionary[case.state2] = case.state1
+                    
             else:
                 if(case.state1 != case.state2):
                     print("mismatch between accept/reject state and different state")

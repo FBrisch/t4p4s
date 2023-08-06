@@ -71,6 +71,8 @@ void control_ingress(STDPARAMS)  {
     pd->control_locals = (void*)&local_vars_struct;
     control_stage_ingress_0(&local_vars_struct, STDPARAMS_IN);
     control_stage_ingress_1(&local_vars_struct, STDPARAMS_IN);
+    control_stage_ingress_2(&local_vars_struct, STDPARAMS_IN);
+    control_stage_ingress_3(&local_vars_struct, STDPARAMS_IN);
 }
 
 void control_DeparserImpl(STDPARAMS)  {
@@ -85,16 +87,25 @@ void control_DeparserImpl(STDPARAMS)  {
 }
 
 // skipping method generation for empty control egress
-// skipping method generation for empty control verifyChecksum
-// skipping method generation for empty control computeChecksum
+void control_verifyChecksum(STDPARAMS)  {
+    control_locals_verifyChecksum_t local_vars_struct;
+    pd->control_locals = (void*)&local_vars_struct;
+    control_stage_verifyChecksum_0(&local_vars_struct, STDPARAMS_IN);
+}
+
+void control_computeChecksum(STDPARAMS)  {
+    control_locals_computeChecksum_t local_vars_struct;
+    pd->control_locals = (void*)&local_vars_struct;
+    control_stage_computeChecksum_0(&local_vars_struct, STDPARAMS_IN);
+}
 
 void process_packet(STDPARAMS) {
 parser_state_ParserImpl_start(STDPARAMS_IN);
 if (unlikely(is_packet_dropped(pd)))   return;
-// control verifyChecksum is empty
+control_verifyChecksum(STDPARAMS_IN);
 control_ingress(STDPARAMS_IN);
 // control egress is empty
-// control computeChecksum is empty
+control_computeChecksum(STDPARAMS_IN);
 control_DeparserImpl(STDPARAMS_IN);
 }
 

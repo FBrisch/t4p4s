@@ -166,8 +166,8 @@ if (Member647507_ethernet__etherType == 0x806) { // select case #1
 
 bool parser_state_ParserImpl_parse_arp_000_extract_arp(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0019 = 0;
-    int arp_len = parser_extract_arp(vwlen_0019, STDPARAMS_IN);
+    int vwlen_0024 = 0;
+    int arp_len = parser_extract_arp(vwlen_0024, STDPARAMS_IN);
     if (unlikely(arp_len < 0)) {
         gen_parse_drop_msg(arp_len, "arp", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
@@ -178,8 +178,8 @@ bool parser_state_ParserImpl_parse_arp_000_extract_arp(STDPARAMS) {
 
 bool parser_state_ParserImpl_parse_icmp_000_extract_icmp(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0020 = 0;
-    int icmp_len = parser_extract_icmp(vwlen_0020, STDPARAMS_IN);
+    int vwlen_0025 = 0;
+    int icmp_len = parser_extract_icmp(vwlen_0025, STDPARAMS_IN);
     if (unlikely(icmp_len < 0)) {
         gen_parse_drop_msg(icmp_len, "icmp", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
@@ -190,8 +190,8 @@ bool parser_state_ParserImpl_parse_icmp_000_extract_icmp(STDPARAMS) {
 
 bool parser_state_ParserImpl_parse_tcp_000_extract_tcp(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0021 = 0;
-    int tcp_len = parser_extract_tcp(vwlen_0021, STDPARAMS_IN);
+    int vwlen_0026 = 0;
+    int tcp_len = parser_extract_tcp(vwlen_0026, STDPARAMS_IN);
     if (unlikely(tcp_len < 0)) {
         gen_parse_drop_msg(tcp_len, "tcp", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
@@ -202,8 +202,8 @@ bool parser_state_ParserImpl_parse_tcp_000_extract_tcp(STDPARAMS) {
 
 bool parser_state_ParserImpl_parse_udp_000_extract_udp(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0022 = 0;
-    int udp_len = parser_extract_udp(vwlen_0022, STDPARAMS_IN);
+    int vwlen_0027 = 0;
+    int udp_len = parser_extract_udp(vwlen_0027, STDPARAMS_IN);
     if (unlikely(udp_len < 0)) {
         gen_parse_drop_msg(udp_len, "udp", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
@@ -214,8 +214,8 @@ bool parser_state_ParserImpl_parse_udp_000_extract_udp(STDPARAMS) {
 
 bool parser_state_ParserImpl_parse_ipv4_000_extract_ipv4(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0023 = 0;
-    int ipv4_len = parser_extract_ipv4(vwlen_0023, STDPARAMS_IN);
+    int vwlen_0028 = 0;
+    int ipv4_len = parser_extract_ipv4(vwlen_0028, STDPARAMS_IN);
     if (unlikely(ipv4_len < 0)) {
         gen_parse_drop_msg(ipv4_len, "ipv4", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
@@ -226,8 +226,8 @@ bool parser_state_ParserImpl_parse_ipv4_000_extract_ipv4(STDPARAMS) {
 
 bool parser_state_ParserImpl_start_000_extract_ethernet(STDPARAMS) {
     parser_state_t* local_vars = pstate;
-    int vwlen_0024 = 0;
-    int ethernet_len = parser_extract_ethernet(vwlen_0024, STDPARAMS_IN);
+    int vwlen_0029 = 0;
+    int ethernet_len = parser_extract_ethernet(vwlen_0029, STDPARAMS_IN);
     if (unlikely(ethernet_len < 0)) {
         gen_parse_drop_msg(ethernet_len, "ethernet", -1 /* ignored */);
         drop_packet(STDPARAMS_IN);
