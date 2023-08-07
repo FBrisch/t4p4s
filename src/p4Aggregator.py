@@ -30,6 +30,11 @@ class P4Aggregator:
             header.is_local = False
         self.mergeHeaderInstances(combiner.resultingHeaders)
 
+
+        newMetadata = self.mergeMetadata(next(x for x in self.p4program1.headers if x.name == 'all_metadatas_t'),next(x for x in self.p4program2.headers if x.name == 'all_metadatas_t'))
+        self.resultingProgram.headers.vec.append(newMetadata)
+        #self.resultingProgram.header_instances.vec.append(newMetadata)
+
         newControls = []
 
         for control1 in self.p4program1.controls:
@@ -37,7 +42,7 @@ class P4Aggregator:
                 if control1.name == control2.name:
                     newControls.append(self.mergeControl(control1,control2,combiner.headerNameTranslationDictionary))
         self.resultingProgram.controls.vec = newControls    
-            
+        
 
         printHLIR(self.resultingProgram)
         #self.resultingProgram.header_instances.vec = combiner.resultingHeaders
@@ -72,7 +77,7 @@ class P4Aggregator:
         for header in headers:
             found = False
             for headerInstance in self.p4program1.header_instances.vec + self.p4program2.header_instances.vec:
-                if headerInstance.name != 'all_metadatas' and headerInstance.type.path.name ==header.name and not found:
+                if headerInstance.name != 'all_metadatas' and headerInstance.type.path.name == header.name and not found:
                     newInstances.append(headerInstance)
                     found = True
         self.resultingProgram.header_instances.vec = newInstances
@@ -100,10 +105,13 @@ class P4Aggregator:
                 resultComponents.append(control1.body.components[index1])
                 index1 = index1 + 1
             resultingControl.body.components = resultComponents
-            print('Deparser')
+            #print('Deparser')
         else:
+            for decls in control2.controlLocals:
+                print(" ")
             for action in control2.actions:
-                resultingControl.actions.append(action)
+                if not any(ele.name == action.name for ele in resultingControl.actions):
+                    resultingControl.actions.append(action)
             for table in control2.tables:
                 resultingControl.tables.append(table)
             
@@ -112,3 +120,13 @@ class P4Aggregator:
 
         return resultingControl
         
+    def mergeMetadata(self,metadata1,metadata2):
+        newMetadata = []
+        for data in metadata1.fields:
+            if not any(ele.name == data.name for ele in newMetadata):
+                newMetadata.append(data)
+        for data in metadata2.fields:
+            if not any(ele.name == data.name for ele in newMetadata):
+                newMetadata.append(data)
+        metadata1.fields.vec = newMetadata
+        return metadata1

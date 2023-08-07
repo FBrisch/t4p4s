@@ -6,6 +6,9 @@ def expr_to_string(expr):
     if expr.node_type == 'Constant':
         if expr.base == 10:
             return f'{expr.value}'
+        if expr.base == 16:
+            return f'{expr.value:#X}'
+        breakpoint()
         return 'TODO_CONST_EXPR'
 
     if expr.node_type == 'Member':
@@ -31,14 +34,29 @@ def expr_to_string(expr):
     if expr.node_type == 'Add':
         return f'{expr_to_string(expr.left)} + {expr_to_string(expr.right)}'
     
-    if expr.node_type == 'BAnd' or expr.node_type == 'LAnd':
+    if expr.node_type == 'BAnd':
+        return f'{expr_to_string(expr.left)} & {expr_to_string(expr.right)}'
+    if expr.node_type == 'LAnd':
         return f'{expr_to_string(expr.left)} && {expr_to_string(expr.right)}'
     if expr.node_type == 'Equ':
         return f'{expr_to_string(expr.left)} == {expr_to_string(expr.right)}'
     if expr.node_type == 'Neq':
         return f'{expr_to_string(expr.left)} != {expr_to_string(expr.right)}'
     if expr.node_type == 'BoolLiteral':
-        return f'{expr.value}'
+        if expr.value:
+            return f'true'
+        else:
+            return f'false'
+    if expr.node_type == 'Declaration_Variable':
+        return f' {expr_to_string(expr.type)} {expr.name}'
+    if expr.node_type == 'Type_Bits':
+        return f' bit<{expr.size}>'
+    if expr.node_type == 'Type_Boolean':
+        return f' bool'
+    if expr.node_type == "StructField":
+        return f' {expr_to_string(expr.type)} {expr.name}'
+    if expr.node_type == "Type_Name":
+        return f' '
     breakpoint()
     return 'TODO_EXPR'
 
@@ -88,33 +106,28 @@ def printHLIR(hlir):
         'V1Switch': 'v1model.p4',
         'PSA': 'psa.p4',
     }
-    def type_to_str(node):
-        if node.node_type == 'Type_Bits':
-            return f'bit<{node.size}>'
-        breakpoint()
-        return 'TODO_TYPE'
 
     print(f'#include <{import_files[hlir.news.model]}>')
     print()
 
-    for hdr in hlir.headers.filter(lambda hdr: hdr.name != 'all_metadatas_t'):
-        print(f'header {hdr.name} {{')
-        for fld in hdr.fields:
-            print(f'    {type_to_str(fld.type)} {fld.name};')
+    for hdr in hlir.headers:
+        if hdr.name == "all_metadatas_t":
+            print(f'struct metadata {{')
+            for fld in hdr.fields:
+                print(f'    {expr_to_string(fld.type)};')
+        else:
+            print(f'header {hdr.name} {{')
+            for fld in hdr.fields:
+                print(f'    {expr_to_string(fld)};')
         print(f'}}')
         print()
 
     print(f'struct headers {{')
-    for hdrinst in hlir.header_instances.filter(lambda hdrinst: hdrinst.name != 'all_metadatas'):
+    for hdrinst in hlir.header_instances.filter(lambda hdrinst: hdrinst.name != 'all_metadatas_t'):
         print(f'    {hdrinst.urtype.name} {hdrinst.name};')
     print(f'}}')
     print()
 
-    print(f'struct metadata {{')
-    for meta in hlir.header_instances['all_metadatas']:
-        print(f'    TODO_META {meta.name};')
-    print(f'}}')
-    print()
 
     for parser in hlir.parsers:
         params = ', '.join(f'{param.direction} {param.urtype.name} {param.name}' for param in parser.type.applyParams.parameters)
@@ -129,7 +142,7 @@ def printHLIR(hlir):
             print(f'    state {state.name} {{')
             for stateComponent in state.components:
                 if stateComponent.call == 'extract_header':
-                    print(f'        {stateComponent.call}(')
+                    print(f'        packet.extract(')
                     for argument in stateComponent.methodCall.arguments:
                         print(f'          {argument.expression.expr.path.name}.{argument.expression.hdr_ref.name}')
                     print(f'        );')
@@ -140,7 +153,7 @@ def printHLIR(hlir):
             if state.selectExpression.node_type == "PathExpression":
                 print(f'        transition {state.selectExpression.path.name};')
             else:
-                print(f'        transition select({parserHeaderName}.{state.selectExpression.select.components[0].fld_ref.name}.{state.selectExpression.select.components[0].fld_ref.name}){"{"}')
+                print(f'        transition select({parserHeaderName}.{state.selectExpression.select.components[0].expr.member}.{state.selectExpression.select.components[0].fld_ref.name}){"{"}')
                 for case in state.selectExpression.selectCases:
                     if(case.keyset.node_type == 'DefaultExpression'):
                         print(f'          default:{case.state.path.name};')
@@ -158,9 +171,14 @@ def printHLIR(hlir):
 
         print(f'control {ctl.type.name}({params}) {{')
 
+        for variable in ctl.controlLocals:
+            if variable.node_type == "Declaration_Variable":
+                print(f'        {expr_to_string(variable)};')
+
         for action in ctl.actions:
             # TODO
-            params = ''
+            params = ', '.join(f'{expr_to_string(param.type)} {param.name}' for param in action.parameters.parameters.vec)
+        
             print(f'    action {action.name}({params}) {{')
             for comp in action.body.components:
                 print_body_component(2, comp)

@@ -310,14 +310,6 @@ typedef struct {
 } action_firewall210_params_t;
 
 typedef struct {
-    FIELD(DUMMY_FIELD, 0);
-} action_NoAction_1_params_t;
-
-typedef struct {
-    FIELD(DUMMY_FIELD, 0);
-} action_NoAction_2_params_t;
-
-typedef struct {
     uint32_t nhgroup_1;
 } action_set_nhop_params_t;
 
