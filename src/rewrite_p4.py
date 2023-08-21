@@ -57,6 +57,8 @@ def expr_to_string(expr):
         return f' {expr_to_string(expr.type)} {expr.name}'
     if expr.node_type == "Type_Name":
         return f' '
+    if expr.node_type == "LOr":
+        return f'{expr_to_string(expr.left)} || {expr_to_string(expr.right)}'
     breakpoint()
     return 'TODO_EXPR'
 
@@ -73,6 +75,12 @@ def print_body_component(level, node):
             if name == 'emit':
                 print(f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});')
             elif name == 'apply':
+                print(f'{indent}{mc.method.expr.path.name}.{name}({exprs});')
+            elif name=='setValid':
+                print(f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});')
+            elif name=='setInvalid':
+                print(f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});')
+            elif name=='execute_meter':
                 print(f'{indent}{mc.method.expr.path.name}.{name}({exprs});')
             else:
                 print(f'{indent}{mc.type.name}.{name}({exprs});')
@@ -96,6 +104,9 @@ def print_body_component(level, node):
     if node.node_type == 'BlockStatement':
         for component in node.components:
             print_body_component(level,component)
+        return
+    if node.node_type == 'EmptyStatement':
+        print(f'   ')
         return
     breakpoint()
     print('TODO_COMP')
@@ -141,7 +152,9 @@ def printHLIR(hlir):
 
             print(f'    state {state.name} {{')
             for stateComponent in state.components:
-                if stateComponent.call == 'extract_header':
+                if stateComponent.node_type == "AssignmentStatement":
+                    print_body_component(3+1,stateComponent)
+                elif stateComponent.call == 'extract_header':
                     print(f'        packet.extract(')
                     for argument in stateComponent.methodCall.arguments:
                         print(f'          {argument.expression.expr.path.name}.{argument.expression.hdr_ref.name}')
@@ -158,7 +171,11 @@ def printHLIR(hlir):
                     if(case.keyset.node_type == 'DefaultExpression'):
                         print(f'          default:{case.state.path.name};')
                     else:
-                        print(f'          {case.keyset.value}:{case.state.path.name};')
+                        if case.keyset.node_type == "ListExpression":
+                            vals = ', '.join(f'{value.value}' for value in case.keyset.components)
+                            print(f'          ({vals}):{case.state.path.name};')
+                        else:
+                            print(f'          {case.keyset.value}:{case.state.path.name};')
                 if state.selectExpression.select.components[0].fld_ref.name == 'accept':
                     print(f'        transition accept;')
                 print('        }')

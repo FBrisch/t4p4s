@@ -107,8 +107,9 @@ class P4Aggregator:
             resultingControl.body.components = resultComponents
             #print('Deparser')
         else:
-            for decls in control2.controlLocals:
-                print(" ")
+            for decl in control2.controlLocals:
+                if decl.node_type == "Declaration_Variable":
+                    resultingControl.controlLocals.append(decl)
             for action in control2.actions:
                 if not any(ele.name == action.name for ele in resultingControl.actions):
                     resultingControl.actions.append(action)

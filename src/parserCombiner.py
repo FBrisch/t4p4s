@@ -173,8 +173,11 @@ class ParserCombiner:
             currentState = self.stateDict2[statename]
         else:
             currentState = self.stateDict1[statename]
-        self.addedNodes.append(self.getExtractedHeader(currentState))
-        self.resultingHeaders.append(self.getExtractedHeader(currentState))
+        
+        extractedHeader = self.getExtractedHeader(currentState)
+        if extractedHeader is not None:
+            self.addedNodes.append(extractedHeader)
+            self.resultingHeaders.append(extractedHeader)
         self.resultingStates[statename] = deep_copy(currentState)
         self.resultingStates[statename].Node_ID = currentState.Node_ID
         self.addedNodes.append(self.resultingStates[statename])
@@ -189,7 +192,7 @@ class ParserCombiner:
         sumHeaderLength = 0
         stateComponents = state.components
         for comp in stateComponents:
-            if(comp.call == "extract_header"):
+            if(comp.node_type == 'MethodCallStatement' and comp.call == "extract_header"):
                 sumHeaderLength += comp.header.byte_width
         return sumHeaderLength
     
