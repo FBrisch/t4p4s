@@ -1,6 +1,6 @@
 /* -*- P4_16 -*- */
 
-#include "common-boilerplate-pre.p4"
+#include "include/v1-boilerplate-pre.p4"
 
 typedef bit<32> digest_t;
 
@@ -449,4 +449,4 @@ CTL_EMIT {
     }
 }
 
-#include "common-boilerplate-post.p4"
+#include "include/v1-boilerplate-post.p4"

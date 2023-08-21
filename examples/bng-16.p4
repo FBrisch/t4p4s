@@ -1,4 +1,4 @@
-#include "common-boilerplate-pre.p4"
+#include "include/v1-boilerplate-pre.p4"
 
 /***********************  C O N S T A N T S  *****************************/
 const bit<16> ETHERTYPE_IPV4 = 0x0800;
@@ -111,10 +111,8 @@ struct metadata {
 
 /***********************  P A R S E R  ***********************************/
 PARSER {
-    @name(".start") state start {
-        transition parse_ethernet;
-    }
-    @name ("parse_ethernet") state parse_ethernet {
+    
+    @name ("start") state start {
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
             ETHERTYPE_IPV4 : parse_ipv4;
@@ -382,4 +380,4 @@ CTL_EMIT {
     apply {}
 }
 
-#include "common-boilerplate-post.p4"
+#include "include/v1-boilerplate-post.p4"
