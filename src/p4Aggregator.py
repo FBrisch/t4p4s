@@ -3,16 +3,18 @@ from hlir16.hlirx_regroup import attrs_regroup_path_expressions, attrs_regroup_s
 from hlir16.p4node import P4Node, deep_copy
 from parserCombiner import ParserCombiner
 from rewrite_p4 import printHLIR
-
+from filemod import writer
 
 class P4Aggregator:
+
+    prefix1 = "1_"
+    prefix2 = "2_"
     def __init__(self,p4program1,p4program2):
         self.p4program1 = p4program1
         self.p4program2 = p4program2
         self.resultingProgram = deep_copy(p4program1)
     
     def run(self):
-        #printHLIR(self.p4program1)
         parser1 = self.p4program1.parsers[0]
         parser2 = self.p4program2.parsers[0]
         headers1 = self.p4program1.headers
@@ -39,12 +41,17 @@ class P4Aggregator:
 
         for control1 in self.p4program1.controls:
             for control2 in self.p4program2.controls:
-                if control1.name == control2.name:
+                if control1.name == control2.name and control1.name == "DeparserImpl":
                     newControls.append(self.mergeControl(control1,control2,combiner.headerNameTranslationDictionary))
+                    
+                else:
+                    resultingControl = deep_copy(control1)
+                    resultingControl.name = self.prefix1 + resultingControl.name
+                    newControls.append(resultingControl)
         self.resultingProgram.controls.vec = newControls    
         
 
-        printHLIR(self.resultingProgram)
+        #writer("output.p4",printHLIR(self.resultingProgram),method="w")
         #self.resultingProgram.header_instances.vec = combiner.resultingHeaders
         
         #self.resultingProgram.groups.pathexprs.append(self.p4program2.groups.pathexprs)

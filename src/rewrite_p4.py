@@ -73,71 +73,73 @@ def print_body_component(level, node):
             
             name = mc.method.member
             if name == 'emit':
-                print(f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});')
+                return f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});\r\n'
             elif name == 'apply':
-                print(f'{indent}{mc.method.expr.path.name}.{name}({exprs});')
+                return f'{indent}{mc.method.expr.path.name}.{name}({exprs});\r\n'
             elif name=='setValid':
-                print(f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});')
+                return f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});\r\n'
             elif name=='setInvalid':
-                print(f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});')
+                return f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});\r\n'
             elif name=='execute_meter':
-                print(f'{indent}{mc.method.expr.path.name}.{name}({exprs});')
+                return f'{indent}{mc.method.expr.path.name}.{name}({exprs});\r\n'
             else:
-                print(f'{indent}{mc.type.name}.{name}({exprs});')
+                return f'{indent}{mc.type.name}.{name}({exprs});\r\n'
             return
         else:
             name = mc.method.path.name
-            print(f'{indent}{name}({exprs});')
+            return f'{indent}{name}({exprs});\r\n'
             return
     if node.node_type == 'AssignmentStatement':
-        print(f'{indent}{expr_to_string(node.left)} = {expr_to_string(node.right)};')
+        return f'{indent}{expr_to_string(node.left)} = {expr_to_string(node.right)};\r\n'
         return
     if node.node_type == 'IfStatement':
-        print(f'{indent}if({expr_to_string(node.condition)}){{')
-        print_body_component(level+1,node.ifTrue)
-        print(f'{indent}}}')
+        statement = ""
+        statement += f'{indent}if({expr_to_string(node.condition)}){{\r\n'
+        statement += print_body_component(level+1,node.ifTrue)
+        statement +=f'{indent}}}\r\n'
         if 'ifFalse' in node:
-            print(f'{indent}else{{')
-            print_body_component(level+1,node.ifFalse)
-            print(f'{indent}}}')
-        return
+            statement += f'{indent}else{{\r\n'
+            statement += print_body_component(level+1,node.ifFalse)
+            statement += f'{indent}}}\r\n'
+        return statement
     if node.node_type == 'BlockStatement':
+        statement = ""
         for component in node.components:
-            print_body_component(level,component)
-        return
+            statement += print_body_component(level,component)
+        return statement
     if node.node_type == 'EmptyStatement':
-        print(f'   ')
-        return
+        return "    "
     breakpoint()
-    print('TODO_COMP')
+    return 'TODO_COMP'
 
 def printHLIR(hlir):
-
+    returnString = ""
+    
     import_files = {
         'V1Switch': 'v1model.p4',
         'PSA': 'psa.p4',
     }
 
-    print(f'#include <{import_files[hlir.news.model]}>')
+    returnString += f'#include <{import_files[hlir.news.model]}>\r\n'
     print()
 
     for hdr in hlir.headers:
         if hdr.name == "all_metadatas_t":
-            print(f'struct metadata {{')
+            returnString += f'struct metadata {{\r\n'
             for fld in hdr.fields:
-                print(f'    {expr_to_string(fld.type)};')
+                returnString += f'    {expr_to_string(fld.type)};\r\n'
         else:
-            print(f'header {hdr.name} {{')
+            returnString += f'header {hdr.name} {{\r\n'
             for fld in hdr.fields:
-                print(f'    {expr_to_string(fld)};')
-        print(f'}}')
-        print()
+                returnString += f'    {expr_to_string(fld)};\r\n'
+        returnString += f'}}\r\n'
+        returnString += "\r\n"
 
-    print(f'struct headers {{')
+    returnString += f'struct headers {{\r\n'
     for hdrinst in hlir.header_instances.filter(lambda hdrinst: hdrinst.name != 'all_metadatas_t'):
-        print(f'    {hdrinst.urtype.name} {hdrinst.name};')
-    print(f'}}')
-    print()
+        returnString += f'    {hdrinst.urtype.name} {hdrinst.name};\r\n'
+    returnString += f'}}\r\n'
+    returnString += "\r\n"
 
 
     for parser in hlir.parsers:
@@ -145,89 +147,90 @@ def printHLIR(hlir):
         # breakpoint()
         parserHeaderName = parser.type.applyParams.parameters[1].name
         
-        print(f'parser {parser.type.name}({params}) {{')
+        returnString += f'parser {parser.type.name}({params}) {{\r\n'
         for state in parser.states:
             if state.name in ('accept', 'reject'):
                 continue
 
-            print(f'    state {state.name} {{')
+            returnString += f'    state {state.name} {{\r\n'
             for stateComponent in state.components:
                 if stateComponent.node_type == "AssignmentStatement":
-                    print_body_component(3+1,stateComponent)
+                    returnString += print_body_component(3+1,stateComponent)
                 elif stateComponent.call == 'extract_header':
-                    print(f'        packet.extract(')
+                    returnString += f'        packet.extract(\r\n'
                     for argument in stateComponent.methodCall.arguments:
-                        print(f'          {argument.expression.expr.path.name}.{argument.expression.hdr_ref.name}')
-                    print(f'        );')
+                        returnString += f'          {argument.expression.expr.path.name}.{argument.expression.hdr_ref.name}\r\n'
+                    returnString += f'        );\r\n'
                 else:
-                    print()
+                    returnString += "\r\n"
                     #normal call/assignment
                         
             if state.selectExpression.node_type == "PathExpression":
-                print(f'        transition {state.selectExpression.path.name};')
+                returnString += f'        transition {state.selectExpression.path.name};\r\n'
             else:
-                print(f'        transition select({parserHeaderName}.{state.selectExpression.select.components[0].expr.member}.{state.selectExpression.select.components[0].fld_ref.name}){"{"}')
+                returnString += f'        transition select({parserHeaderName}.{state.selectExpression.select.components[0].expr.member}.{state.selectExpression.select.components[0].fld_ref.name}){"{"}\r\n'
                 for case in state.selectExpression.selectCases:
                     if(case.keyset.node_type == 'DefaultExpression'):
-                        print(f'          default:{case.state.path.name};')
+                        returnString += f'          default:{case.state.path.name};\r\n'
                     else:
                         if case.keyset.node_type == "ListExpression":
                             vals = ', '.join(f'{value.value}' for value in case.keyset.components)
-                            print(f'          ({vals}):{case.state.path.name};')
+                            returnString += f'          ({vals}):{case.state.path.name};\r\n'
                         else:
-                            print(f'          {case.keyset.value}:{case.state.path.name};')
+                            returnString += f'          {case.keyset.value}:{case.state.path.name};\r\n'
                 if state.selectExpression.select.components[0].fld_ref.name == 'accept':
-                    print(f'        transition accept;')
-                print('        }')
-            print(f'    }}')
-        print(f'}}')
-        print()
+                    returnString += f'        transition accept;\r\n'
+                returnString += '        }\r\n'
+            returnString += f'    }}\r\n'
+        returnString += f'}}\r\n'
+        returnString += "\r\n"
 
     for ctl in hlir.controls:
         params = ', '.join(f'{param.direction} {param.urtype.name} {param.name}' for param in ctl.type.applyParams.parameters)
 
-        print(f'control {ctl.type.name}({params}) {{')
+        returnString += f'control {ctl.type.name}({params}) {{\r\n'
 
         for variable in ctl.controlLocals:
             if variable.node_type == "Declaration_Variable":
-                print(f'        {expr_to_string(variable)};')
+                returnString += f'        {expr_to_string(variable)};\r\n'
 
         for action in ctl.actions:
             # TODO
             params = ', '.join(f'{expr_to_string(param.type)} {param.name}' for param in action.parameters.parameters.vec)
         
-            print(f'    action {action.name}({params}) {{')
+            returnString += f'    action {action.name}({params}) {{\r\n'
             for comp in action.body.components:
-                print_body_component(2, comp)
-            print(f'    }}')
+                returnString += print_body_component(2, comp)
+            returnString += f'    }}\r\n'
 
         for table in ctl.tables:
-            print(f'    table {table.name} {{')
+            returnString += f'    table {table.name} {{\r\n'
 
-            print(f'        key = {{')
+            returnString += f'        key = {{\r\n'
             for keyelem in table.key.keyElements:
-                print(f'            {expr_to_string(keyelem.expression)}: {keyelem.matchType.path.name};')
-            print(f'        }}')
+                returnString += f'            {expr_to_string(keyelem.expression)}: {keyelem.matchType.path.name};\r\n'
+            returnString += f'        }}\r\n'
 
-            print(f'        actions = {{')
+            returnString += f'        actions = {{\r\n'
             for name in table.actions.map('expression.method.path.name'):
-                print(f'            {name};')
-            print(f'        }}')
+                returnString += f'            {name};\r\n'
+            returnString += f'        }}\r\n'
 
             if 'size' in table:
-                print(f'        size = {expr_to_string(table.size.expression)};')
+                returnString += f'        size = {expr_to_string(table.size.expression)};\r\n'
 
             if 'default_action' in table:
-                print(f'        default_action = {expr_to_string(table.default_action.expression)};')
+                returnString += f'        default_action = {expr_to_string(table.default_action.expression)};\r\n'
 
-            print(f'    }}')
+            returnString += f'    }}\r\n'
 
-        print(f'    apply {{')
+        returnString += f'    apply {{\r\n'
         for comp in ctl.body.components:
-            print_body_component(2, comp)
-        print(f'    }}')
+            returnString += print_body_component(2, comp)
+        returnString += f'    }}\r\n'
 
-        print(f'}}')
-        print()
+        returnString += f'}}\r\n'
+        returnString += "\r\n"
+    return returnString
         
 
