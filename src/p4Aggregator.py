@@ -7,8 +7,8 @@ from filemod import writer
 
 class P4Aggregator:
 
-    prefix1 = "1_"
-    prefix2 = "2_"
+    prefix1 = "NF1_"
+    prefix2 = "NF2_"
     def __init__(self,p4program1,p4program2):
         self.p4program1 = p4program1
         self.p4program2 = p4program2
@@ -41,13 +41,12 @@ class P4Aggregator:
 
         for control1 in self.p4program1.controls:
             for control2 in self.p4program2.controls:
-                if control1.name == control2.name and control1.name == "DeparserImpl":
+                if control1.name == control2.name:
                     newControls.append(self.mergeControl(control1,control2,combiner.headerNameTranslationDictionary))
-                    
-                else:
-                    resultingControl = deep_copy(control1)
-                    resultingControl.name = self.prefix1 + resultingControl.name
-                    newControls.append(resultingControl)
+        """ else:
+        resultingControl = deep_copy(control1)
+        resultingControl.name = self.prefix1 + resultingControl.name
+        newControls.append(resultingControl)"""
         self.resultingProgram.controls.vec = newControls    
         
 
@@ -114,16 +113,32 @@ class P4Aggregator:
             resultingControl.body.components = resultComponents
             #print('Deparser')
         else:
+            for decl in resultingControl.controlLocals:
+                if decl.node_type == "Declaration_Variable":
+                    decl.name = self.prefix1 + decl.name
+            for action in resultingControl.actions:
+                action.name == self.prefix1 + action.name
+            for table in resultingControl.tables:
+                table.name = self.prefix1 + table.name
+            #for controlBlock in resultingControl.body.components:
+                #if controlBlock.node_type == "MethodCallStatement":
+                    
+                    #controlBlock.name = self.prefix2 + controlBlock.name
+                    #resultingControl.body.components.append(controlBlock)
+
             for decl in control2.controlLocals:
                 if decl.node_type == "Declaration_Variable":
+                    decl.name = self.prefix2 + decl.name
                     resultingControl.controlLocals.append(decl)
             for action in control2.actions:
-                if not any(ele.name == action.name for ele in resultingControl.actions):
+                    action.name == self.prefix2 + action.name
                     resultingControl.actions.append(action)
             for table in control2.tables:
+                table.name = self.prefix2 + table.name
                 resultingControl.tables.append(table)
             
             for controlBlock in control2.body.components:
+                #controlBlock.name == self.prefix2 + controlBlock.name
                 resultingControl.body.components.append(controlBlock)
 
         return resultingControl

@@ -22,7 +22,10 @@ def expr_to_string(expr):
         return f'{expr.method.path.name}({args})'
 
     if expr.node_type == 'PathExpression':
-        return f'{expr.path.name}'
+        if "table_ref" in expr:
+            return f'{expr.table_ref.name}'
+        else:
+            return f'{expr.path.name}'
 
     if expr.node_type == 'StructExpression':
         args = ', '.join(expr.components.map('expression').map(expr_to_string))
@@ -75,7 +78,7 @@ def print_body_component(level, node):
             if name == 'emit':
                 return f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});\r\n'
             elif name == 'apply':
-                return f'{indent}{mc.method.expr.path.name}.{name}({exprs});\r\n'
+                return f'{indent}{mc.method.expr.table_ref.name}.{name}({exprs});\r\n'
             elif name=='setValid':
                 return f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});\r\n'
             elif name=='setInvalid':
