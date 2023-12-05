@@ -19,11 +19,16 @@ def expr_to_string(expr):
         if 'path' not in expr.method:
             args = ', '.join(arg for arg in expr.arguments)
             return f'{expr_to_string(expr.method.expr)}.{expr.method.member}({args})'
-        return f'{expr.method.path.name}({args})'
+        if "action_ref" in expr.method:
+            return f'{expr.method.action_ref.name}({args})'
+        else:
+            return f'{expr.method.path.name}({args})'
 
     if expr.node_type == 'PathExpression':
         if "table_ref" in expr:
             return f'{expr.table_ref.name}'
+        if "action_ref" in expr:
+            return f'{expr.action_ref.name}'
         else:
             return f'{expr.path.name}'
 
@@ -59,9 +64,13 @@ def expr_to_string(expr):
     if expr.node_type == "StructField":
         return f' {expr_to_string(expr.type)} {expr.name}'
     if expr.node_type == "Type_Name":
-        return f' '
+        return f' {expr.type_ref.name}'
     if expr.node_type == "LOr":
         return f'{expr_to_string(expr.left)} || {expr_to_string(expr.right)}'
+    if expr.node_type == "Parameter":
+        return f'{expr_to_string(expr.type)}'
+    if expr.node_type == "Type_Specialized":
+        return f'{expr.baseType.path.name}'
     breakpoint()
     return 'TODO_EXPR'
 
@@ -91,10 +100,10 @@ def print_body_component(level, node):
         else:
             name = mc.method.path.name
             return f'{indent}{name}({exprs});\r\n'
-            return
+            
     if node.node_type == 'AssignmentStatement':
         return f'{indent}{expr_to_string(node.left)} = {expr_to_string(node.right)};\r\n'
-        return
+        
     if node.node_type == 'IfStatement':
         statement = ""
         statement += f'{indent}if({expr_to_string(node.condition)}){{\r\n'
@@ -215,7 +224,7 @@ def printHLIR(hlir):
             returnString += f'        }}\r\n'
 
             returnString += f'        actions = {{\r\n'
-            for name in table.actions.map('expression.method.path.name'):
+            for name in table.actions.map('action_object.name'):
                 returnString += f'            {name};\r\n'
             returnString += f'        }}\r\n'
 
@@ -234,6 +243,13 @@ def printHLIR(hlir):
 
         returnString += f'}}\r\n'
         returnString += "\r\n"
-    return returnString
+    
         
+    for instance in hlir.decl_instances:
+        params = ',\r\n'.join(f'{argument.expression.type.name}()' for argument in instance.arguments)
+        returnString += f'{expr_to_string(instance.type)}({params}) {instance.name}; \r\n'
+
+
+
+    return returnString
 

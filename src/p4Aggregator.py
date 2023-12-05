@@ -33,8 +33,8 @@ class P4Aggregator:
         self.mergeHeaderInstances(combiner.resultingHeaders)
 
 
-        newMetadata = self.mergeMetadata(next(x for x in self.p4program1.headers if x.name == 'all_metadatas_t'),next(x for x in self.p4program2.headers if x.name == 'all_metadatas_t'))
-        self.resultingProgram.headers.vec.append(newMetadata)
+        #newMetadata = self.mergeMetadata(next(x for x in self.p4program1.headers if x.name == 'all_metadatas_t'),next(x for x in self.p4program2.headers if x.name == 'all_metadatas_t'))
+        #self.resultingProgram.headers.vec.append(newMetadata)
         #self.resultingProgram.header_instances.vec.append(newMetadata)
 
         newControls = []
@@ -117,26 +117,24 @@ class P4Aggregator:
                 if decl.node_type == "Declaration_Variable":
                     decl.name = self.prefix1 + decl.name
             for action in resultingControl.actions:
-                action.name == self.prefix1 + action.name
+                action.name = self.prefix1 + action.name
+
+
             for table in resultingControl.tables:
                 table.name = self.prefix1 + table.name
-            #for controlBlock in resultingControl.body.components:
-                #if controlBlock.node_type == "MethodCallStatement":
-                    
-                    #controlBlock.name = self.prefix2 + controlBlock.name
-                    #resultingControl.body.components.append(controlBlock)
-
+                
             for decl in control2.controlLocals:
                 if decl.node_type == "Declaration_Variable":
                     decl.name = self.prefix2 + decl.name
                     resultingControl.controlLocals.append(decl)
             for action in control2.actions:
-                    action.name == self.prefix2 + action.name
+                    action.name = self.prefix2 + action.name
                     resultingControl.actions.append(action)
+
+
             for table in control2.tables:
                 table.name = self.prefix2 + table.name
                 resultingControl.tables.append(table)
-            
             for controlBlock in control2.body.components:
                 #controlBlock.name == self.prefix2 + controlBlock.name
                 resultingControl.body.components.append(controlBlock)

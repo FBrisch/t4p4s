@@ -56,10 +56,12 @@ class ParserCombiner:
         if self.sumExtractedHeaderLength(state1) != self.sumExtractedHeaderLength(state2):
             print(f"could not combine states {state1.name} and {state2.name} due to extracted header width not matching({self.sumExtractedHeaderLength(state1)},{self.sumExtractedHeaderLength(state2)})")
             exit(1)
-        if self.getExtractedHeader(state1) is not None:
-            self.addedNodes.append(self.getExtractedHeader(state1))
-            self.resultingHeaders.append(self.getExtractedHeader(state1))
-            self.headerNameTranslationDictionary[self.getExtractedHeader(state2).name] = self.getExtractedHeader(state1).name
+        
+        extractedHeaders = self.getExtractedHeader(state1)
+        for header in extractedHeaders:
+            self.addedNodes.append(header)
+            self.resultingHeaders.append(header)
+            self.headerNameTranslationDictionary[header.name] = header
         
         mergedSelect,resultingSelectStatement = self.mergeSelects(state1.selectExpression,state2.selectExpression)
 
@@ -174,10 +176,10 @@ class ParserCombiner:
         else:
             currentState = self.stateDict1[statename]
         
-        extractedHeader = self.getExtractedHeader(currentState)
-        if extractedHeader is not None:
-            self.addedNodes.append(extractedHeader)
-            self.resultingHeaders.append(extractedHeader)
+        extractedHeaders = self.getExtractedHeader(currentState)
+        for header in extractedHeaders:
+            self.addedNodes.append(header)
+            self.resultingHeaders.append(header)
         self.resultingStates[statename] = deep_copy(currentState)
         self.resultingStates[statename].Node_ID = currentState.Node_ID
         self.addedNodes.append(self.resultingStates[statename])
@@ -203,9 +205,11 @@ class ParserCombiner:
 
 
     def getExtractedHeader(self,state):
-         for comp in state.components:
+        returnValue = []
+        for comp in state.components:
             if(comp.call == "extract_header"):
-                return comp.header
+                returnValue.append( comp.header)
+        return returnValue
 
 
     def findSelectCase(self,selectStatement,value):
