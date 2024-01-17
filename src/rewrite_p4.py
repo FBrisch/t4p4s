@@ -26,7 +26,7 @@ def expr_to_string(expr):
 
     if expr.node_type == 'PathExpression':
         if "table_ref" in expr:
-            return f'{expr.table_ref.name}'
+            return f'{expr.table_ref.short_name}'
         if "action_ref" in expr:
             return f'{expr.action_ref.name}'
         else:
@@ -87,7 +87,7 @@ def print_body_component(level, node):
             if name == 'emit':
                 return f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});\r\n'
             elif name == 'apply':
-                return f'{indent}{mc.method.expr.table_ref.name}.{name}({exprs});\r\n'
+                return f'{indent}{mc.method.expr.table_ref.short_name}.{name}({exprs});\r\n'
             elif name=='setValid':
                 return f'{indent}hdr.{mc.method.expr.member}.{name}({exprs});\r\n'
             elif name=='setInvalid':
@@ -121,6 +121,7 @@ def print_body_component(level, node):
         return statement
     if node.node_type == 'EmptyStatement':
         return "    "
+    #if node.node_type == 'IndexedVector<StatOrDecl>'
     breakpoint()
     return 'TODO_COMP'
 
@@ -216,7 +217,7 @@ def printHLIR(hlir):
             returnString += f'    }}\r\n'
 
         for table in ctl.tables:
-            returnString += f'    table {table.name} {{\r\n'
+            returnString += f'    table {table.short_name} {{\r\n'
 
             returnString += f'        key = {{\r\n'
             for keyelem in table.key.keyElements:

@@ -43,10 +43,6 @@ class P4Aggregator:
             for control2 in self.p4program2.controls:
                 if control1.name == control2.name:
                     newControls.append(self.mergeControl(control1,control2,combiner.headerNameTranslationDictionary))
-        """ else:
-        resultingControl = deep_copy(control1)
-        resultingControl.name = self.prefix1 + resultingControl.name
-        newControls.append(resultingControl)"""
         self.resultingProgram.controls.vec = newControls    
         
 
@@ -83,35 +79,43 @@ class P4Aggregator:
         for header in headers:
             found = False
             for headerInstance in self.p4program1.header_instances.vec + self.p4program2.header_instances.vec:
+                
                 if headerInstance.name != 'all_metadatas' and headerInstance.type.path.name == header.name and not found:
+                    if headerInstance.type.path.name == headers[0].name:
+                        print('ethernet header')
                     newInstances.append(headerInstance)
                     found = True
         self.resultingProgram.header_instances.vec = newInstances
 
     def mergeControl(self,control1,control2,headers):
+        IngressNames = ['MyIngress']
+        DeparserNames = ['DeparserImpl','MyDeparser']
+        newControl1 = control1.body
+        newControl2 = control2.body
         resultingControl = deep_copy(control1)
         index1 = 0
         index2 = 0
-        if control1.name == 'DeparserImpl':
-            resultComponents = []
-            for header2,header1 in headers.items():
-                while index2 < len(control2.body.components.vec) and control2.body.components[index2].methodCall.arguments[0].expression.type.name != header2:
-                    resultComponents.append(control2.body.components[index2])
-                    index2 = index2 + 1
-                index2 = index2 + 1
-                while index1 < len(control1.body.components.vec) and control1.body.components[index1].methodCall.arguments[0].expression.type.name != header1:
-                    resultComponents.append(control1.body.components[index1])
-                    index1 = index1 + 1
-                resultComponents.append(control1.body.components[index1])
-                index1 = index1 + 1
-            while index2 < len(control2.body.components.vec):
-                resultComponents.append(control2.body.components[index2])
-                index2 = index2 + 1
-            while index1 < len(control1.body.components.vec):
-                resultComponents.append(control1.body.components[index1])
-                index1 = index1 + 1
-            resultingControl.body.components = resultComponents
-            #print('Deparser')
+        if control1.name in DeparserNames:
+            # resultComponents = []
+            # for header2,header1 in headers.items():
+            #     while index2 < len(control2.body.components.vec) and control2.body.components[index2].methodCall.arguments[0].expression.type.name != header2:
+            #         resultComponents.append(control2.body.components[index2])
+            #         index2 = index2 + 1
+            #     index2 = index2 + 1
+            #     while index1 < len(control1.body.components.vec) and control1.body.components[index1].methodCall.arguments[0].expression.type.name != header1:
+            #         resultComponents.append(control1.body.components[index1])
+            #         index1 = index1 + 1
+            #     resultComponents.append(control1.body.components[index1])
+            #     index1 = index1 + 1
+            # while index2 < len(control2.body.components.vec):
+            #     resultComponents.append(control2.body.components[index2])
+            #     index2 = index2 + 1
+            # while index1 < len(control1.body.components.vec):
+            #     resultComponents.append(control1.body.components[index1])
+            #     index1 = index1 + 1
+            # resultingControl.body.components = resultComponents
+            print('Deparser')
+        
         else:
             for decl in resultingControl.controlLocals:
                 if decl.node_type == "Declaration_Variable":
@@ -121,8 +125,63 @@ class P4Aggregator:
 
 
             for table in resultingControl.tables:
-                table.name = self.prefix1 + table.name
-                
+                table.short_name = self.prefix1 + table.short_name
+            if control1.name in IngressNames:
+                resultingControl.tables.append(
+                    P4Node({
+                        'short_name':'tunnelident',
+                        'node_type':'P4Table',
+                        'key':P4Node({
+                            'node_type':'IndexedVector<KeyElement>',
+                            'keyElements':
+                            [
+                                P4Node({
+                                    'node_type':'KeyElement',
+                                    'header_name':'ethernet',
+                                    'expression':P4Node({
+                                        'node_type':'Member',
+                                        'expr':P4Node({
+                                            'node_type':'Member',
+                                            'member':'ethernet',
+                                            'expr':P4Node({
+                                                'node_type':'PathExpression',
+                                                'path':P4Node({'node_type':'constant','name':'hdr'})
+                                            })
+                                        }),
+                                        'member':'vlan'
+                                    }),
+                                    'matchType':P4Node({'node_type':'dc','path':P4Node({'node_type':'dc','name':'exact'})})
+                                })
+                            ]
+                        }),
+                        'actions':P4Node({
+                            'node_type': '<vec>',
+                        },[
+                            P4Node({'node_type':'dc','action_object':P4Node({'node_type':'dc','name':'set_tunnelid'})})
+                            ,
+                            P4Node({'node_type':'dc','action_object':P4Node({'node_type':'dc','name':'NF2_drop'})})
+                        ]),
+                        'size':P4Node({'node_type':'dc','expression':P4Node({
+                            'node_type':'Constant',
+                            'base':10,
+                            'value':1024
+                        })}),
+                        'default_action':P4Node({
+                            'node_type':'dc',
+                            'expression':P4Node({
+                            'node_type':'MethodCallExpression',
+                            'arguments':[],
+                            'method': P4Node({
+                                'node_type':'MethodCallExpression',
+                                'path':P4Node({'node_type':'dc','name':'NF2_drop'}),
+                                'action_ref':P4Node({
+                                    'node_type':'P4Action',
+                                    'name':'NF2_drop'
+                                })
+                            })
+                        })})
+                    })
+                )
             for decl in control2.controlLocals:
                 if decl.node_type == "Declaration_Variable":
                     decl.name = self.prefix2 + decl.name
@@ -130,14 +189,110 @@ class P4Aggregator:
             for action in control2.actions:
                     action.name = self.prefix2 + action.name
                     resultingControl.actions.append(action)
-
+            if control1.name in IngressNames:
+                resultingControl.actions.append(P4Node({
+                    'name':'set_tunnelid',
+                    'node_type':'P4Action',
+                    'parameters':P4Node({
+                        'node_type':"ParameterList",
+                        'parameters':P4Node({
+                            'node_type':'IndexedVector<Parameter'
+                        },[P4Node({
+                            'node_type':'Parameter',
+                            'name':'tunnelid',
+                            'type':P4Node({
+                                'node_type':'Type_Bits',
+                                'size':1
+                            })
+                        })])
+                    }),
+                    'body':P4Node({
+                        'node_type':'BlockStatement',
+                        'components':P4Node({
+                            'node_type': 'IndexedVector<StatOrDecl>'
+                        },vec=[P4Node({
+                            'node_type':'AssignmentStatement',
+                            'left': P4Node({
+                                'node_type' : 'Member',
+                                'expr':P4Node({
+                                    'node_type':'PathExpression',
+                                    'path':P4Node({
+                                        'node_type':'Path',
+                                        'name':'meta'
+                                    })
+                                }),
+                                'member':'tunnelID'
+                            }),
+                            'right': P4Node({
+                                'node_type':'PathExpression',
+                                'path':P4Node({
+                                        'node_type':'Path',
+                                        'name':'tunnelid'
+                                    })
+                            })
+                        })])
+                    })
+                }))
 
             for table in control2.tables:
-                table.name = self.prefix2 + table.name
+                table.short_name = self.prefix2 + table.short_name
                 resultingControl.tables.append(table)
-            for controlBlock in control2.body.components:
+            #for controlBlock in control2.body.components:
                 #controlBlock.name == self.prefix2 + controlBlock.name
-                resultingControl.body.components.append(controlBlock)
+                #resultingControl.body.components.append(controlBlock)
+            
+            newControl = [
+                    ]
+            if control1.name in IngressNames:
+                newControl.insert(0,P4Node({
+                        'node_type' : 'IfStatement',
+                        'condition' : P4Node({
+                            'node_type' : 'Equ',
+                            'left' : P4Node({
+                                'node_type':'Member',
+                                'type' : P4Node({
+                                    'node_type':'Type_Bits',
+                                    'size' : 1,
+                                    'member' : 'tunnelID'
+                                }),
+                                'member':'tunnelID',
+                                'expr' : P4Node({
+                                    'node_type':'PathExpression',
+                                    'path' : P4Node({
+                                        'node_type':'Path',
+                                        'name' : 'meta' #might need to be fixed for other meta names
+                                    }),
+                                }),
+                            }),
+                            'right' : P4Node({
+                                'node_type' : 'Constant',
+                                'value' : 1,
+                                'base' : 10
+
+                            })
+                        }),
+                        'ifFalse' : P4Node(init={
+                            'node_type' : 'BlockStatement',
+                            'components' : P4Node({
+                                'node_type':'Array'
+                            },vec=newControl1.components.vec)}),
+                        'ifTrue': P4Node(init={
+                            'node_type' : 'BlockStatement',
+                            'components' : P4Node({
+                                'node_type':'Array'
+                            },vec=newControl2.components.vec)})
+                    })
+                )
+
+
+            resultingControl.body.components.vec = [P4Node(init={
+                'node_type' : 'BlockStatement',
+                'components' : P4Node({
+                    'node_type':'Array'
+                },vec=newControl)
+                    })]
+
+
 
         return resultingControl
         

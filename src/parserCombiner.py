@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from hlir16.p4node import deep_copy, deep_copy_with_details
+from hlir16.p4node import P4Node, deep_copy, deep_copy_with_details
 
 @dataclass
 class StateInParser:
@@ -236,5 +236,18 @@ class ParserCombiner:
             if field.name not in metadatapresent:
                 resultingMetadata.fields.append(field)
                 metadatapresent.append(field.name)
+        resultingMetadata.fields.append(P4Node({  
+            'name' : 'tunnelID', 
+            'node_type' : 'StructField',
+            'short_name' : 'tunnelID',
+            'type' : P4Node({
+                'node_type' : 'StructField',
+                'type' : P4Node({
+                    'node_type' : 'Type_Bits',
+                    'size' : 1
+                }),
+                'name' : 'tunnelID'
+            }),
+            'size': 1}))
         self.addedNodes.append(resultingMetadata)
         self.resultingHeaders.append(resultingMetadata)
