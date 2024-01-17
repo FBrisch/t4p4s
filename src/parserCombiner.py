@@ -38,6 +38,8 @@ class ParserCombiner:
         firstStateToIterate1 = self.stateDict1["start"]
         firstStateToIterate2 = self.stateDict2["start"]
 
+        
+
         #self.resultingStates[self.parser1.states[0].name] = deep_copy(self.parser1.states[0])
         self.iterateOverStates(self.stateDict1["start"],self.stateDict2["start"])
 
@@ -58,6 +60,29 @@ class ParserCombiner:
             exit(1)
         
         extractedHeaders = self.getExtractedHeader(state1)
+        if state1.name == "start":
+            print('checking for vlan tagging')
+            if extractedHeaders[0].size == 112:
+                extractedHeaders[0].fields.vec.insert(2,P4Node({
+                    'node_type':'StructField',
+                    'name':'vlanProtocol',
+                    'type':P4Node({
+                        'node_type':'Type_Bits',
+                        'size':16
+                    })
+                }))
+                extractedHeaders[0].fields.vec.insert(2,P4Node({
+                    'node_type':'StructField',
+                    'name':'vlanID',
+                    'type':P4Node({
+                        'node_type':'Type_Bits',
+                        'size':16
+                    })
+                }))
+            else:
+                print('source pipeline does not extract ethernet header without vlan tag as first extract, this will not work')
+                exit(-1)
+            
         for header in extractedHeaders:
             self.addedNodes.append(header)
             self.resultingHeaders.append(header)

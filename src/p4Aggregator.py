@@ -81,8 +81,7 @@ class P4Aggregator:
             for headerInstance in self.p4program1.header_instances.vec + self.p4program2.header_instances.vec:
                 
                 if headerInstance.name != 'all_metadatas' and headerInstance.type.path.name == header.name and not found:
-                    if headerInstance.type.path.name == headers[0].name:
-                        print('ethernet header')
+                    
                     newInstances.append(headerInstance)
                     found = True
         self.resultingProgram.header_instances.vec = newInstances
@@ -186,6 +185,58 @@ class P4Aggregator:
                 if decl.node_type == "Declaration_Variable":
                     decl.name = self.prefix2 + decl.name
                     resultingControl.controlLocals.append(decl)
+            if control1.name in IngressNames:
+                resultingControl.controlLocals.append(P4Node({
+                    'node_type':'Declaration_Variable',
+                    'name':'meterValue',
+                    'type':P4Node({
+                        'node_type':'Type_Bits',
+                        'size':32
+                    })
+                }))
+                resultingControl.controlLocals.append(P4Node({
+                    'node_type':'Declaration_Instance',
+                    'name':'NF1_meter',
+                    'arguments':P4Node({
+                        'node_type':'Vector<Arguments>'},
+                        [P4Node({
+                            'node_type':'Argument',
+                            'expression':P4Node({
+                                'node_type':'Member',
+                                'member':'packets',
+                                'expr':P4Node({
+                                    'node_type':'TypeNameExpression',
+                                    'typeName':P4Node({
+                                        'node_type':'Type_Name',
+                                        'path':P4Node({
+                                            'node_type':'Path',
+                                            'name':'MeterType'
+                                        })
+                                    })
+                                })
+                            })
+                        })]
+                    ),
+                    type:P4Node({
+                        'node_type':'Type_Specialized',
+                        'base_type':P4Node({
+                            'node_type':'Type_Name',
+                            'type_ref':P4Node({
+                                'node_type':'Type_Extern',
+                                'name':'direct_meter'
+                            })
+                        }),
+                        'arguments':P4Node({
+                            'node_type':'Vector<Type>'
+                            
+                        },[
+                            P4Node({
+                                'node_type':'Type_Bits',
+                                'size':32
+                            })    
+                        ])
+                    })
+                }))
             for action in control2.actions:
                     action.name = self.prefix2 + action.name
                     resultingControl.actions.append(action)
