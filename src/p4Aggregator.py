@@ -147,7 +147,7 @@ class P4Aggregator:
                                                 'path':P4Node({'node_type':'constant','name':'hdr'})
                                             })
                                         }),
-                                        'member':'vlan'
+                                        'member':'vlanID'
                                     }),
                                     'matchType':P4Node({'node_type':'dc','path':P4Node({'node_type':'dc','name':'exact'})})
                                 })
@@ -217,7 +217,50 @@ class P4Aggregator:
                             })
                         })]
                     ),
-                    type:P4Node({
+                    'type':P4Node({
+                        'node_type':'Type_Specialized',
+                        'base_type':P4Node({
+                            'node_type':'Type_Name',
+                            'type_ref':P4Node({
+                                'node_type':'Type_Extern',
+                                'name':'direct_meter'
+                            })
+                        }),
+                        'arguments':P4Node({
+                            'node_type':'Vector<Type>'
+                            
+                        },[
+                            P4Node({
+                                'node_type':'Type_Bits',
+                                'size':32
+                            })    
+                        ])
+                    })
+                }))
+                resultingControl.controlLocals.append(P4Node({
+                    'node_type':'Declaration_Instance',
+                    'name':'NF2_meter',
+                    'arguments':P4Node({
+                        'node_type':'Vector<Arguments>'},
+                        [P4Node({
+                            'node_type':'Argument',
+                            'expression':P4Node({
+                                'node_type':'Member',
+                                'member':'packets',
+                                'expr':P4Node({
+                                    'node_type':'TypeNameExpression',
+                                    'typeName':P4Node({
+                                        'node_type':'Type_Name',
+                                        'path':P4Node({
+                                            'node_type':'Path',
+                                            'name':'MeterType'
+                                        })
+                                    })
+                                })
+                            })
+                        })]
+                    ),
+                    'type':P4Node({
                         'node_type':'Type_Specialized',
                         'base_type':P4Node({
                             'node_type':'Type_Name',
@@ -296,6 +339,28 @@ class P4Aggregator:
                     ]
             if control1.name in IngressNames:
                 newControl.insert(0,P4Node({
+                    'node_type':'MethodCallStatement',
+                    'methodCall':P4Node({
+                        'node_type':'MethodCallExpression',
+                        'method':P4Node({
+                            'node_type':'PathExpression',
+                            'member':'apply',
+                            'expr':P4Node({
+                                'node_type':'dontcare',
+                                'table_ref':P4Node({
+                                    'node_type':'P4Table',
+                                    'short_name':'tunnelident'
+                                })
+                            })
+                        })
+                        ,'arguments':P4Node({
+                            'node_type':'Vector<Argument>'
+                        },[])
+
+                    })
+
+                }))
+                newControl.insert(1,P4Node({
                         'node_type' : 'IfStatement',
                         'condition' : P4Node({
                             'node_type' : 'Equ',
@@ -326,12 +391,114 @@ class P4Aggregator:
                             'node_type' : 'BlockStatement',
                             'components' : P4Node({
                                 'node_type':'Array'
-                            },vec=newControl1.components.vec)}),
+                            },vec=[
+                                # P4Node({
+                                #     'node_type':'MethodCallStatement',
+                                #     'methodCall':P4Node({
+                                #         'node_type':'MethodCallExpression',
+                                #         'method':P4Node({
+                                #             'node_type':'PathExpression',
+                                #             'member':'read',
+                                #             'expr':P4Node({
+                                #                 'node_type':'dontcare',
+                                #                 'table_ref':P4Node({
+                                #                     'node_type':'P4Table',
+                                #                     'short_name':'tunnelident'
+                                #                 })
+                                #             })
+                                #         })
+                                #         ,'arguments':P4Node({
+                                #             'node_type':'Vector<Argument>'
+                                #         },[])
+
+                                #     })
+
+                                # }),
+                                P4Node({
+                                'node_type' : 'IfStatement',
+                                'condition' : P4Node({
+                                    'node_type' : 'Equ',
+                                    'left' : P4Node({
+                                        'node_type':'PathExpression',
+                                        'path' : P4Node({
+                                            'node_type':'Path',
+                                            'name' : 'meterValue'
+                                        })
+                                    }),
+                                    'right' : P4Node({
+                                        'node_type' : 'Constant',
+                                        'value' : 0,
+                                        'base' : 10
+
+                                    })
+                                }),
+                                'ifTrue' : P4Node(init={
+                                    'node_type' : 'BlockStatement',
+                                    'components' : P4Node({
+                                        'node_type':'Array'
+                                    },vec=newControl1.components.vec)}),
+                                'ifFalse': P4Node(init={
+                                    'node_type' : 'BlockStatement',
+                                    'components' : P4Node({
+                                        'node_type':'Array'
+                                    },vec=[])})
+                            })])}),
                         'ifTrue': P4Node(init={
                             'node_type' : 'BlockStatement',
                             'components' : P4Node({
                                 'node_type':'Array'
-                            },vec=newControl2.components.vec)})
+                            },vec=[
+                                # P4Node({
+                                #     'node_type':'MethodCallStatement',
+                                #     'methodCall':P4Node({
+                                #         'node_type':'MethodCallExpression',
+                                #         'method':P4Node({
+                                #             'node_type':'PathExpression',
+                                #             'member':'read',
+                                #             'expr':P4Node({
+                                #                 'node_type':'dontcare',
+                                #                 'table_ref':P4Node({
+                                #                     'node_type':'P4Table',
+                                #                     'short_name':'tunnelident'
+                                #                 })
+                                #             })
+                                #         })
+                                #         ,'arguments':P4Node({
+                                #             'node_type':'Vector<Argument>'
+                                #         },[])
+
+                                #     })
+
+                                # }),
+                                P4Node({
+                                'node_type' : 'IfStatement',
+                                'condition' : P4Node({
+                                    'node_type' : 'Equ',
+                                    'left' : P4Node({
+                                        'node_type':'PathExpression',
+                                        'path' : P4Node({
+                                            'node_type':'Path',
+                                            'name' : 'meterValue'
+                                        })
+                                    }),
+                                    'right' : P4Node({
+                                        'node_type' : 'Constant',
+                                        'value' : 0,
+                                        'base' : 10
+
+                                    })
+                                }),
+                                'ifTrue' : P4Node(init={
+                                    'node_type' : 'BlockStatement',
+                                    'components' : P4Node({
+                                        'node_type':'Array'
+                                    },vec=newControl2.components.vec)}),
+                                'ifFalse': P4Node(init={
+                                    'node_type' : 'BlockStatement',
+                                    'components' : P4Node({
+                                        'node_type':'Array'
+                                    },vec=[])})
+                            })])})
                     })
                 )
 

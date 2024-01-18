@@ -37,7 +37,10 @@ def expr_to_string(expr):
         return f'{{{args}}}'
 
     if expr.node_type == 'TypeNameExpression':
-        return f'{expr.urtype.name}'
+        if "typeName" in expr:
+            return expr.typeName.path.name
+        else:
+            return f'{expr.urtype.name}'
     
     if expr.node_type == 'Add':
         return f'{expr_to_string(expr.left)} + {expr_to_string(expr.right)}'
@@ -70,7 +73,16 @@ def expr_to_string(expr):
     if expr.node_type == "Parameter":
         return f'{expr_to_string(expr.type)}'
     if expr.node_type == "Type_Specialized":
+        if 'base_type' in expr:
+            args = ', '.join(expr.arguments.map(expr_to_string))
+            return f'{expr_to_string(expr.base_type)}<{args}>'
         return f'{expr.baseType.path.name}'
+    if expr.node_type == 'Declaration_Instance':
+        #direct_meter<bit<32>>(MeterType.packets) NF1_meter;
+        args = ', '.join(expr.arguments.map(expr_to_string))
+        return f'{expr_to_string(expr.type)}({args}) {expr.name}'
+    if expr.node_type == 'Argument':
+        return expr_to_string(expr.expression)
     breakpoint()
     return 'TODO_EXPR'
 
@@ -204,7 +216,7 @@ def printHLIR(hlir):
         returnString += f'control {ctl.type.name}({params}) {{\r\n'
 
         for variable in ctl.controlLocals:
-            if variable.node_type == "Declaration_Variable":
+            if variable.node_type in ["Declaration_Variable","Declaration_Instance"]:
                 returnString += f'        {expr_to_string(variable)};\r\n'
 
         for action in ctl.actions:
