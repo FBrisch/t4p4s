@@ -9,9 +9,10 @@ class P4Aggregator:
 
     prefix1 = "NF1_"
     prefix2 = "NF2_"
-    def __init__(self,p4program1,p4program2):
+    def __init__(self,p4program1,p4program2,p4inject):
         self.p4program1 = p4program1
         self.p4program2 = p4program2
+        self.p4inject = p4inject
         self.resultingProgram = deep_copy(p4program1)
     
     def run(self):
@@ -79,7 +80,6 @@ class P4Aggregator:
         for header in headers:
             found = False
             for headerInstance in self.p4program1.header_instances.vec + self.p4program2.header_instances.vec:
-                
                 if headerInstance.name != 'all_metadatas' and headerInstance.type.path.name == header.name and not found:
                     
                     newInstances.append(headerInstance)
@@ -126,208 +126,19 @@ class P4Aggregator:
             for table in resultingControl.tables:
                 table.short_name = self.prefix1 + table.short_name
             if control1.name in IngressNames:
-                resultingControl.tables.append(
-                    P4Node({
-                        'short_name':'tunnelident',
-                        'node_type':'P4Table',
-                        'key':P4Node({
-                            'node_type':'IndexedVector<KeyElement>',
-                            'keyElements':
-                            [
-                                P4Node({
-                                    'node_type':'KeyElement',
-                                    'header_name':'ethernet',
-                                    'expression':P4Node({
-                                        'node_type':'Member',
-                                        'expr':P4Node({
-                                            'node_type':'Member',
-                                            'member':'ethernet',
-                                            'expr':P4Node({
-                                                'node_type':'PathExpression',
-                                                'path':P4Node({'node_type':'constant','name':'hdr'})
-                                            })
-                                        }),
-                                        'member':'vlanID'
-                                    }),
-                                    'matchType':P4Node({'node_type':'dc','path':P4Node({'node_type':'dc','name':'exact'})})
-                                })
-                            ]
-                        }),
-                        'actions':P4Node({
-                            'node_type': '<vec>',
-                        },[
-                            P4Node({'node_type':'dc','action_object':P4Node({'node_type':'dc','name':'set_tunnelid'})})
-                            ,
-                            P4Node({'node_type':'dc','action_object':P4Node({'node_type':'dc','name':'NF2_drop'})})
-                        ]),
-                        'size':P4Node({'node_type':'dc','expression':P4Node({
-                            'node_type':'Constant',
-                            'base':10,
-                            'value':1024
-                        })}),
-                        'default_action':P4Node({
-                            'node_type':'dc',
-                            'expression':P4Node({
-                            'node_type':'MethodCallExpression',
-                            'arguments':[],
-                            'method': P4Node({
-                                'node_type':'MethodCallExpression',
-                                'path':P4Node({'node_type':'dc','name':'NF2_drop'}),
-                                'action_ref':P4Node({
-                                    'node_type':'P4Action',
-                                    'name':'NF2_drop'
-                                })
-                            })
-                        })})
-                    })
-                )
+                resultingControl.tables.append(self.p4inject.controls[1].tables[0])
             for decl in control2.controlLocals:
                 if decl.node_type == "Declaration_Variable":
                     decl.name = self.prefix2 + decl.name
                     resultingControl.controlLocals.append(decl)
             if control1.name in IngressNames:
-                resultingControl.controlLocals.append(P4Node({
-                    'node_type':'Declaration_Variable',
-                    'name':'meterValue',
-                    'type':P4Node({
-                        'node_type':'Type_Bits',
-                        'size':32
-                    })
-                }))
-                resultingControl.controlLocals.append(P4Node({
-                    'node_type':'Declaration_Instance',
-                    'name':'NF1_meter',
-                    'arguments':P4Node({
-                        'node_type':'Vector<Arguments>'},
-                        [P4Node({
-                            'node_type':'Argument',
-                            'expression':P4Node({
-                                'node_type':'Member',
-                                'member':'packets',
-                                'expr':P4Node({
-                                    'node_type':'TypeNameExpression',
-                                    'typeName':P4Node({
-                                        'node_type':'Type_Name',
-                                        'path':P4Node({
-                                            'node_type':'Path',
-                                            'name':'MeterType'
-                                        })
-                                    })
-                                })
-                            })
-                        })]
-                    ),
-                    'type':P4Node({
-                        'node_type':'Type_Specialized',
-                        'base_type':P4Node({
-                            'node_type':'Type_Name',
-                            'type_ref':P4Node({
-                                'node_type':'Type_Extern',
-                                'name':'direct_meter'
-                            })
-                        }),
-                        'arguments':P4Node({
-                            'node_type':'Vector<Type>'
-                            
-                        },[
-                            P4Node({
-                                'node_type':'Type_Bits',
-                                'size':32
-                            })    
-                        ])
-                    })
-                }))
-                resultingControl.controlLocals.append(P4Node({
-                    'node_type':'Declaration_Instance',
-                    'name':'NF2_meter',
-                    'arguments':P4Node({
-                        'node_type':'Vector<Arguments>'},
-                        [P4Node({
-                            'node_type':'Argument',
-                            'expression':P4Node({
-                                'node_type':'Member',
-                                'member':'packets',
-                                'expr':P4Node({
-                                    'node_type':'TypeNameExpression',
-                                    'typeName':P4Node({
-                                        'node_type':'Type_Name',
-                                        'path':P4Node({
-                                            'node_type':'Path',
-                                            'name':'MeterType'
-                                        })
-                                    })
-                                })
-                            })
-                        })]
-                    ),
-                    'type':P4Node({
-                        'node_type':'Type_Specialized',
-                        'base_type':P4Node({
-                            'node_type':'Type_Name',
-                            'type_ref':P4Node({
-                                'node_type':'Type_Extern',
-                                'name':'direct_meter'
-                            })
-                        }),
-                        'arguments':P4Node({
-                            'node_type':'Vector<Type>'
-                            
-                        },[
-                            P4Node({
-                                'node_type':'Type_Bits',
-                                'size':32
-                            })    
-                        ])
-                    })
-                }))
+                resultingControl.controlLocals = resultingControl.controlLocals + [self.p4inject.controls[1].controlLocals[0],self.p4inject.controls[1].controlLocals[4],self.p4inject.controls[1].controlLocals[5],self.p4inject.controls[1].controlLocals[6]]
             for action in control2.actions:
                     action.name = self.prefix2 + action.name
                     resultingControl.actions.append(action)
             if control1.name in IngressNames:
-                resultingControl.actions.append(P4Node({
-                    'name':'set_tunnelid',
-                    'node_type':'P4Action',
-                    'parameters':P4Node({
-                        'node_type':"ParameterList",
-                        'parameters':P4Node({
-                            'node_type':'IndexedVector<Parameter'
-                        },[P4Node({
-                            'node_type':'Parameter',
-                            'name':'tunnelid',
-                            'type':P4Node({
-                                'node_type':'Type_Bits',
-                                'size':1
-                            })
-                        })])
-                    }),
-                    'body':P4Node({
-                        'node_type':'BlockStatement',
-                        'components':P4Node({
-                            'node_type': 'IndexedVector<StatOrDecl>'
-                        },vec=[P4Node({
-                            'node_type':'AssignmentStatement',
-                            'left': P4Node({
-                                'node_type' : 'Member',
-                                'expr':P4Node({
-                                    'node_type':'PathExpression',
-                                    'path':P4Node({
-                                        'node_type':'Path',
-                                        'name':'meta'
-                                    })
-                                }),
-                                'member':'tunnelID'
-                            }),
-                            'right': P4Node({
-                                'node_type':'PathExpression',
-                                'path':P4Node({
-                                        'node_type':'Path',
-                                        'name':'tunnelid'
-                                    })
-                            })
-                        })])
-                    })
-                }))
-
+                resultingControl.actions = resultingControl.actions + [self.p4inject.controls[1].actions[3],self.p4inject.controls[1].actions[4],self.p4inject.controls[1].actions[5],self.p4inject.controls[1].actions[6]]
+                
             for table in control2.tables:
                 table.short_name = self.prefix2 + table.short_name
                 resultingControl.tables.append(table)
@@ -335,183 +146,24 @@ class P4Aggregator:
                 #controlBlock.name == self.prefix2 + controlBlock.name
                 #resultingControl.body.components.append(controlBlock)
             
-            newControl = [
-                    ]
             if control1.name in IngressNames:
-                newControl.insert(0,P4Node({
-                    'node_type':'MethodCallStatement',
-                    'methodCall':P4Node({
-                        'node_type':'MethodCallExpression',
-                        'method':P4Node({
-                            'node_type':'PathExpression',
-                            'member':'apply',
-                            'expr':P4Node({
-                                'node_type':'dontcare',
-                                'table_ref':P4Node({
-                                    'node_type':'P4Table',
-                                    'short_name':'tunnelident'
-                                })
-                            })
-                        })
-                        ,'arguments':P4Node({
-                            'node_type':'Vector<Argument>'
-                        },[])
-
-                    })
-
-                }))
-                newControl.insert(1,P4Node({
-                        'node_type' : 'IfStatement',
-                        'condition' : P4Node({
-                            'node_type' : 'Equ',
-                            'left' : P4Node({
-                                'node_type':'Member',
-                                'type' : P4Node({
-                                    'node_type':'Type_Bits',
-                                    'size' : 1,
-                                    'member' : 'tunnelID'
-                                }),
-                                'member':'tunnelID',
-                                'expr' : P4Node({
-                                    'node_type':'PathExpression',
-                                    'path' : P4Node({
-                                        'node_type':'Path',
-                                        'name' : 'meta' #might need to be fixed for other meta names
-                                    }),
-                                }),
-                            }),
-                            'right' : P4Node({
-                                'node_type' : 'Constant',
-                                'value' : 1,
-                                'base' : 10
-
-                            })
-                        }),
-                        'ifFalse' : P4Node(init={
-                            'node_type' : 'BlockStatement',
-                            'components' : P4Node({
-                                'node_type':'Array'
-                            },vec=[
-                                # P4Node({
-                                #     'node_type':'MethodCallStatement',
-                                #     'methodCall':P4Node({
-                                #         'node_type':'MethodCallExpression',
-                                #         'method':P4Node({
-                                #             'node_type':'PathExpression',
-                                #             'member':'read',
-                                #             'expr':P4Node({
-                                #                 'node_type':'dontcare',
-                                #                 'table_ref':P4Node({
-                                #                     'node_type':'P4Table',
-                                #                     'short_name':'tunnelident'
-                                #                 })
-                                #             })
-                                #         })
-                                #         ,'arguments':P4Node({
-                                #             'node_type':'Vector<Argument>'
-                                #         },[])
-
-                                #     })
-
-                                # }),
-                                P4Node({
-                                'node_type' : 'IfStatement',
-                                'condition' : P4Node({
-                                    'node_type' : 'Equ',
-                                    'left' : P4Node({
-                                        'node_type':'PathExpression',
-                                        'path' : P4Node({
-                                            'node_type':'Path',
-                                            'name' : 'meterValue'
-                                        })
-                                    }),
-                                    'right' : P4Node({
-                                        'node_type' : 'Constant',
-                                        'value' : 0,
-                                        'base' : 10
-
-                                    })
-                                }),
-                                'ifTrue' : P4Node(init={
+                newControl = self.p4inject.controls[1].body.components.vec
+                newControl[0].ifTrue.components[1].ifTrue.components[1].ifTrue =  P4Node(init={
                                     'node_type' : 'BlockStatement',
                                     'components' : P4Node({
                                         'node_type':'Array'
-                                    },vec=newControl1.components.vec)}),
-                                'ifFalse': P4Node(init={
+                                    },vec=[newControl[0].ifTrue.components[1].ifTrue.components[1].ifTrue] + newControl1.components.vec )})
+                newControl[0].ifTrue.components[1].ifFalse.components[1].ifTrue =  P4Node(init={
                                     'node_type' : 'BlockStatement',
                                     'components' : P4Node({
                                         'node_type':'Array'
-                                    },vec=[])})
-                            })])}),
-                        'ifTrue': P4Node(init={
-                            'node_type' : 'BlockStatement',
-                            'components' : P4Node({
-                                'node_type':'Array'
-                            },vec=[
-                                # P4Node({
-                                #     'node_type':'MethodCallStatement',
-                                #     'methodCall':P4Node({
-                                #         'node_type':'MethodCallExpression',
-                                #         'method':P4Node({
-                                #             'node_type':'PathExpression',
-                                #             'member':'read',
-                                #             'expr':P4Node({
-                                #                 'node_type':'dontcare',
-                                #                 'table_ref':P4Node({
-                                #                     'node_type':'P4Table',
-                                #                     'short_name':'tunnelident'
-                                #                 })
-                                #             })
-                                #         })
-                                #         ,'arguments':P4Node({
-                                #             'node_type':'Vector<Argument>'
-                                #         },[])
-
-                                #     })
-
-                                # }),
-                                P4Node({
-                                'node_type' : 'IfStatement',
-                                'condition' : P4Node({
-                                    'node_type' : 'Equ',
-                                    'left' : P4Node({
-                                        'node_type':'PathExpression',
-                                        'path' : P4Node({
-                                            'node_type':'Path',
-                                            'name' : 'meterValue'
-                                        })
-                                    }),
-                                    'right' : P4Node({
-                                        'node_type' : 'Constant',
-                                        'value' : 0,
-                                        'base' : 10
-
-                                    })
-                                }),
-                                'ifTrue' : P4Node(init={
-                                    'node_type' : 'BlockStatement',
-                                    'components' : P4Node({
-                                        'node_type':'Array'
-                                    },vec=newControl2.components.vec)}),
-                                'ifFalse': P4Node(init={
-                                    'node_type' : 'BlockStatement',
-                                    'components' : P4Node({
-                                        'node_type':'Array'
-                                    },vec=[])})
-                            })])})
-                    })
-                )
-
-
-            resultingControl.body.components.vec = [P4Node(init={
-                'node_type' : 'BlockStatement',
-                'components' : P4Node({
-                    'node_type':'Array'
-                },vec=newControl)
-                    })]
-
-
-
+                                    },vec=[newControl[0].ifTrue.components[1].ifFalse.components[1].ifTrue] + newControl2.components.vec )})
+                resultingControl.body.components.vec = [P4Node(init={
+                    'node_type' : 'BlockStatement',
+                    'components' : P4Node({
+                        'node_type':'Array'
+                    },vec=newControl)
+                        })]
         return resultingControl
         
     def mergeMetadata(self,metadata1,metadata2):

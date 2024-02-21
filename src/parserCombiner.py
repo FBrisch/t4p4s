@@ -43,6 +43,32 @@ class ParserCombiner:
         #self.resultingStates[self.parser1.states[0].name] = deep_copy(self.parser1.states[0])
         self.iterateOverStates(self.stateDict1["start"],self.stateDict2["start"])
 
+        for header in self.resultingHeaders:
+            print(header)
+            
+        
+            # print('checking for vlan tagging')
+            # if extractedHeaders[0].size == 112:
+            #     extractedHeaders[0].fields.vec.insert(2,P4Node({
+            #         'node_type':'StructField',
+            #         'name':'vlanProtocol',
+            #         'type':P4Node({
+            #             'node_type':'Type_Bits',
+            #             'size':16
+            #         })
+            #     }))
+            #     extractedHeaders[0].fields.vec.insert(2,P4Node({
+            #         'node_type':'StructField',
+            #         'name':'vlanID',
+            #         'type':P4Node({
+            #             'node_type':'Type_Bits',
+            #             'size':16
+            #         })
+            #     }))
+            # else:
+            #     print('source pipeline does not extract ethernet header without vlan tag as first extract, this will not work')
+            #     exit(-1)
+
         for state in self.parser1.states:
             if state.name in ["accept","reject"]:
                 stateToInsert = deep_copy(state)
@@ -60,32 +86,16 @@ class ParserCombiner:
             exit(1)
         
         extractedHeaders = self.getExtractedHeader(state1)
-        if state1.name == "start":
-            print('checking for vlan tagging')
-            if extractedHeaders[0].size == 112:
-                extractedHeaders[0].fields.vec.insert(2,P4Node({
-                    'node_type':'StructField',
-                    'name':'vlanProtocol',
-                    'type':P4Node({
-                        'node_type':'Type_Bits',
-                        'size':16
-                    })
-                }))
-                extractedHeaders[0].fields.vec.insert(2,P4Node({
-                    'node_type':'StructField',
-                    'name':'vlanID',
-                    'type':P4Node({
-                        'node_type':'Type_Bits',
-                        'size':16
-                    })
-                }))
-            else:
-                print('source pipeline does not extract ethernet header without vlan tag as first extract, this will not work')
-                exit(-1)
+        
             
         for header in extractedHeaders:
-            self.addedNodes.append(header)
-            self.resultingHeaders.append(header)
+            if header.node_type == 'StructField' and  header.type.type_ref not in self.resultingHeaders:
+                self.resultingHeaders.append(header.type.type_ref)
+                self.addedNodes.append(header.type.type_ref)
+            elif header.node_type == 'Type_Header' and header not in self.resultingHeaders:
+                self.resultingHeaders.append(header)
+                self.addedNodes.append(header)
+            
             self.headerNameTranslationDictionary[header.name] = header
         
         mergedSelect,resultingSelectStatement = self.mergeSelects(state1.selectExpression,state2.selectExpression)
@@ -97,8 +107,7 @@ class ParserCombiner:
                 elif case.state2 == None:
                     self.addDistinctTree(case.state1,False)
                 else:
-                    self.iterateOverStates(self.stateDict1[case.state1],self.stateDict2[case.state2])
-                    
+                    self.iterateOverStates(self.stateDict1[case.state1],self.stateDict2[case.state2])       
             else:
                 if(case.state1 != case.state2):
                     print("mismatch between accept/reject state and different state")
@@ -131,13 +140,17 @@ class ParserCombiner:
         resultingSelectStatement = deep_copy(selectStatement1)
         #check if selects have same offset 
         if (selectStatement2.node_type != "PathExpression" and selectStatement1.node_type != "PathExpression"):
-            if not selectStatement1.select.components[0].fld_ref.offset == selectStatement2.select.components[0].fld_ref.offset:
-                print(f"couldnt combine select Statements, offset didnt match({selectStatement1.components[0].fld_ref.offset},{selectStatement2.components[0].fld_ref.offset})")
-                exit(-1)
-            #check if selects have same length
-            if not selectStatement1.select.components[0].fld_ref.size == selectStatement2.select.components[0].fld_ref.size:
-                print(f"couldnt combine select Statements, checked length didnt match({selectStatement1.components[0].fld_ref.size},{selectStatement2.components[0].fld_ref.size})")
-                exit(-1)
+            if 'fld_ref' not in selectStatement1.select.components[0] and 'fld_ref' not in selectStatement2.select.components[0].node_type:
+                #must be a metadata reference, continue for now
+                print('select references metadata')
+            else:
+                if not selectStatement1.select.components[0].fld_ref.offset == selectStatement2.select.components[0].fld_ref.offset:
+                    print(f"couldnt combine select Statements, offset didnt match({selectStatement1.components[0].fld_ref.offset},{selectStatement2.components[0].fld_ref.offset})")
+                    exit(-1)
+                #check if selects have same length
+                if not selectStatement1.select.components[0].fld_ref.size == selectStatement2.select.components[0].fld_ref.size:
+                    print(f"couldnt combine select Statements, checked length didnt match({selectStatement1.components[0].fld_ref.size},{selectStatement2.components[0].fld_ref.size})")
+                    exit(-1)
 
         #merge select
         if selectStatement1.node_type == "PathExpression": # handle simple transitions without select
@@ -203,8 +216,13 @@ class ParserCombiner:
         
         extractedHeaders = self.getExtractedHeader(currentState)
         for header in extractedHeaders:
-            self.addedNodes.append(header)
-            self.resultingHeaders.append(header)
+            if header.node_type == 'StructField' and  header.type.type_ref not in self.resultingHeaders:
+                self.resultingHeaders.append(header.type.type_ref)
+                self.addedNodes.append(header.type.type_ref)
+            elif header.node_type == 'Type_Header' and header not in self.resultingHeaders:
+                self.resultingHeaders.append(header)
+                self.addedNodes.append(header)
+            
         self.resultingStates[statename] = deep_copy(currentState)
         self.resultingStates[statename].Node_ID = currentState.Node_ID
         self.addedNodes.append(self.resultingStates[statename])
@@ -219,8 +237,13 @@ class ParserCombiner:
         sumHeaderLength = 0
         stateComponents = state.components
         for comp in stateComponents:
-            if(comp.node_type == 'MethodCallStatement' and comp.call == "extract_header"):
+            if(comp.node_type == 'MethodCallStatement' and ("call" in comp and comp.call == "extract_header") ):
                 sumHeaderLength += comp.header.byte_width
+            elif comp.node_type == 'MethodCallStatement' and ("methodCall" in comp and 'member' in comp.methodCall.method and comp.methodCall.method.member == 'extract'):
+                if comp.methodCall.arguments[0].expression.type.name == 'ingress_intrinsic_metadata_t':
+                    comp.methodCall.arguments[0].expression.type.size / 8
+                # else:
+                    # sumHeaderLength += comp.methodCall.arguments[0].expression.hdr_ref.size / 8
         return sumHeaderLength
     
     def getExtractedHeaderName(self,state):
@@ -232,8 +255,11 @@ class ParserCombiner:
     def getExtractedHeader(self,state):
         returnValue = []
         for comp in state.components:
-            if(comp.call == "extract_header"):
+            if("call" in comp and comp.call == "extract_header"):
                 returnValue.append( comp.header)
+            elif comp.node_type == 'MethodCallStatement' and ("methodCall" in comp and 'member' in comp.methodCall.method and comp.methodCall.method.member == 'extract'):
+                returnValue.append( comp.methodCall.arguments[0].expression.hdr_ref)
+            
         return returnValue
 
 
