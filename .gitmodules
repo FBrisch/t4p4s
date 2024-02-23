@@ -2,3 +2,4 @@
 	path = src/hlir16
 	url = https://github.com/FBrisch/hlir16
 	update = merge 
+	branch = master
