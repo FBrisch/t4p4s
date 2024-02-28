@@ -128,16 +128,16 @@ class P4Aggregator:
             if control1.name in IngressNames:
                 resultingControl.tables.append(self.p4inject.controls[1].tables[0])
             for decl in control2.controlLocals:
-                if decl.node_type == "Declaration_Variable":
-                    decl.name = self.prefix2 + decl.name
+                if decl.node_type == "Declaration_Variable" or decl.node_type == "Declaration_Instance":
+                    decl.name = decl.name#self.prefix2 + 
                     resultingControl.controlLocals.append(decl)
             if control1.name in IngressNames:
-                resultingControl.controlLocals = resultingControl.controlLocals + [self.p4inject.controls[1].controlLocals[0],self.p4inject.controls[1].controlLocals[4],self.p4inject.controls[1].controlLocals[5],self.p4inject.controls[1].controlLocals[6]]
+                resultingControl.controlLocals = resultingControl.controlLocals + [self.p4inject.controls[1].controlLocals[0],self.p4inject.controls[1].controlLocals[2],self.p4inject.controls[1].controlLocals[3],self.p4inject.controls[1].controlLocals[6]]
             for action in control2.actions:
                     action.name = self.prefix2 + action.name
                     resultingControl.actions.append(action)
             if control1.name in IngressNames:
-                resultingControl.actions = resultingControl.actions + [self.p4inject.controls[1].actions[3],self.p4inject.controls[1].actions[4],self.p4inject.controls[1].actions[5],self.p4inject.controls[1].actions[6]]
+                resultingControl.actions = resultingControl.actions + self.p4inject.controls[1].actions
                 
             for table in control2.tables:
                 table.short_name = self.prefix2 + table.short_name

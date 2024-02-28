@@ -71,7 +71,7 @@ def expr_to_string(expr):
         return f' bool'
     if expr.node_type == "StructField":
         if 'stack' in expr:
-            return f' {expr_to_string(expr.type)} {expr.stack.name}[{expr.stack.type.stk_size.value}]'
+            return f' {expr_to_string(expr.type)}[{expr.stack.type.stk_size.value}] {expr.stack.name}'
         return f' {expr_to_string(expr.type)} {expr.name}'
     if expr.node_type == "Type_Name":
         if 'path' in expr:
@@ -80,7 +80,7 @@ def expr_to_string(expr):
     if expr.node_type == "LOr":
         return f'{expr_to_string(expr.left)} || {expr_to_string(expr.right)}'
     if expr.node_type == "Parameter":
-        return f'{expr_to_string(expr.type)}'
+        return f'{expr.direction} {expr_to_string(expr.type)} {expr.name}'
     if expr.node_type == "Type_Specialized":
         if 'base_type' in expr:
             args = ', '.join(expr.arguments.map(expr_to_string))
@@ -104,6 +104,9 @@ def expr_to_string(expr):
         return f' {expr.name}'
     if expr.node_type == 'ArrayIndex':
         return f' {expr_to_string(expr.left)}[{expr_to_string(expr.right)}]'
+    if expr.node_type == 'Entry':
+        keys = ', '.join(expr.keys.components.map(expr_to_string))
+        return f'({keys}) : {expr_to_string(expr.action)}'
     breakpoint()
     return 'TODO_EXPR'
 
@@ -177,7 +180,8 @@ def printHLIR(hlir):
     for importline in import_files[hlir.news.model]:
         returnString += f'#include <{importline}>\r\n'
     print()
-
+    for typedef in hlir.typedefs:
+        returnString += f'typedef {expr_to_string(typedef.type)} {typedef.name};\r\n'
     for hdr in hlir.headers:
         if hdr.name == "all_metadatas_t":
             returnString += f'struct metadata {{\r\n'
@@ -280,6 +284,12 @@ def printHLIR(hlir):
             for name in table.actions.map('action_object.name'):
                 returnString += f'            {name};\r\n'
             returnString += f'        }}\r\n'
+
+            if 'entries' in table:
+                returnString += '        const entries = {\r\n'
+                for entry in table.entries.entries:
+                    returnString += f'          {expr_to_string(entry)};\r\n'
+                returnString += '        }\r\n'
 
             if 'size' in table:
                 returnString += f'        size = {expr_to_string(table.size.expression)};\r\n'

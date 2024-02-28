@@ -145,14 +145,12 @@ control MyIngress(inout headers hdr,
                 if(meterValue == 0){
                     c.count(0);
                 }else{
-                    drop();
                 }
             }else{
                 segmentMeter.execute_meter<bit<32>>(1,meterValue);
                 if(meterValue == 0){
                     c.count(1);
                 }else{
-                    drop();
                 }
             }
         }
