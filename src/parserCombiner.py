@@ -89,14 +89,13 @@ class ParserCombiner:
         
             
         for header in extractedHeaders:
-            if header.node_type == 'StructField' and  header.type.type_ref not in self.resultingHeaders:
-                self.resultingHeaders.append(header.type.type_ref)
-                self.addedNodes.append(header.type.type_ref)
-            elif header.node_type == 'Type_Header' and header not in self.resultingHeaders:
+            if header.node_type == 'Member' and header not in self.resultingHeaders:
                 self.resultingHeaders.append(header)
                 self.addedNodes.append(header)
+            elif header.node_type != "Member":
+                breakpoint()
             
-            self.headerNameTranslationDictionary[header.name] = header
+            self.headerNameTranslationDictionary[header.member] = header
         
         mergedSelect,resultingSelectStatement = self.mergeSelects(state1.selectExpression,state2.selectExpression)
 
@@ -216,12 +215,11 @@ class ParserCombiner:
         
         extractedHeaders = self.getExtractedHeader(currentState)
         for header in extractedHeaders:
-            if header.node_type == 'StructField' and  header.type.type_ref not in self.resultingHeaders:
-                self.resultingHeaders.append(header.type.type_ref)
-                self.addedNodes.append(header.type.type_ref)
-            elif header.node_type == 'Type_Header' and header not in self.resultingHeaders:
+            if header.node_type == 'Member' and header not in self.resultingHeaders:
                 self.resultingHeaders.append(header)
                 self.addedNodes.append(header)
+            elif header.node_type != "Member":
+                breakpoint()
             
         self.resultingStates[statename] = deep_copy(currentState)
         self.resultingStates[statename].Node_ID = currentState.Node_ID
@@ -256,9 +254,9 @@ class ParserCombiner:
         returnValue = []
         for comp in state.components:
             if("call" in comp and comp.call == "extract_header"):
-                returnValue.append( comp.header)
+                returnValue.append( comp.methodCall.arguments[0].expression)
             elif comp.node_type == 'MethodCallStatement' and ("methodCall" in comp and 'member' in comp.methodCall.method and comp.methodCall.method.member == 'extract'):
-                returnValue.append( comp.methodCall.arguments[0].expression.hdr_ref)
+                returnValue.append( comp.methodCall.arguments[0].expression)
             
         return returnValue
 
@@ -301,4 +299,4 @@ class ParserCombiner:
             }),
             'size': 1}))
         self.addedNodes.append(resultingMetadata)
-        self.resultingHeaders.append(resultingMetadata)
+        self.resultingMetadata = resultingMetadata

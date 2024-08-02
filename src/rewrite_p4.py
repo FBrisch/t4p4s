@@ -7,7 +7,10 @@ def expr_to_string(expr):
         return expr
     if expr.node_type == 'Constant':
         if expr.base == 10:
-            return f'{expr.value}'
+            if(expr.type.node_type == "Type_Bits"):
+                return f'({expr_to_string(expr.type)}) {expr.value}'
+            else:
+                return f'{expr.value}'
         if expr.base == 16:
             return f'{expr.value:#X}'
         breakpoint()
@@ -28,9 +31,13 @@ def expr_to_string(expr):
 
     if expr.node_type == 'PathExpression':
         if "table_ref" in expr:
-            return f'{expr.table_ref.short_name}'
+            return f'{expr.table_ref.canonical_name}'
         if "action_ref" in expr:
             return f'{expr.action_ref.name}'
+        if "decl_ref" in expr and expr.decl_ref.node_type == 'Declaration_Variable':
+            return f'{expr.decl_ref.name}'
+        if "path" in expr:
+            return f'{expr.path.name}'
         else:
             return f'{expr.path.name}'
 
@@ -98,6 +105,8 @@ def expr_to_string(expr):
         return 'default'
     if expr.node_type == 'Type_Struct':
         return f'{expr.name}'
+    if expr.node_type == 'Type_Header':
+        return f'{expr.name}'
     if expr.node_type == 'Cast':
         return f'({expr_to_string(expr.type)}) {expr_to_string(expr.expr)}'
     if expr.node_type == 'Type_Extern':
@@ -123,7 +132,7 @@ def print_body_component(level, node):
             if name == 'emit':
                 return f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});\r\n'
             elif name == 'apply':
-                return f'{indent}{mc.method.expr.table_ref.short_name}.{name}({exprs});\r\n'
+                return f'{indent}{mc.method.expr.table_ref.canonical_name}.{name}({exprs});\r\n'
             elif name=='setValid':
                 if 'path' in mc.method.expr:
                     return f'{indent}hdr.{mc.method.expr.path.name}.{name}({exprs});\r\n'
@@ -142,7 +151,10 @@ def print_body_component(level, node):
                 return f'{indent}{mc.type.name}.{name}({exprs});\r\n'
             return
         else:
-            name = mc.method.path.name
+            if "action_ref" in mc.method and mc.method.action_ref is not None:
+                name = mc.method.action_ref.name
+            else:
+                name = mc.method.path.name
             return f'{indent}{name}({exprs});\r\n'
             
     if node.node_type == 'AssignmentStatement':
@@ -195,8 +207,8 @@ def printHLIR(hlir):
         returnString += "\r\n"
 
     returnString += f'struct headers {{\r\n'
-    for hdrinst in hlir.header_instances.filter(lambda hdrinst: hdrinst.name != 'all_metadatas_t'):
-        returnString += f'    {expr_to_string(hdrinst)};\r\n'
+    for hdrinst in hlir.header_instances.filter(lambda hdrinst: hdrinst.member != 'all_metadatas_t'):
+        returnString += f'    {expr_to_string(hdrinst.type)} {hdrinst.member};\r\n'
     returnString += f'}}\r\n'
     returnString += "\r\n"
 
@@ -273,7 +285,7 @@ def printHLIR(hlir):
             returnString += f'    }}\r\n'
 
         for table in ctl.tables:
-            returnString += f'    table {table.short_name} {{\r\n'
+            returnString += f'    table {table.canonical_name} {{\r\n'
 
             returnString += f'        key = {{\r\n'
             for keyelem in table.key.keyElements:

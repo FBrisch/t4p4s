@@ -35,8 +35,12 @@ struct metadata {
 }
 
 struct headers {
-    ipv6_srh_h srh;
-    ipv6_srh_segment_h[SRH_SID_MAX] srh_sid; // [0]~[SRH_SID_MAX-1]
+    ipv6_srh_h srh; 
+    ipv6_srh_segment_h srh_sid_0; 
+    ipv6_srh_segment_h srh_sid_1; 
+    ipv6_srh_segment_h srh_sid_2; 
+    ipv6_srh_segment_h srh_sid_3; 
+
 }
 
 /********************* P A R S E R  *************************************/
@@ -56,7 +60,7 @@ parser MyParser(packet_in packet,
     }
     #define PARSE_SRH_SID(curr, next)               \
     state parse_srh_sid_##curr {                \
-        packet.extract(hdr.srh_sid[curr]);         \
+        packet.extract(hdr.srh_sid_##curr);         \
         transition select(hdr.srh.last_entry) {  \
             curr : parse_srh_next_header;       \
             default : parse_srh_sid_##next;     \
@@ -67,7 +71,7 @@ parser MyParser(packet_in packet,
     PARSE_SRH_SID(1, 2)
     PARSE_SRH_SID(2, 3)
     state parse_srh_sid_3 {
-        packet.extract(hdr.srh_sid[3]);
+        packet.extract(hdr.srh_sid_3);
         transition select(hdr.srh.last_entry) {
             3 : parse_srh_next_header;
         }
@@ -103,16 +107,16 @@ control MyIngress(inout headers hdr,
     meter(2, MeterType.packets) segmentMeter;
     counter(2, CounterType.packets) c;
     action set_nextsid_1() {
-        meta.next_sid = hdr.srh_sid[0].sid;
+        meta.next_sid = hdr.srh_sid_0.sid;
     }
     action set_nextsid_2() {
-        meta.next_sid = hdr.srh_sid[1].sid;
+        meta.next_sid = hdr.srh_sid_1.sid;
     }
     action set_nextsid_3() {
-        meta.next_sid = hdr.srh_sid[2].sid;
+        meta.next_sid = hdr.srh_sid_2.sid;
     }
     action set_nextsid_4() {
-        meta.next_sid = hdr.srh_sid[3].sid;
+        meta.next_sid = hdr.srh_sid_3.sid;
     }
     
     table srv6_set_nextsid { // helper table

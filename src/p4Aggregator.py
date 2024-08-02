@@ -27,11 +27,13 @@ class P4Aggregator:
 
         self.resultingProgram.parsers[0].states.vec = [f for f in combiner.resultingStates.values()]
         
-        self.resultingProgram.headers.vec = combiner.resultingHeaders
+        self.resultingProgram.headers.vec = list(set([x.type for x in combiner.resultingHeaders]))
+        self.resultingProgram.headers.append(combiner.resultingMetadata)
         for header in self.resultingProgram.headers.vec:
             header.is_skipped = False
             header.is_local = False
-        self.mergeHeaderInstances(combiner.resultingHeaders)
+        self.resultingProgram.header_instances.vec = combiner.resultingHeaders
+        #self.mergeHeaderInstances(combiner.resultingHeaders)
 
 
         #newMetadata = self.mergeMetadata(next(x for x in self.p4program1.headers if x.name == 'all_metadatas_t'),next(x for x in self.p4program2.headers if x.name == 'all_metadatas_t'))
@@ -124,15 +126,18 @@ class P4Aggregator:
 
 
             for table in resultingControl.tables:
-                table.short_name = self.prefix1 + table.short_name
+                table.canonical_name = self.prefix1 + table.canonical_name
             if control1.name in IngressNames:
                 resultingControl.tables.append(self.p4inject.controls[1].tables[0])
             for decl in control2.controlLocals:
                 if decl.node_type == "Declaration_Variable" or decl.node_type == "Declaration_Instance":
-                    decl.name = decl.name#self.prefix2 + 
+                    decl.name = self.prefix2 + decl.name#
                     resultingControl.controlLocals.append(decl)
             if control1.name in IngressNames:
-                resultingControl.controlLocals = resultingControl.controlLocals + [self.p4inject.controls[1].controlLocals[0],self.p4inject.controls[1].controlLocals[2],self.p4inject.controls[1].controlLocals[3],self.p4inject.controls[1].controlLocals[6]]
+                resultingControl.controlLocals = resultingControl.controlLocals + [self.p4inject.controls[1].controlLocals[0],
+                                                                                   self.p4inject.controls[1].controlLocals[2],
+                                                                                   self.p4inject.controls[1].controlLocals[3],
+                                                                                   self.p4inject.controls[1].controlLocals[8]]
             for action in control2.actions:
                     action.name = self.prefix2 + action.name
                     resultingControl.actions.append(action)
@@ -140,7 +145,7 @@ class P4Aggregator:
                 resultingControl.actions = resultingControl.actions + self.p4inject.controls[1].actions
                 
             for table in control2.tables:
-                table.short_name = self.prefix2 + table.short_name
+                table.canonical_name = self.prefix2 + table.canonical_name
                 resultingControl.tables.append(table)
             #for controlBlock in control2.body.components:
                 #controlBlock.name == self.prefix2 + controlBlock.name
