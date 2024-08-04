@@ -17,7 +17,10 @@ def expr_to_string(expr):
         return 'TODO_CONST_EXPR'
 
     if expr.node_type == 'Member':
-        return f'{expr_to_string(expr.expr)}.{expr.member}'
+        if "fld_ref" in expr and "hdr_ref" in expr and expr.hdr_ref.name != "all_metadatas":
+            return f'{expr.expr.expr.path.name}.{expr_to_string(expr.hdr_ref.name)}.{expr_to_string(expr.fld_ref.name)}'
+        else:
+            return f'{expr_to_string(expr.expr)}.{expr.member}'
 
     if expr.node_type == 'MethodCallExpression':
         args = ', '.join(expr_to_string(arg) for arg in expr.arguments)
@@ -30,6 +33,8 @@ def expr_to_string(expr):
             return f'{expr.method.path.name}({args})'
 
     if expr.node_type == 'PathExpression':
+        #if "hdr_ref" in expr:
+        #    return f'{expr.hdr_ref.name}'
         if "table_ref" in expr:
             return f'{expr.table_ref.canonical_name}'
         if "action_ref" in expr:

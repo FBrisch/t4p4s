@@ -86,8 +86,9 @@ class ParserCombiner:
             exit(1)
         
         extractedHeaders = self.getExtractedHeader(state1)
-        
-            
+        extractedHeadersState2 = self.getExtractedHeader(state2)
+        for idx,header in enumerate(extractedHeaders):
+            extractedHeadersState2[idx].expr.hdr_ref.name = header.expr.hdr_ref.name
         for header in extractedHeaders:
             if header.node_type == 'Member' and header not in self.resultingHeaders:
                 self.resultingHeaders.append(header)
