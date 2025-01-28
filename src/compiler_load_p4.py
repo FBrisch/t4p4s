@@ -295,7 +295,6 @@ def load_from_p4(compiler_args, cache_dir_name):
     check_file_extension(filename)
 
     with RecursionLimit(10000) as recursion_limit:
-
         hlir = load_hlir(filename, cache_dir_name, args['recompile'])
         
         if 'merge' in args:

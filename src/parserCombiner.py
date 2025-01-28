@@ -88,15 +88,18 @@ class ParserCombiner:
         extractedHeaders = self.getExtractedHeader(state1)
         extractedHeadersState2 = self.getExtractedHeader(state2)
         for idx,header in enumerate(extractedHeaders):
-            extractedHeadersState2[idx].expr.hdr_ref.name = header.expr.hdr_ref.name
+            extractedHeadersState2[idx].hdr_ref.name = header.hdr_ref.name#.expr
         for header in extractedHeaders:
-            if header.node_type == 'Member' and header not in self.resultingHeaders:
+            if header.node_type == 'Member' and header.hdr_ref not in self.resultingHeaders:
+                self.resultingHeaders.append(header.hdr_ref)
+                self.addedNodes.append(header)
+            elif header.node_type == 'PathExpression':
                 self.resultingHeaders.append(header)
                 self.addedNodes.append(header)
-            elif header.node_type != "Member":
-                breakpoint()
+            #else:
+                #breakpoint()
             
-            self.headerNameTranslationDictionary[header.member] = header
+            self.headerNameTranslationDictionary[header.hdr_ref.name] = header
         
         mergedSelect,resultingSelectStatement = self.mergeSelects(state1.selectExpression,state2.selectExpression)
 
@@ -216,8 +219,8 @@ class ParserCombiner:
         
         extractedHeaders = self.getExtractedHeader(currentState)
         for header in extractedHeaders:
-            if header.node_type == 'Member' and header not in self.resultingHeaders:
-                self.resultingHeaders.append(header)
+            if header.node_type == 'Member' and header.hdr_ref not in self.resultingHeaders:
+                self.resultingHeaders.append(header.hdr_ref)
                 self.addedNodes.append(header)
             elif header.node_type != "Member":
                 breakpoint()

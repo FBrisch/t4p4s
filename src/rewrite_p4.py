@@ -152,6 +152,8 @@ def print_body_component(level, node):
                 return f'{indent}{expr_to_string(mc.method.expr)}.{name}({exprs});\r\n'
             elif name=='count':
                 return f'{indent}{expr_to_string(mc.method.expr)}.{name}({exprs});\r\n'
+            elif name=='get':
+                return f'{indent}{mc.method.expr.decl_ref.name}.{name}({exprs});\r\n'
             else:
                 return f'{indent}{mc.type.name}.{name}({exprs});\r\n'
             return
@@ -200,7 +202,7 @@ def printHLIR(hlir):
     for typedef in hlir.typedefs:
         returnString += f'typedef {expr_to_string(typedef.type)} {typedef.name};\r\n'
     for hdr in hlir.headers:
-        if hdr.name == "all_metadatas_t":
+        if "name" in hdr and hdr.name == "all_metadatas_t":
             returnString += f'struct metadata {{\r\n'
             for fld in hdr.fields:
                 returnString += f'    {expr_to_string(fld.type)};\r\n'
@@ -212,8 +214,8 @@ def printHLIR(hlir):
         returnString += "\r\n"
 
     returnString += f'struct headers {{\r\n'
-    for hdrinst in hlir.header_instances.filter(lambda hdrinst: hdrinst.member != 'all_metadatas_t'):
-        returnString += f'    {expr_to_string(hdrinst.type)} {hdrinst.member};\r\n'
+    for hdrinst in hlir.header_instances.filter(lambda hdrinst: hdrinst.node_type == 'StructField'):
+        returnString += f'    {expr_to_string(hdrinst.type.type_ref.name)} {hdrinst.name};\r\n'
     returnString += f'}}\r\n'
     returnString += "\r\n"
 

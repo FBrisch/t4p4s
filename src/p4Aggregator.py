@@ -27,12 +27,20 @@ class P4Aggregator:
 
         self.resultingProgram.parsers[0].states.vec = [f for f in combiner.resultingStates.values()]
         
-        self.resultingProgram.headers.vec = list(set([x.type for x in combiner.resultingHeaders]))
+        self.resultingProgram.headers.vec = []
+        for header in combiner.resultingHeaders:
+            if header.type.node_type=="Type_Name" and header.type.type_ref not in self.resultingProgram.headers.vec:
+                self.resultingProgram.headers.vec.append(header.type.type_ref)
+            elif header.type.node_type=="Type_Header" and header.type not in self.resultingProgram.headers.vec:
+                self.resultingProgram.headers.vec.append(header.type)
         self.resultingProgram.headers.append(combiner.resultingMetadata)
         for header in self.resultingProgram.headers.vec:
             header.is_skipped = False
             header.is_local = False
-        self.resultingProgram.header_instances.vec = combiner.resultingHeaders
+        self.resultingProgram.header_instances.vec = []
+        for headerinstance in combiner.resultingHeaders:
+            if header.node_type=="Type_Header":
+                self.resultingProgram.header_instances.vec.append(headerinstance)
         #self.mergeHeaderInstances(combiner.resultingHeaders)
 
 
