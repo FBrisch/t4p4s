@@ -103,7 +103,7 @@ control MyIngress(inout headers hdr,
         mark_to_drop(standard_metadata);
     }
     
-    bit<32> meterValue;
+    bit<32> meterValue = 0;
     meter(2, MeterType.packets) segmentMeter;
     counter(2, CounterType.packets) c;
     action set_nextsid_1() {

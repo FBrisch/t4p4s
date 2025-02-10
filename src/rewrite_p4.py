@@ -15,7 +15,6 @@ def expr_to_string(expr):
             return f'{expr.value:#X}'
         breakpoint()
         return 'TODO_CONST_EXPR'
-
     if expr.node_type == 'Member':
         if "fld_ref" in expr and "hdr_ref" in expr and expr.hdr_ref.name != "all_metadatas":
             return f'{expr.expr.expr.path.name}.{expr_to_string(expr.hdr_ref.name)}.{expr_to_string(expr.fld_ref.name)}'
@@ -72,9 +71,9 @@ def expr_to_string(expr):
         return f'{expr_to_string(expr.left)} != {expr_to_string(expr.right)}'
     if expr.node_type == 'BoolLiteral':
         if expr.value:
-            return f'true'
+            return f'({expr_to_string(expr.type)}) true'
         else:
-            return f'false'
+            return f'({expr_to_string(expr.type)}) false'
     if expr.node_type == 'Declaration_Variable':
         return f' {expr_to_string(expr.type)} {expr.name}'
     if expr.node_type == 'Type_Bits':
