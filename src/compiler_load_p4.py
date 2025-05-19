@@ -304,7 +304,7 @@ def load_from_p4(compiler_args, cache_dir_name):
             check_file_extension(filename2)
             hlir2 = load_hlir(filename2, cache_dir_name, args['recompile'])
             hlirInject = load_hlir('./t4p4s/src/p4code/inject.p4','./t4p4s/src/p4code/cache', args['recompile'])
-            merger = P4Aggregator(hlir,hlir2,hlirInject)
+            merger = P4Aggregator(hlir,hlir2,hlirInject,args['SegmentID1'],args['SegmentID2'])
             merger.run()
             hlir = merger.getResult()
 

@@ -9,10 +9,12 @@ class P4Aggregator:
 
     prefix1 = "NF1_"
     prefix2 = "NF2_"
-    def __init__(self,p4program1,p4program2,p4inject):
+    def __init__(self,p4program1,p4program2,p4inject,id1,id2):
         self.p4program1 = p4program1
         self.p4program2 = p4program2
         self.p4inject = p4inject
+        self.id1=id1
+        self.id2=id2
         self.resultingProgram = deep_copy(p4program1)
     
     def run(self):
@@ -144,8 +146,11 @@ class P4Aggregator:
             if control1.name in IngressNames:
                 resultingControl.controlLocals = resultingControl.controlLocals + [self.p4inject.controls[1].controlLocals[0],
                                                                                    self.p4inject.controls[1].controlLocals[2],
-                                                                                   self.p4inject.controls[1].controlLocals[3],
-                                                                                   self.p4inject.controls[1].controlLocals[8]]
+                                                                                #    self.p4inject.controls[1].controlLocals[3],
+                                                                                #    self.p4inject.controls[1].controlLocals[4],
+                                                                                #    self.p4inject.controls[1].controlLocals[5],
+                                                                                #    self.p4inject.controls[1].controlLocals[10]
+                                                                                ]
             for action in control2.actions:
                     action.name = self.prefix2 + action.name
                     resultingControl.actions.append(action)
@@ -161,16 +166,16 @@ class P4Aggregator:
             
             if control1.name in IngressNames:
                 newControl = self.p4inject.controls[1].body.components.vec
-                newControl[0].ifTrue.components[1].ifTrue.components[1].ifTrue =  P4Node(init={
+                newControl[0].ifTrue.components[1].ifTrue =  P4Node(init={
                                     'node_type' : 'BlockStatement',
                                     'components' : P4Node({
                                         'node_type':'Array'
-                                    },vec=[newControl[0].ifTrue.components[1].ifTrue.components[1].ifTrue] + newControl1.components.vec )})
-                newControl[0].ifTrue.components[1].ifFalse.components[1].ifTrue =  P4Node(init={
+                                    },vec=[newControl[0].ifTrue.components[1].ifTrue] + newControl1.components.vec )})
+                newControl[0].ifTrue.components[1].ifFalse =  P4Node(init={
                                     'node_type' : 'BlockStatement',
                                     'components' : P4Node({
                                         'node_type':'Array'
-                                    },vec=[newControl[0].ifTrue.components[1].ifFalse.components[1].ifTrue] + newControl2.components.vec )})
+                                    },vec=[newControl[0].ifTrue.components[1].ifFalse] + newControl2.components.vec )})
                 resultingControl.body.components.vec = [P4Node(init={
                     'node_type' : 'BlockStatement',
                     'components' : P4Node({

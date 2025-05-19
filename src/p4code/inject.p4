@@ -100,7 +100,7 @@ control MyIngress(inout headers hdr,
                   inout metadata meta,
                   inout standard_metadata_t standard_metadata) {
     action drop() {
-        mark_to_drop(standard_metadata);
+        mark_to_drop();
     }
     
     bit<32> meterValue = 0;
@@ -132,12 +132,12 @@ control MyIngress(inout headers hdr,
             set_nextsid_4;
         }
         const default_action = NoAction;
-        const entries = {
-            (1) : set_nextsid_1();
-            (2) : set_nextsid_2();
-            (3) : set_nextsid_3();
-            (4) : set_nextsid_4();
-        }
+        //const entries = {
+        //    (1 &&& 0xff) : set_nextsid_1();
+        //    (2 &&& 0xff) : set_nextsid_2();
+        //    (3 &&& 0xff) : set_nextsid_3();
+        //    (4 &&& 0xff) : set_nextsid_4();
+        //}
     }
 
     
@@ -145,16 +145,18 @@ control MyIngress(inout headers hdr,
        if (hdr.srh.isValid()) {
             srv6_set_nextsid.apply();
             if(meta.next_sid == 1){
-                segmentMeter.execute_meter<bit<32>>(0,meterValue);
+                //segmentMeter.execute_meter<bit<32>>(0,meterValue);
                 if(meterValue == 0){
                     c.count(0);
                 }else{
+                    drop();
                 }
             }else{
-                segmentMeter.execute_meter<bit<32>>(1,meterValue);
+                //segmentMeter.execute_meter<bit<32>>(1,meterValue);
                 if(meterValue == 0){
                     c.count(1);
                 }else{
+                    drop();
                 }
             }
         }
